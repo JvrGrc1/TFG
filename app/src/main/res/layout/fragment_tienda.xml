@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GridLayout android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:rowCount="4"
+    android:columnCount="3"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Primera fila -->
+    <androidx.cardview.widget.CardView
+        android:text="Celda 1"
+        android:layout_columnWeight="1"
+        android:layout_rowWeight="1"
+        app:cardBackgroundColor="#B0B587"
+        app:cardCornerRadius="6dp"
+        app:cardElevation="6dp"
+        app:cardPreventCornerOverlap="false"
+        app:cardUseCompatPadding="true"/>
+
+    <androidx.cardview.widget.CardView
+        android:text="Celda 1"
+        android:layout_columnWeight="1"
+        android:layout_rowWeight="1"
+        app:cardBackgroundColor="#B57373"
+        app:cardCornerRadius="6dp"
+        app:cardElevation="6dp"
+        app:cardPreventCornerOverlap="false"
+        app:cardUseCompatPadding="true"/>
+
+    <androidx.cardview.widget.CardView
+        android:text="Celda 1"
+        android:layout_columnWeight="1"
+        android:layout_rowWeight="1"
+        app:cardBackgroundColor="#E4E38E"
+        app:cardCornerRadius="6dp"
+        app:cardElevation="6dp"
+        app:cardPreventCornerOverlap="false"
+        app:cardUseCompatPadding="true"/>
+
+    <!-- Segunda fila -->
+    <androidx.cardview.widget.CardView
+        android:text="Celda 1"
+        android:layout_columnWeight="1"
+        android:layout_rowWeight="1"
+        app:cardBackgroundColor="#7BC6E4"
+        app:cardCornerRadius="6dp"
+        app:cardElevation="6dp"
+        app:cardPreventCornerOverlap="false"
+        app:cardUseCompatPadding="true"/>
+
+    <androidx.cardview.widget.CardView
+        android:text="Celda 1"
+        android:layout_columnWeight="1"
+        android:layout_rowWeight="1"
+        app:cardBackgroundColor="#C8E3B8"
+        app:cardCornerRadius="6dp"
+        app:cardElevation="6dp"
+        app:cardPreventCornerOverlap="false"
+        app:cardUseCompatPadding="true"/>
+
+    <androidx.cardview.widget.CardView
+        android:text="Celda 1"
+        android:layout_columnWeight="1"
+        android:layout_rowWeight="1"
+        app:cardBackgroundColor="#EDA791"
+        app:cardCornerRadius="6dp"
+        app:cardElevation="6dp"
+        app:cardPreventCornerOverlap="false"
+        app:cardUseCompatPadding="true"/>
+
+    <!-- Tercera fila -->
+    <androidx.cardview.widget.CardView
+        android:text="Celda 1"
+        android:layout_columnWeight="1"
+        android:layout_rowWeight="1"
+        app:cardBackgroundColor="#D3A4DC"
+        app:cardCornerRadius="6dp"
+        app:cardElevation="6dp"
+        app:cardPreventCornerOverlap="false"
+        app:cardUseCompatPadding="true"/>
+
+    <androidx.cardview.widget.CardView
+        android:text="Celda 1"
+        android:layout_columnWeight="1"
+        android:layout_rowWeight="1"
+        app:cardBackgroundColor="#99ECF6"
+        app:cardCornerRadius="6dp"
+        app:cardElevation="6dp"
+        app:cardPreventCornerOverlap="false"
+        app:cardUseCompatPadding="true"/>
+
+    <androidx.cardview.widget.CardView
+        android:text="Celda 1"
+        android:layout_columnWeight="1"
+        android:layout_rowWeight="1"
+        app:cardBackgroundColor="#FF8BB2"
+        app:cardCornerRadius="6dp"
+        app:cardElevation="6dp"
+        app:cardPreventCornerOverlap="false"
+        app:cardUseCompatPadding="true"/>
+
+</GridLayout>

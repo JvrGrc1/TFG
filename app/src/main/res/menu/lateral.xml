@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:title="Ajustes de usuario"
+        android:id="@+id/ajustesUser">
+    </item>
+    <item android:title="Algo más del usuario"
+        android:id="@+id/moreUser">
+    </item>
+    <item android:title="Registrar partido"
+        android:id="@+id/registrarPartido">
+    </item>
+    <item android:title="Consultar Jugador"
+        android:id="@+id/consultaJugador">
+    </item>
+    <item android:title="Consultar Equipo"
+        android:id="@+id/consultaEquipo">
+    </item>
+    <item android:title="Ajustes"
+        android:id="@+id/ajustes">
+    </item>
+</menu>

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "759386391388",
+    "project_id": "balonmano-f213a",
+    "storage_bucket": "balonmano-f213a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:759386391388:android:0bfb2bcbe6ace1bf74f799",
+        "android_client_info": {
+          "package_name": "com.example.tfg"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "759386391388-d851cj2gf56vcpuo6efm0f4sbhnm95sg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCm6jCtU8Ap7xrMWazXpSfkZDuCpa9bqMI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "759386391388-d851cj2gf56vcpuo6efm0f4sbhnm95sg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
