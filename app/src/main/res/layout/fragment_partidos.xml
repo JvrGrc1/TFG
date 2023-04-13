@@ -38,6 +38,39 @@
             app:layout_constraintTop_toBottomOf="@+id/botonMenu"
             app:layout_constraintVertical_bias="0.0" />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="60dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toStartOf="@+id/botonMenu"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <Spinner
+                android:id="@+id/spinnerTemporada"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:labelFor="@+id/spinnerTemporada"/>
+
+            <Spinner
+                android:id="@+id/spinnerDivisionPartidos"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:labelFor="@+id/spinnerDivisionPartidos"/>
+
+            <Spinner
+                android:id="@+id/spinnerJornadaPartidos"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:labelFor="@+id/spinnerJornadaPartidos"/>
+        </LinearLayout>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

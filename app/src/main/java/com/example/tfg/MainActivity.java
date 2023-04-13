@@ -2,8 +2,6 @@ package com.example.tfg;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -11,22 +9,23 @@ import androidx.fragment.app.FragmentTransaction;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.tfg.databinding.ActivityMainBinding;
-import com.example.tfg.entidad.Jugador;
 import com.example.tfg.entidad.Partido;
 import com.example.tfg.fragments.EstadisticasFragment;
 import com.example.tfg.fragments.PartidosFragment;
 import com.example.tfg.fragments.TiendaFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
@@ -35,7 +34,12 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +61,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         Intent intent = getIntent();
-        j = (List<Partido>) intent.getSerializableExtra("lista");
+        if (intent == null){
+            j = new ArrayList<>();
+        }else {
+            j = (List<Partido>) intent.getSerializableExtra("lista");
+        }
 
         logo = findViewById(R.id.logo);
         bottomNav = findViewById(R.id.bottomNavigationView);
@@ -126,13 +134,60 @@ public class MainActivity extends AppCompatActivity {
         View header = lateral.getHeaderView(0);
         TextView nombreUsuario = header.findViewById(R.id.nombreUsuario);
         TextView posicion = header.findViewById(R.id.posicionUsuario);
+        ImageView imagen = header.findViewById(R.id.imagenUsuario);
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user == null){
             nombreUsuario.setText("Sin registrar");
             posicion.setVisibility(View.INVISIBLE);
+            try {
+                imagenRandom(imagen);
+            }catch (IOException e){
+                e.printStackTrace();
+            }
         }else{
             comprobarExiste(user.getEmail(), nombreUsuario, posicion);
         }
+    }
+
+    private void imagenRandom(ImageView imagen) throws IOException {
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        String foto = randomFoto();
+        StorageReference ref = storage.getReference().child("gs://balonmano-f213a.appspot.com/imagenes-default/" + foto);
+        File localFile = File.createTempFile("nombre_temporal", "jpg");
+        ref.getFile(localFile)
+                .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                        Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                        imagen.setImageBitmap(bitmap);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(MainActivity.this, "Error descargando la imagen por defecto.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+    }
+
+    private String randomFoto(){
+        int numero = (int) (Math.random() * 6) + 1;
+        switch (numero) {
+            case 1:
+                return "corriendo.png";
+            case 2:
+                return "culturismo.png";
+            case 3:
+                return "futbol-americano.png";
+            case 4:
+                return "futbol.png";
+            case 5:
+                return "surf.png";
+            case 6:
+                return "voleibol.png";
+        }
+        return "corriendo.png";
     }
 
     private boolean comprobarExiste(String email, TextView nombre,TextView posicion) {

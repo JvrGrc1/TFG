@@ -13,20 +13,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class RegistrarPartido extends AppCompatActivity {
 
@@ -57,11 +51,39 @@ public class RegistrarPartido extends AppCompatActivity {
                     division.setEnabled(true);
                 }
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
                 division.setEnabled(false);
                 jornada.setEnabled(false);
+            }
+        });
+
+        division.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if (division.getSelectedItem().equals("")){
+                    jornada.setEnabled(false);
+                }else{
+                    rellenarJornadas();
+                    jornada.setEnabled(true);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                jornada.setEnabled(false);
+            }
+        });
+
+        jornada.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                rellenarCampos(anios.getSelectedItem().toString(), division.getSelectedItem().toString(), i);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                vaciarTodo();
             }
         });
 
@@ -97,5 +119,47 @@ public class RegistrarPartido extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void rellenarJornadas(){
+        db.collection("temporadas").document(anios.getSelectedItem().toString()).collection(division.getSelectedItem().toString()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                List<Integer> listaJornadas = new ArrayList<>();
+                if (task.isSuccessful()){
+                    QuerySnapshot snapshot = task.getResult();
+                    int jornada = 1;
+                    for (DocumentSnapshot ds : snapshot){
+                        listaJornadas.add(jornada++);
+                    }
+                }else{
+                    Toast.makeText(RegistrarPartido.this, String.format("No existe la división %s en la temporada %s", division.getSelectedItem().toString(), anios.getSelectedItem().toString()), Toast.LENGTH_SHORT).show();
+                }
+                ArrayAdapter<Integer> adapter = new ArrayAdapter<Integer>(getApplicationContext(), android.R.layout.simple_spinner_item, listaJornadas);
+                jornada.setAdapter(adapter);
+            }
+        });
+    }
+
+    private void rellenarCampos(String anio, String division, int jornada){
+        db.collection("temporadas").document(anio).collection(division).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()){
+                    QuerySnapshot qs = task.getResult();
+                    for (DocumentSnapshot ds : qs){
+                        if (ds.get("jornada").equals(jornada)){
+                            //rellenar
+                        }
+                    }
+                }else{
+                    Toast.makeText(RegistrarPartido.this, "Error con la jornada", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    private void vaciarTodo(){
+
     }
 }

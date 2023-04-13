@@ -4,41 +4,30 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Login">
+    tools:context=".RegistrarUsuario">
 
-    <ImageView
-        android:id="@+id/imageViewInicioSesionLogo"
-        android:layout_width="300dp"
-        android:layout_height="300dp"
-        android:layout_marginTop="70dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/logo" />
-
-    <EditText
-        android:id="@+id/correoUser"
-        android:layout_width="250dp"
+    <Button
+        android:id="@+id/registroButton"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="200dp"
         android:layout_height="50dp"
-        android:background="@drawable/fondo_registros"
-        android:ems="10"
+        android:layout_marginTop="50dp"
+        android:background="@drawable/fondo_spinner"
         android:fontFamily="@font/industrial_light"
-        android:hint="Correo del usuario"
-        android:inputType="textPersonName"
-        android:maxLength="20"
-        android:paddingStart="15dp"
-        android:paddingEnd="15dp"
-        android:textSize="22sp"
+        android:gravity="bottom|center_horizontal"
+        android:padding="10dp"
+        android:text="Registrarse"
+        android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageViewInicioSesionLogo" />
+        app:layout_constraintTop_toBottomOf="@+id/psswrdRegistroUser" />
 
     <EditText
-        android:id="@+id/contrasenaUser"
+        android:id="@+id/psswrdRegistroUser"
         android:layout_width="250dp"
         android:layout_height="50dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="40dp"
         android:background="@drawable/fondo_registros"
         android:ems="10"
         android:fontFamily="@font/industrial_light"
@@ -51,52 +40,49 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/correoUser" />
+        app:layout_constraintTop_toBottomOf="@+id/correoUserRegistro" />
 
-    <Button
-        android:id="@+id/loginButton"
-        style="@style/Widget.AppCompat.Button.Borderless"
-        android:layout_width="200dp"
+    <EditText
+        android:id="@+id/correoUserRegistro"
+        android:layout_width="250dp"
         android:layout_height="50dp"
-        android:layout_marginTop="40dp"
-        android:background="@drawable/fondo_spinner"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/fondo_registros"
+        android:ems="10"
         android:fontFamily="@font/industrial_light"
-        android:gravity="bottom|center_horizontal"
-        android:padding="10dp"
-        android:text="Iniciar Sesión"
-        android:textSize="20sp"
+        android:hint="Correo del usuario"
+        android:inputType="textPersonName"
+        android:maxLength="20"
+        android:paddingStart="15dp"
+        android:paddingEnd="15dp"
+        android:textSize="22sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/contrasenaUser" />
+        app:layout_constraintTop_toBottomOf="@+id/imageViewRegistroLogo" />
 
     <TextView
-        android:id="@+id/nuevaCuenta"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="50dp"
-        android:clickable="true"
-        android:fontFamily="@font/industrial_light"
-        android:text="Pulsa para crear una nueva cuenta"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/loginButton" />
-
-    <TextView
-        android:id="@+id/textViewInicioSesion"
+        android:id="@+id/textViewRegistro"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
         android:fontFamily="@font/favter1"
         android:gravity="center"
-        android:text="Inicio\nde sesión"
+        android:text="Registro de\nusuario"
         android:textColor="#CC000180"
         android:textSize="22sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageViewRegistroLogo"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_marginTop="60dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/logo" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

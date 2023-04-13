@@ -29,6 +29,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.firestore.Source;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -69,6 +70,21 @@ public class SplashScreen extends AppCompatActivity {
                 startActivity(intent);
                 overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 finish();
+                /*FirebaseFirestore db = FirebaseFirestore.getInstance();
+                for (Partido p : partidos){
+                    DocumentReference docRef = db.collection("temporadas").document("22-23");
+                    Map<String, Object> data = new HashMap<>();
+                    data.put("division", p.getDivision());
+                    data.put("jornada", p.getJornada());
+                    data.put("golesLocal", p.getGolesLocal());
+                    data.put("golesVisitante", p.getGolesVisitante());
+                    data.put("local", p.getLocal());
+                    data.put("visitante", p.getVisitante());
+                    data.put("fecha", p.getFecha());
+                    data.put("hora", p.getHora());
+                    data.put("pabellón", p.getPabellon());
+                    docRef.set(data, SetOptions.merge());
+                }*/
             }
         };
 
@@ -77,33 +93,3 @@ public class SplashScreen extends AppCompatActivity {
 
     }
 }
-
-/*
-TimerTask tarea = new TimerTask() {
-            @Override
-            public void run() {
-                FirebaseFirestore db = FirebaseFirestore.getInstance();
-                db.collection("Jugadores").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()){
-                            QuerySnapshot document = task.getResult();
-                            List<DocumentSnapshot> d = document.getDocuments();
-                            List<Jugador> jugadoresList = new ArrayList<>();
-                            for (DocumentSnapshot ds : d){
-                                Jugador j = new Jugador((String) ds.get("Nombre"), (String) ds.get("1Apellido"), (String) ds.get("2Apellido"), (String) ds.get("Posicion"));
-                                jugadoresList.add(j);
-                            }
-                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                            intent.putExtra("lista", (Serializable) jugadoresList);
-                            startActivity(intent);
-                            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                            finish();
-                        }else{
-                            Toast.makeText(SplashScreen.this, "Error al leer jugadores", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-            }
-        };
- */

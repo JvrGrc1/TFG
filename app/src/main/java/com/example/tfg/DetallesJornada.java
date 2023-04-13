@@ -1,6 +1,8 @@
 package com.example.tfg;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -12,9 +14,17 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
+import com.example.tfg.adaptador.PartidosAdapter;
+import com.example.tfg.entidad.Partido;
+
+import java.util.List;
+
 public class DetallesJornada extends AppCompatActivity {
 
     private TextView detalles;
+
+    private RecyclerView recycler;
+    private List<Partido> partidos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,10 +34,12 @@ public class DetallesJornada extends AppCompatActivity {
         getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         detalles = findViewById(R.id.detallesPartidos);
+        recycler = findViewById(R.id.recyclerDetallesJornada);
 
         Intent intent = getIntent();
+        partidos = (List<Partido>)intent.getSerializableExtra("partidos");
 
-        detalles.setText(intent.getSerializableExtra("partidos").toString());
+        //detalles.setText(partidos.toString());
 
         View layout = findViewById(R.id.l);
         Animation animacion = AnimationUtils.loadAnimation(this, R.anim.escala);
@@ -47,5 +59,10 @@ public class DetallesJornada extends AppCompatActivity {
 
             }
         });
+
+        recycler.setLayoutManager(new LinearLayoutManager(this));
+        PartidosAdapter adapter = new PartidosAdapter(this, partidos);
+        recycler.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
     }
 }

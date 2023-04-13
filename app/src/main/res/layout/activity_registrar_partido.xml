@@ -4,18 +4,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF"
 
+    android:backgroundTint="#ccccf4"
     tools:context=".RegistrarPartido">
 
     <TextView
-        android:id="@+id/textView6"
+        android:id="@+id/textViewTitulo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="35dp"
         android:fontFamily="@font/favter1"
         android:text="Registrar partido"
         android:textColor="#000180"
+        android:textStyle="italic"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -30,7 +31,7 @@
         android:background="	#B5B2B2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView6" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewTitulo" />
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -42,7 +43,7 @@
         <Spinner
             android:id="@+id/spinnerAnio"
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
+            android:layout_height="48dp"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="2dp"
@@ -56,7 +57,7 @@
         <Spinner
             android:id="@+id/spinnerDivision"
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
+            android:layout_height="48dp"
             android:layout_marginStart="2dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="2dp"
@@ -70,7 +71,7 @@
         <Spinner
             android:id="@+id/spinnerJornada"
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
+            android:layout_height="48dp"
             android:layout_marginStart="2dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
@@ -81,5 +82,84 @@
             android:popupBackground="#f2f2fc"
             android:textAlignment="center" />
     </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="30dp"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+
+        <EditText
+            android:id="@+id/editTextTextPersonName2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autoSizeTextType="uniform"
+            android:background="@drawable/fondo_local"
+            android:ems="10"
+            android:fontFamily="@font/thinoobold"
+            android:gravity="center"
+            android:hint="Local"
+            android:inputType="textPersonName"
+            android:maxWidth="96dp"
+            android:textColor="#000000"
+            android:textColorHint="#000000"
+            android:textSize="28sp" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:fontFamily="@font/thinoobold"
+            android:gravity="center"
+            android:text="VS"
+            android:textColor="#000000"
+            android:textSize="30sp" />
+
+        <EditText
+            android:id="@+id/editTextTextPersonName3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/fondo_visitante"
+            android:ems="10"
+            android:fontFamily="@font/thinoobold"
+            android:gravity="center"
+            android:hint="Visitante"
+            android:inputType="textPersonName"
+            android:maxWidth="96dp"
+            android:textColorHint="#000000"
+            android:textSize="28sp" />
+    </LinearLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/buttonAgregar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        android:clickable="true"
+        app:backgroundTint="#ccccf4"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/agregar" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/buttonEditar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="10dp"
+        android:clickable="true"
+        android:visibility="invisible"
+        app:backgroundTint="#ccccf4"
+        app:layout_constraintBottom_toTopOf="@+id/buttonAgregar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/editar" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

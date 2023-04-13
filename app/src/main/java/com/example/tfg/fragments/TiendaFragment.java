@@ -7,8 +7,11 @@ import android.view.ViewGroup;
 import android.widget.DatePicker;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.tfg.R;
+import com.example.tfg.adaptador.TiendaAdapter;
 import com.example.tfg.databinding.FragmentTiendaBinding;
 import com.google.android.material.datepicker.MaterialDatePicker;
 
@@ -18,6 +21,8 @@ import com.google.android.material.datepicker.MaterialDatePicker;
  * create an instance of this fragment.
  */
 public class TiendaFragment extends Fragment {
+
+    private RecyclerView recyclerView;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -62,7 +67,14 @@ public class TiendaFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        View root = inflater.inflate(R.layout.fragment_tienda, container, false);
+
+        recyclerView = root.findViewById(R.id.recyclerTienda);
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        TiendaAdapter adapter = new TiendaAdapter();
+        recyclerView.setAdapter(adapter);
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_tienda, container, false);
+        return root;
     }
 }
