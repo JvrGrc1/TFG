@@ -15,9 +15,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -28,7 +33,7 @@ public class RegistrarPartido extends AppCompatActivity {
 
     Spinner anios, division, jornada;
     TextView fecha, hora, local, visitante, gL, gV, pabellon, id;
-    Button agregar;
+    FloatingActionButton agregar;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     AlertDialog progressDialog;
 
@@ -42,13 +47,22 @@ public class RegistrarPartido extends AppCompatActivity {
         jornada = findViewById(R.id.spinnerJornada);
         local = findViewById(R.id.localRegistro);
         visitante = findViewById(R.id.visitanteRegistro);
+        agregar = findViewById(R.id.buttonAgregar);
         rellenarAnios();
         rellenarDivisiones();
         rellenarJornadas();
-        if (jornada.isEnabled()) {
-            jornada.setSelection(2);
-            rellenarCampos();
-        }
+
+        jornada.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                actualizarDatos();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
     private void rellenarAnios() {
@@ -164,5 +178,24 @@ public class RegistrarPartido extends AppCompatActivity {
                 .setCancelable(false)
                 .create();
         progressDialog.show();
+    }
+
+    public void actualizarDatos() {
+        db.collection("temporadas").document(anios.getSelectedItem().toString()).collection(division.getSelectedItem().toString()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        if (Integer.parseInt(document.get("jornada").toString()) == (Integer.parseInt(jornada.getSelectedItem().toString()))){
+                            System.out.println(document);
+                            local.setText(document.get("local").toString());
+                            visitante.setText(document.get("visitante").toString());
+                        }
+                    }
+                } else {
+                    Toast.makeText(RegistrarPartido.this, "Error al conseguir los documentos.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 }

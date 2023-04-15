@@ -107,6 +107,7 @@
             android:hint="Local"
             android:inputType="textPersonName"
             android:maxWidth="96dp"
+            android:padding="5dp"
             android:textColor="#000000"
             android:textColorHint="#000000"
             android:textSize="28sp" />
@@ -133,6 +134,7 @@
             android:hint="Visitante"
             android:inputType="textPersonName"
             android:maxWidth="96dp"
+            android:padding="5dp"
             android:textColorHint="#000000"
             android:textSize="28sp" />
     </LinearLayout>
