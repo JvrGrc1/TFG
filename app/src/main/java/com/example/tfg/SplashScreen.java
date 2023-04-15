@@ -70,24 +70,8 @@ public class SplashScreen extends AppCompatActivity {
                 startActivity(intent);
                 overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 finish();
-                /*FirebaseFirestore db = FirebaseFirestore.getInstance();
-                for (Partido p : partidos){
-                    DocumentReference docRef = db.collection("temporadas").document("22-23");
-                    Map<String, Object> data = new HashMap<>();
-                    data.put("division", p.getDivision());
-                    data.put("jornada", p.getJornada());
-                    data.put("golesLocal", p.getGolesLocal());
-                    data.put("golesVisitante", p.getGolesVisitante());
-                    data.put("local", p.getLocal());
-                    data.put("visitante", p.getVisitante());
-                    data.put("fecha", p.getFecha());
-                    data.put("hora", p.getHora());
-                    data.put("pabellón", p.getPabellon());
-                    docRef.set(data, SetOptions.merge());
-                }*/
             }
         };
-
 
         tiempo.schedule(tarea, tarea.scheduledExecutionTime());
 

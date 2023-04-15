@@ -1,18 +1,17 @@
 package com.example.tfg.fragments;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,11 +21,14 @@ import com.example.tfg.R;
 import com.example.tfg.adaptador.JornadasAdapter;
 import com.example.tfg.adaptador.RecyclerItemClickListener;
 import com.example.tfg.entidad.Partido;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -36,9 +38,11 @@ import java.util.List;
  */
 public class PartidosFragment extends Fragment {
 
-    private ImageButton menu;
+    private ImageButton buscar;
     private RecyclerView recycler;
     private JornadasAdapter adapter;
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private Spinner temporadas, equipos, jornadas;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -84,7 +88,10 @@ public class PartidosFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_partidos, container, false);
 
-        menu = root.findViewById(R.id.botonMenu);
+        buscar = root.findViewById(R.id.botonBuscar);
+        jornadas = root.findViewById(R.id.spinnerJornadaPartidos);
+        temporadas = root.findViewById(R.id.spinnerTemporada);
+        equipos = root.findViewById(R.id.spinnerDivisionPartidos);
 
         recycler = root.findViewById(R.id.recycler);
         recycler.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -114,36 +121,126 @@ public class PartidosFragment extends Fragment {
             }
         }));
 
-        menu.setOnClickListener(new View.OnClickListener() {
+        buscar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (temporadas.getVisibility() == View.VISIBLE) {
+                    buscar.setImageResource(R.drawable.menu_icon);
+                    temporadas.setVisibility(View.INVISIBLE);
+                    jornadas.setVisibility(View.INVISIBLE);
+                    equipos.setVisibility(View.INVISIBLE);
+                }else{
+                    buscar.setImageResource(R.drawable.buscar);
+                    temporadas.setVisibility(View.VISIBLE);
+                    jornadas.setVisibility(View.VISIBLE);
+                    equipos.setVisibility(View.VISIBLE);
+                }
             }
         });
+
+        List<String> listaEquipos = new ArrayList<>();
+        listaEquipos.add("");
+        listaEquipos.add("TODOS");
+        listaEquipos.add("1NM");
+        listaEquipos.add("DHPF");
+        listaEquipos.add("1NF");
+        listaEquipos.add("2NM");
+
+        rellenarTemporadas();
+        rellenarEquipos(listaEquipos);
+        rellenarJornadas();
 
         return root;
     }
 
-    private void subirFoto(){
-        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        imagePicker.launch(intent);
-    }
-
-    ActivityResultLauncher<Intent> imagePicker = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            result -> {
-                if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
-                    Uri imageUri = result.getData().getData();
-                    StorageReference storage = FirebaseStorage.getInstance().getReference().child("/imagenes-perfil");
-                    UploadTask uploadTask = storage.putFile(imageUri);
-
-                    uploadTask.addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(getContext(), "Todo bien", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Exception e = task.getException();
-                            e.printStackTrace();
+    private void rellenarJornadas() {
+        equipos.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (!equipos.getSelectedItem().equals("") & !equipos.getSelectedItem().equals("TODOS")){
+                    db.collection("temporadas").document(temporadas.getSelectedItem().toString()).collection(getEquipos()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            List<Integer> listaJornadas = new ArrayList<>();
+                            if (task.isSuccessful()){
+                                Integer numDocs = 1;
+                                for (QueryDocumentSnapshot document : task.getResult()){
+                                    listaJornadas.add(numDocs++);
+                                }
+                                jornadas.setAdapter(new ArrayAdapter<Integer>(getContext(), android.R.layout.simple_spinner_item, listaJornadas));
+                                jornadas.setEnabled(true);
+                            }else{
+                                Toast.makeText(getContext(), "El año " + temporadas.getSelectedItem().toString() + " no existe.", Toast.LENGTH_SHORT).show();
+                            }
                         }
                     });
+                }else{
+                    jornadas.setSelection(0);
+                    jornadas.setEnabled(false);
                 }
-            });
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
+    private String getEquipos() {
+        String equipo = equipos.getSelectedItem().toString();
+        switch (equipo){
+            case "1NM":
+                return "1NacionalMasc";
+            case "DHPF":
+                return "DHPF";
+            case "1NF":
+                return "1NacionalFem";
+            case "2NM":
+                return "2NacionalMasc";
+        }
+        return null;
+    }
+
+    private void rellenarTemporadas() {
+        db.collection("temporadas").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                List<String> listaAnios = new ArrayList<>();
+                listaAnios.add("");
+                if (task.isSuccessful()){
+                    for (QueryDocumentSnapshot document : task.getResult()){
+                        listaAnios.add(document.getId());
+                    }
+                }else{
+                    Toast.makeText(getContext(), "El año " + temporadas.getSelectedItem().toString() + " no existe.", Toast.LENGTH_SHORT).show();
+                }
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, listaAnios);
+                temporadas.setAdapter(adapter);
+                equipos.setEnabled(false);
+                jornadas.setEnabled(false);
+            }
+        });
+    }
+
+    private void rellenarEquipos(List<String> listaEquipos) {
+        temporadas.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (!temporadas.getSelectedItem().equals("")){
+                    equipos.setAdapter(new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, listaEquipos));
+                    equipos.setEnabled(true);
+                }else {
+                    equipos.setSelection(0);
+                    jornadas.setSelection(0);
+                    equipos.setEnabled(false);
+                    jornadas.setEnabled(false);
+                }
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
 }

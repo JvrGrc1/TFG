@@ -2,6 +2,8 @@ package com.example.tfg;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -13,6 +15,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ImageView;
@@ -53,8 +56,10 @@ public class MainActivity extends AppCompatActivity {
 
     BottomNavigationView bottomNav;
     NavigationView lateral;
-    ImageView logo;
+    ImageView logo, abrir;
     List<Partido> j = new ArrayList<>();
+
+    FirebaseAuth auth = FirebaseAuth.getInstance();
 
 
     @Override
@@ -73,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
         logo = findViewById(R.id.logo);
         bottomNav = findViewById(R.id.bottomNavigationView);
         lateral = findViewById(R.id.lateral);
+        abrir = findViewById(R.id.botonAbrir);
 
         comprobarUser();
 
@@ -122,14 +128,32 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.registrarPartido:
                     Intent intentRegistrar = new Intent(this, RegistrarPartido.class);
                     startActivity(intentRegistrar);
+                    break;
                     /*ConexionFirebase conexion = new ConexionFirebase();
                     j = conexion.obtenerPartidos();*/
                 case R.id.ajustes:
-                    FirebaseAuth auth = FirebaseAuth.getInstance();
-                    auth.signInWithEmailAndPassword("zurdocbl@gmail.com", "gt02102002");
-
+                    if (auth.getCurrentUser() == null) {
+                        auth.signInWithEmailAndPassword("zurdocbl@gmail.com", "gt02102002");
+                        finish();
+                    }
+                    break;
+                case R.id.ajustesUser:
+                    if (auth.getCurrentUser() != null) {
+                        auth.signOut();
+                        ;
+                        finish();
+                    }
+                    break;
             }
             return false;
+        });
+
+        abrir.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DrawerLayout drawerLayout = findViewById(R.id.drawer);
+                drawerLayout.openDrawer(GravityCompat.START);
+            }
         });
     }
 
@@ -142,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
         if (user == null){
             nombreUsuario.setText("Sin registrar");
             posicion.setVisibility(View.INVISIBLE);
-                imagenRandom(imagen);
+            imagenRandom(imagen);
         }else{
             comprobarExiste(user.getEmail(), nombreUsuario, posicion, imagen);
         }
@@ -159,6 +183,7 @@ public class MainActivity extends AppCompatActivity {
                 Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                 Bitmap bitmap1 = Bitmap.createScaledBitmap(bitmap,200,200,true);
                 imagen.setImageBitmap(bitmap1);
+                abrir.setImageBitmap(bitmap1);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -178,6 +203,7 @@ public class MainActivity extends AppCompatActivity {
                 Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                 Bitmap bitmap1 = Bitmap.createScaledBitmap(bitmap,200,200,true);
                 imagen.setImageBitmap(bitmap1);
+                abrir.setImageBitmap(bitmap1);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override

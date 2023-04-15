@@ -13,7 +13,7 @@
         android:layout_height="match_parent">
 
         <ImageButton
-            android:id="@+id/botonMenu"
+            android:id="@+id/botonBuscar"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginTop="10dp"
@@ -35,7 +35,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/botonMenu"
+            app:layout_constraintTop_toBottomOf="@+id/botonBuscar"
             app:layout_constraintVertical_bias="0.0" />
 
         <LinearLayout
@@ -43,32 +43,37 @@
             android:layout_height="40dp"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
-            android:layout_marginEnd="60dp"
+            android:layout_marginEnd="45dp"
             android:orientation="horizontal"
-            app:layout_constraintEnd_toStartOf="@+id/botonMenu"
+            app:layout_constraintEnd_toStartOf="@+id/botonBuscar"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <Spinner
                 android:id="@+id/spinnerTemporada"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:layout_weight="1"
-                android:labelFor="@+id/spinnerTemporada"/>
+                android:labelFor="@+id/spinnerTemporada"
+                android:minWidth="100dp"
+                android:visibility="invisible" />
 
             <Spinner
                 android:id="@+id/spinnerDivisionPartidos"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:layout_weight="1"
-                android:labelFor="@+id/spinnerDivisionPartidos"/>
+                android:labelFor="@+id/spinnerDivisionPartidos"
+                android:visibility="invisible" />
 
             <Spinner
                 android:id="@+id/spinnerJornadaPartidos"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:layout_weight="1"
-                android:labelFor="@+id/spinnerJornadaPartidos"/>
+                android:labelFor="@+id/spinnerJornadaPartidos"
+                android:minWidth="100dp"
+                android:visibility="invisible" />
         </LinearLayout>
 
 

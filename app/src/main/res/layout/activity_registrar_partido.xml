@@ -96,7 +96,7 @@
         app:layout_constraintTop_toBottomOf="@+id/linearLayout">
 
         <EditText
-            android:id="@+id/editTextTextPersonName2"
+            android:id="@+id/localRegistro"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:autoSizeTextType="uniform"
@@ -123,7 +123,7 @@
             android:textSize="30sp" />
 
         <EditText
-            android:id="@+id/editTextTextPersonName3"
+            android:id="@+id/visitanteRegistro"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/fondo_visitante"
