@@ -11,6 +11,7 @@ import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -19,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.tfg.databinding.ActivityMainBinding;
 import com.example.tfg.entidad.Partido;
 import com.example.tfg.fragments.EstadisticasFragment;
@@ -140,22 +142,16 @@ public class MainActivity extends AppCompatActivity {
         if (user == null){
             nombreUsuario.setText("Sin registrar");
             posicion.setVisibility(View.INVISIBLE);
-            try {
                 imagenRandom(imagen);
-            }catch (IOException e){
-                e.printStackTrace();
-            }
         }else{
-            comprobarExiste(user.getEmail(), nombreUsuario, posicion);
+            comprobarExiste(user.getEmail(), nombreUsuario, posicion, imagen);
         }
     }
 
-    private void imagenRandom(ImageView imagen) throws IOException {
+    private void imagenRandom(ImageView imagen) {
         FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageRef = storage.getReference();
         String foto = randomFoto();
         StorageReference gsReference = storage.getReferenceFromUrl("gs://balonmano-f213a.appspot.com/imagenes-default/" + foto);
-
         final long ONE_MEGABYTE = 1024 * 1024;
         gsReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
@@ -171,6 +167,24 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+    private void imagenPerfil(ImageView imagen, String url){
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference gsReference = storage.getReferenceFromUrl(url);
+        final long ONE_MEGABYTE = 4096 * 4096;
+        gsReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                Bitmap bitmap1 = Bitmap.createScaledBitmap(bitmap,200,200,true);
+                imagen.setImageBitmap(bitmap1);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                Toast.makeText(MainActivity.this, "Error al descargar la imagen de perfil", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private String randomFoto(){
@@ -192,7 +206,7 @@ public class MainActivity extends AppCompatActivity {
         return "corriendo.png";
     }
 
-    private boolean comprobarExiste(String email, TextView nombre,TextView posicion) {
+    private boolean comprobarExiste(String email, TextView nombre,TextView posicion, ImageView imagen) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("usuarios").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -204,6 +218,7 @@ public class MainActivity extends AppCompatActivity {
                             nombre.setText(ds.get("nombre") + " " + ds.get("apellido1"));
                             posicion.setVisibility(View.VISIBLE);
                             posicion.setText(ds.get("rol").toString());
+                            imagenPerfil(imagen, ds.get("imagen").toString());
                         }
                     }
                 }

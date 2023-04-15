@@ -26,6 +26,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -101,7 +102,7 @@ public class PartidosFragment extends Fragment {
             public void onItemClick(View v, int posicion) {
 
                 Intent intent = new Intent(v.getContext(), DetallesJornada.class);
-                intent.putExtra("partidos", adapter.getDatos().get(posicion));
+                intent.putExtra("partidos", (Serializable) adapter.getDatos().get(posicion).getPartidos());
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
