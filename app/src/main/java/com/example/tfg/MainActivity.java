@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.tfg.databinding.ActivityMainBinding;
 import com.example.tfg.entidad.Partido;
 import com.example.tfg.fragments.EstadisticasFragment;
@@ -151,23 +152,24 @@ public class MainActivity extends AppCompatActivity {
 
     private void imagenRandom(ImageView imagen) throws IOException {
         FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference();
         String foto = randomFoto();
-        StorageReference ref = storage.getReference().child("gs://balonmano-f213a.appspot.com/imagenes-default/" + foto);
-        File localFile = File.createTempFile("nombre_temporal", "jpg");
-        ref.getFile(localFile)
-                .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                        Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
-                        imagen.setImageBitmap(bitmap);
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(MainActivity.this, "Error descargando la imagen por defecto.", Toast.LENGTH_SHORT).show();
-                    }
-                });
+        StorageReference gsReference = storage.getReferenceFromUrl("gs://balonmano-f213a.appspot.com/imagenes-default/" + foto);
+
+        final long ONE_MEGABYTE = 1024 * 1024;
+        gsReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                Bitmap bitmap1 = Bitmap.createScaledBitmap(bitmap,200,200,true);
+                imagen.setImageBitmap(bitmap1);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                Toast.makeText(MainActivity.this, "Error al descargar la imagen", Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
 
