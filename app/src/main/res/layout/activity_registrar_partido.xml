@@ -37,6 +37,7 @@
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:orientation="horizontal"
         app:layout_constraintTop_toBottomOf="@+id/divider2">
 
@@ -88,7 +89,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="50dp"
         android:layout_marginEnd="30dp"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
@@ -100,7 +101,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:autoSizeTextType="uniform"
-            android:background="@drawable/fondo_local"
+            android:background="@drawable/fondo_local_disenabled"
             android:ems="10"
             android:fontFamily="@font/thinoobold"
             android:gravity="center"
@@ -108,7 +109,6 @@
             android:inputType="textPersonName"
             android:maxWidth="96dp"
             android:padding="10dp"
-            android:textColor="#000000"
             android:textColorHint="#000000"
             android:textSize="28sp" />
 
@@ -127,7 +127,7 @@
             android:id="@+id/visitanteRegistro"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/fondo_visitante"
+            android:background="@drawable/fondo_visitante_disenabled"
             android:ems="10"
             android:fontFamily="@font/thinoobold"
             android:gravity="center"
@@ -161,11 +161,11 @@
             android:ems="10"
             android:fontFamily="@font/thinoobold"
             android:gravity="center"
-            android:hint="GgolesLocal"
-            android:inputType="text"
+            android:hint="GolesLocal"
+            android:inputType="number"
             android:textColor="#000000"
             android:textColorHint="#000000"
-            android:textSize="20sp"/>
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/textView5"
@@ -191,10 +191,10 @@
             android:fontFamily="@font/thinoobold"
             android:gravity="center"
             android:hint="GolesVisitante"
-            android:inputType="text"
+            android:inputType="number"
             android:textColor="#000000"
             android:textColorHint="#000000"
-            android:textSize="20sp"/>
+            android:textSize="20sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -214,7 +214,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/fondo_registros"
+            android:background="@drawable/fondo_spinner_disenabled"
             android:ems="10"
             android:fontFamily="@font/thinoobold"
             android:gravity="center"
@@ -229,7 +229,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/fondo_registros"
+            android:background="@drawable/fondo_spinner_disenabled"
             android:ems="10"
             android:fontFamily="@font/thinoobold"
             android:gravity="center"
@@ -244,15 +244,15 @@
         android:id="@+id/buttonEditar"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="10dp"
-        android:clickable="false"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="22dp"
+        android:clickable="true"
         android:visibility="invisible"
         app:backgroundTint="#f2f2fc"
         app:elevation="2dp"
         app:fabCustomSize="50dp"
-        app:layout_constraintBottom_toTopOf="@+id/buttonAgregar"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/buttonAgregar"
         app:srcCompat="@drawable/editar" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -271,9 +271,9 @@
         android:id="@+id/pabellonRegistrar"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="70dp"
+        android:layout_marginTop="60dp"
         android:layout_marginEnd="30dp"
-        android:background="@drawable/fondo_registros"
+        android:background="@drawable/fondo_spinner_disenabled"
         android:ems="10"
         android:fontFamily="@font/thinoobold"
         android:gravity="center"

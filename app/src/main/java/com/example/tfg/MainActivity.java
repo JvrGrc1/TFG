@@ -17,6 +17,7 @@ import android.graphics.Matrix;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -34,6 +35,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.internal.NavigationMenuItemView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -49,6 +51,8 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -60,6 +64,8 @@ public class MainActivity extends AppCompatActivity {
     List<Partido> j = new ArrayList<>();
 
     FirebaseAuth auth = FirebaseAuth.getInstance();
+    Timer tiempo = new Timer();
+    TimerTask task;
 
 
     @Override
@@ -69,10 +75,18 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         Intent intent = getIntent();
-        if (intent == null){
-            j = new ArrayList<>();
-        }else {
+        if (!intent.hasExtra("lista")) {
+            task = new TimerTask() {
+                @Override
+                public void run() {
+                    j = ConexionFirebase.obtenerPartidos();
+                }
+            };
+            tiempo.schedule(task, task.scheduledExecutionTime());
+            iniciar();
+        } else {
             j = (List<Partido>) intent.getSerializableExtra("lista");
+            iniciar();
         }
 
         logo = findViewById(R.id.logo);
@@ -87,7 +101,6 @@ public class MainActivity extends AppCompatActivity {
         bottomNav.setSelected(true);
 
         //Establece el fragment Partidos para que sea el primero en aparecer
-        iniciar();
 
         AnimatorSet animSet = new AnimatorSet();
         animSet.playTogether(
@@ -140,7 +153,6 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.ajustesUser:
                     if (auth.getCurrentUser() != null) {
                         auth.signOut();
-                        ;
                         finish();
                     }
                     break;
@@ -167,6 +179,8 @@ public class MainActivity extends AppCompatActivity {
             nombreUsuario.setText("Sin registrar");
             posicion.setVisibility(View.INVISIBLE);
             imagenRandom(imagen);
+            NavigationMenuItemView registrar = lateral.findViewById(R.id.registrarse);
+            if (registrar != null){registrar.setVisibility(View.VISIBLE);}
         }else{
             comprobarExiste(user.getEmail(), nombreUsuario, posicion, imagen);
         }
@@ -247,6 +261,8 @@ public class MainActivity extends AppCompatActivity {
                             imagenPerfil(imagen, ds.get("imagen").toString());
                         }
                     }
+                    NavigationMenuItemView registrar = lateral.findViewById(R.id.registrarse);
+                    registrar.setVisibility(View.INVISIBLE);
                 }
             }
         });
@@ -255,15 +271,15 @@ public class MainActivity extends AppCompatActivity {
 
     private void iniciar() {
         Bundle bundle = new Bundle();
-        if (!j.isEmpty()) {
+        if ( j != null && !j.isEmpty()) {
             bundle.putSerializable("lista", (Serializable) j);
+            Fragment partidos = new PartidosFragment();
+            partidos.setArguments(bundle);
+            FragmentManager manager = getSupportFragmentManager();
+            FragmentTransaction transaction = manager.beginTransaction();
+            transaction.replace(R.id.frame_layout, partidos);
+            transaction.commit();
         }
-        Fragment partidos = new PartidosFragment();
-        partidos.setArguments(bundle);
-        FragmentManager manager = getSupportFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
-        transaction.replace(R.id.frame_layout,partidos);
-        transaction.commit();
     }
 
     private void resetIcons() {

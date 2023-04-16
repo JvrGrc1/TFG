@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -12,6 +13,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.tfg.entidad.Partido;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -25,6 +27,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -60,13 +63,12 @@ public class RegistrarPartido extends AppCompatActivity {
 
         if (auth.getCurrentUser() != null){
             isAdmin(auth.getCurrentUser());
-        }else{
-            local.setFocusable(false);
-            visitante.setFocusable(false);
-            fecha.setFocusable(false);
-            hora.setFocusable(false);
-            pabellon.setFocusable(false);
         }
+        local.setEnabled(false);
+        visitante.setEnabled(false);
+        hora.setEnabled(false);
+        pabellon.setEnabled(false);
+        fecha.setEnabled(false);
 
         rellenarAnios();
         rellenarDivisiones();
@@ -111,6 +113,7 @@ public class RegistrarPartido extends AppCompatActivity {
                                     @Override
                                     public void onSuccess(Void aVoid) {
                                         Toast.makeText(RegistrarPartido.this, "Partido agregado correctamente.", Toast.LENGTH_SHORT).show();
+                                        finish();
                                     }
                                 })
                                 .addOnFailureListener(new OnFailureListener() {
@@ -120,6 +123,19 @@ public class RegistrarPartido extends AppCompatActivity {
                                     }
                                 });
                     }
+                }
+            }
+        });
+
+        editar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (local.isEnabled()) {
+                    cambiarEnabled(false);
+                    Toast.makeText(RegistrarPartido.this, "Ya no puedes editar los campos", Toast.LENGTH_SHORT).show();
+                }else{
+                    cambiarEnabled(true);
+                    Toast.makeText(RegistrarPartido.this, "Puedes editar los campos", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -237,17 +253,8 @@ public class RegistrarPartido extends AppCompatActivity {
                         if (document.get("correo").equals(currentUser.getEmail())){
                             if (document.get("rol").equals("Administrador")){
                                 editar.setVisibility(View.VISIBLE);
-                                local.setFocusable(true);
-                                visitante.setFocusable(true);
-                                fecha.setFocusable(true);
-                                hora.setFocusable(true);
-                                pabellon.setFocusable(true);
                             }else{
-                                local.setFocusable(false);
-                                visitante.setFocusable(false);
-                                fecha.setFocusable(false);
-                                hora.setFocusable(false);
-                                pabellon.setFocusable(false);
+                                editar.setVisibility(View.INVISIBLE);
                             }
                         }
                     }
@@ -258,10 +265,10 @@ public class RegistrarPartido extends AppCompatActivity {
         });
     }
     private boolean todoRelleno(){
-        return !local.getText().toString().isEmpty() && !visitante.getText().toString().isEmpty() && !gV.getText().toString().isEmpty() && !gL.getText().toString().isEmpty() && !hora.getText().toString().isEmpty() && !fecha.getText().toString().isEmpty() && !pabellon.getText().toString().isEmpty();
+        return !local.getText().toString().isEmpty() && !visitante.getText().toString().isEmpty() && !gV.getText().toString().isEmpty() && !gL.getText().toString().isEmpty() && !hora.getText().toString().isEmpty() && !fecha.getText().toString().isEmpty() && !pabellon.getText().toString().isEmpty() && getFecha() != null && getFecha() != null;
     }
     private String getDivision(){
-        String divison = anios.getSelectedItem().toString();
+        String divison = division.getSelectedItem().toString();
         switch (divison){
             case "1NacionalMasc":
                 return "1NM";
@@ -275,30 +282,48 @@ public class RegistrarPartido extends AppCompatActivity {
         return null;
     }
     private String getHora(){
-
-        /*Puede estar interesante cambiar a un TimePicker
-          quedaría más estético.*/
-        return null;
+        String patron = "^(0?[1-9]|1\\d|2[0-4]):([0-5]?\\d)$";
+        if (hora.getText().toString().matches(patron)){
+            return hora.getText().toString();
+        }else{
+            Toast.makeText(this, "La hora está mal escrita", Toast.LENGTH_SHORT).show();
+            return null;
+        }
     }
     private String getFecha(){
-
-        //Puede estar interesante cambiar a un CalendarView
-        /*
-        CalendarView calendarView = findViewById(R.id.calendarView);
-        calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
-        @Override
-        public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
-            Calendar calendar = Calendar.getInstance();
-            calendar.set(Calendar.YEAR, year);
-            calendar.set(Calendar.MONTH, month);
-            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-
-            String formattedDate = String.format(Locale.getDefault(), "%02d-%02d-%04d", dayOfMonth, month + 1, year);
-
-            // Use formattedDate as needed
-            }
-         });*/
-        return null;
+        String patron = "\\d{2}-\\d{2}-(2022|2023)";
+        if (fecha.getText().toString().matches(patron)){
+            return fecha.getText().toString();
+        }else{
+            Toast.makeText(this, "La fecha está mal escrita", Toast.LENGTH_SHORT).show();
+            return null;
+        }
     }
 
+    private void cambiarEnabled(boolean booleano){
+        if (booleano == true){
+            local.setEnabled(true);
+            local.setBackgroundResource(R.drawable.fondo_local);
+            visitante.setEnabled(true);
+            visitante.setBackgroundResource(R.drawable.fondo_visitante);
+            hora.setEnabled(true);
+            hora.setBackgroundResource(R.drawable.fondo_spinner);
+            pabellon.setEnabled(true);
+            pabellon.setBackgroundResource(R.drawable.fondo_spinner);
+            fecha.setEnabled(true);
+            fecha.setBackgroundResource(R.drawable.fondo_spinner);
+        }else{
+            local.setEnabled(false);
+            local.setBackgroundResource(R.drawable.fondo_local_disenabled);
+            visitante.setEnabled(false);
+            visitante.setBackgroundResource(R.drawable.fondo_visitante_disenabled);
+            hora.setEnabled(false);
+            hora.setBackgroundResource(R.drawable.fondo_spinner_disenabled);
+            pabellon.setEnabled(false);
+            pabellon.setBackgroundResource(R.drawable.fondo_spinner_disenabled);
+            fecha.setEnabled(false);
+            fecha.setBackgroundResource(R.drawable.fondo_spinner_disenabled);
+        }
+
+    }
 }

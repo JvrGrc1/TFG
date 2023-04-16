@@ -15,7 +15,7 @@ import java.util.concurrent.CountDownLatch;
 
 public class ConexionFirebase {
 
-    private List<String> divisiones = new ArrayList<>();
+    private static List<String> divisiones = new ArrayList<>();
     private List<Partido> partidos = new ArrayList<>();
 
     public ConexionFirebase() {
@@ -24,7 +24,7 @@ public class ConexionFirebase {
         divisiones.add("2NacionalMasc");
         divisiones.add("1NacionalFem");
     }
-    public List<Partido> obtenerPartidos(){
+    public static List<Partido> obtenerPartidos(){
         List<Partido> partidos = new ArrayList<>();
         CountDownLatch latch = new CountDownLatch(1);
 

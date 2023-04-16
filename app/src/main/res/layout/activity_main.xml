@@ -67,7 +67,7 @@
             android:layout_marginStart="30dp"
             android:layout_marginEnd="30dp"
             android:layout_marginBottom="10dp"
-            android:background="@drawable/redondeado"
+            android:background="@drawable/fondo_redondeado"
             app:itemIconTint="#000180"
             app:itemRippleColor="#DFDFFF"
             app:itemTextColor="#000180"
