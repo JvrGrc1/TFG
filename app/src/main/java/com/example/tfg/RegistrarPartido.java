@@ -87,7 +87,7 @@ public class RegistrarPartido extends AppCompatActivity {
         agregar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (jornada.getSelectedItem() == null){
+                if (jornada.getSelectedItem() == null || anios.getSelectedItem().equals("")){
                     Toast.makeText(RegistrarPartido.this, "No has seleccionado jornada", Toast.LENGTH_SHORT).show();
                 }else{
                     if (todoRelleno()){
@@ -100,7 +100,7 @@ public class RegistrarPartido extends AppCompatActivity {
                         datos.put("golesLocal", Integer.parseInt(gL.getText().toString()));
                         datos.put("golesVisitante", Integer.parseInt(gV.getText().toString()));
                         datos.put("hora", getHora());
-                        datos.put("jornada", jornada.getSelectedItem().toString());
+                        datos.put("jornada", Integer.parseInt(jornada.getSelectedItem().toString()));
                         datos.put("local", local.getText().toString());
                         datos.put("pabellón", pabellon.getText().toString());
                         datos.put("visitante", visitante.getText().toString());
