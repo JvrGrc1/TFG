@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFFFFF"
     tools:context=".RegistrarUsuario">
 
     <Button
@@ -32,7 +33,7 @@
         android:ems="10"
         android:fontFamily="@font/industrial_light"
         android:hint="Contraseña"
-        android:inputType="textPersonName"
+        android:inputType="textPassword"
         android:maxLength="20"
         android:paddingStart="15dp"
         android:paddingEnd="15dp"
@@ -65,7 +66,7 @@
         android:id="@+id/textViewRegistro"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="60dp"
         android:fontFamily="@font/favter1"
         android:gravity="center"
         android:text="Registro de\nusuario"
@@ -79,10 +80,45 @@
         android:id="@+id/imageViewRegistroLogo"
         android:layout_width="300dp"
         android:layout_height="300dp"
-        android:layout_marginTop="60dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewRegistro"
         app:srcCompat="@drawable/logo" />
+
+    <Button
+        android:id="@+id/buttonVer"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="50dp"
+        android:background="@drawable/ojo_abierto"
+        app:layout_constraintStart_toEndOf="@+id/psswrdRegistroUser"
+        app:layout_constraintTop_toBottomOf="@+id/correoUserRegistro" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="1dp"
+        android:fontFamily="@font/industrial_light"
+        android:text="La contraseña debe contener min. 4 caracteres."
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/psswrdRegistroUser" />
+
+    <TextView
+        android:id="@+id/iniciarSesion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/industrial_light"
+        android:gravity="center"
+        android:text="Si ya tienes cuenta.\n INICIA SESIÓN AQUÍ"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/registroButton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

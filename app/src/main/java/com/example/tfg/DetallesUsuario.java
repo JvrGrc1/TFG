@@ -2,8 +2,10 @@ package com.example.tfg;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -26,18 +28,20 @@ public class DetallesUsuario extends AppCompatActivity {
         linearLayoutCodigo = findViewById(R.id.linearLayoutCodigo);
         codigo = findViewById(R.id.codigoRol);
 
+        String correo = getIntent().getStringExtra("correo");
+
         radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
             radioButton = radioGroup.findViewById(checkedId);
             switch (radioButton.getId()){
-                case 1:
+                case R.id.adminOption:
                     linearLayoutCodigo.setVisibility(View.VISIBLE);
                     codigo.setHint("Administrador");
                     break;
-                case 2:
+                case R.id.entrenadorOption:
                     linearLayoutCodigo.setVisibility(View.VISIBLE);
                     codigo.setHint("Entrenador");
                     break;
-                case 3:
+                case R.id.jugadorOption:
                     linearLayoutCodigo.setVisibility(View.INVISIBLE);
                     break;
                 default:
@@ -45,7 +49,5 @@ public class DetallesUsuario extends AppCompatActivity {
                     break;
             }
         });
-
-
     }
 }

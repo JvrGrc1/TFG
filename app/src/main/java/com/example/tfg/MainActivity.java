@@ -130,6 +130,11 @@ public class MainActivity extends AppCompatActivity {
                         finish();
                     }
                     break;
+                case R.id.registrarse:
+                    Intent intentSignIn = new Intent(this, RegistrarUsuario.class);
+                    startActivity(intentSignIn);
+                    finish();
+                    break;
             }
             return false;
         });
@@ -211,7 +216,9 @@ public class MainActivity extends AppCompatActivity {
                         nombre.setText(ds.get("nombre") + " " + ds.get("apellido1"));
                         posicion.setVisibility(View.VISIBLE);
                         posicion.setText(ds.get("rol").toString());
-                        imagenPerfil(imagen, ds.get("imagen").toString());
+                        if (ds.get("imagen").toString() != null) {
+                            imagenPerfil(imagen, ds.get("imagen").toString());
+                        }
                     }
                 }
                 NavigationMenuItemView registrar = lateral.findViewById(R.id.registrarse);
