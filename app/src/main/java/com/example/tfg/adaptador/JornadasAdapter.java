@@ -19,7 +19,7 @@ import java.util.List;
 
 public class JornadasAdapter extends RecyclerView.Adapter<JornadasAdapter.JornadaViewHolder> {
 
-    private Context contexto;
+    private final Context contexto;
     private List<Jornada> jornada;
 
     public JornadasAdapter(Context context, List<Partido> partidos) {
@@ -29,7 +29,7 @@ public class JornadasAdapter extends RecyclerView.Adapter<JornadasAdapter.Jornad
 
         //Quiero rellenar una lista de Jornadas pasandole una lista de Partidos.
         //Cada Jornada consta de: nº de jornada y lista de Partidos
-        //Tengo que separar por jornadas los Partdidos y con cada lista crear una Jornada que añado a la lista de Jornadas
+        //Tengo que separar por jornadas los Partidos y con cada lista crear una Jornada que añado a la lista de Jornadas
         setJornadas(partidos);
     }
 
@@ -51,7 +51,7 @@ public class JornadasAdapter extends RecyclerView.Adapter<JornadasAdapter.Jornad
     public void setDatos(List<Jornada> listaDatos) {
         this.jornada = listaDatos;
     }
-    public void setDatosPartidos(List<Partido> listaPartidos){setJornadas(listaPartidos);};
+    public void setDatosPartidos(List<Partido> listaPartidos){setJornadas(listaPartidos);}
     public List<Jornada> getDatos() {
         return jornada;
     }
@@ -72,7 +72,6 @@ public class JornadasAdapter extends RecyclerView.Adapter<JornadasAdapter.Jornad
         holder.recyclerView.setLayoutManager(new LinearLayoutManager(contexto));
         PartidosAdapter adapter = new PartidosAdapter(contexto, jornada1.getPartidos());
         holder.recyclerView.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
 
     }
 

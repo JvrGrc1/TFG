@@ -26,26 +26,23 @@ public class DetallesUsuario extends AppCompatActivity {
         linearLayoutCodigo = findViewById(R.id.linearLayoutCodigo);
         codigo = findViewById(R.id.codigoRol);
 
-        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                radioButton = radioGroup.findViewById(checkedId);
-                switch (radioButton.getId()){
-                    case 1:
-                        linearLayoutCodigo.setVisibility(View.VISIBLE);
-                        codigo.setHint("Administrador");
-                        break;
-                    case 2:
-                        linearLayoutCodigo.setVisibility(View.VISIBLE);
-                        codigo.setHint("Entrenador");
-                        break;
-                    case 3:
-                        linearLayoutCodigo.setVisibility(View.INVISIBLE);
-                        break;
-                    default:
-                        Toast.makeText(DetallesUsuario.this, radioButton.getId() + "", Toast.LENGTH_SHORT).show();
-                        break;
-                }
+        radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            radioButton = radioGroup.findViewById(checkedId);
+            switch (radioButton.getId()){
+                case 1:
+                    linearLayoutCodigo.setVisibility(View.VISIBLE);
+                    codigo.setHint("Administrador");
+                    break;
+                case 2:
+                    linearLayoutCodigo.setVisibility(View.VISIBLE);
+                    codigo.setHint("Entrenador");
+                    break;
+                case 3:
+                    linearLayoutCodigo.setVisibility(View.INVISIBLE);
+                    break;
+                default:
+                    Toast.makeText(DetallesUsuario.this, radioButton.getId() + "", Toast.LENGTH_SHORT).show();
+                    break;
             }
         });
 

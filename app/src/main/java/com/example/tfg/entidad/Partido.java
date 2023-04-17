@@ -1,14 +1,12 @@
 package com.example.tfg.entidad;
 
 import android.annotation.SuppressLint;
-import android.os.Build;
 
 import androidx.annotation.NonNull;
 
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
@@ -126,7 +124,7 @@ public class Partido implements Serializable {
     }
 
     public void setHoraS(String hora) {
-        DateTimeFormatter formatter = null;
+        DateTimeFormatter formatter;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             formatter = DateTimeFormatter.ofPattern("HH:mm");
             this.hora = LocalTime.parse(hora, formatter);

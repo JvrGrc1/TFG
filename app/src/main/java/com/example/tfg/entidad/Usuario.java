@@ -1,6 +1,7 @@
 package com.example.tfg.entidad;
 
-import com.google.android.material.datepicker.MaterialDatePicker;
+
+import androidx.annotation.NonNull;
 
 public class Usuario {
 
@@ -40,6 +41,7 @@ public class Usuario {
         this.rol = rol;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return String.format("Usuario[ Nombre: %s, Correo: %s, Rol: %s]", getNombre(), getCorreo(), getRol());

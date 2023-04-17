@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.DatePicker;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -12,8 +11,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.tfg.R;
 import com.example.tfg.adaptador.TiendaAdapter;
-import com.example.tfg.databinding.FragmentTiendaBinding;
-import com.google.android.material.datepicker.MaterialDatePicker;
 
 /**
  * A simple {@link Fragment} subclass.

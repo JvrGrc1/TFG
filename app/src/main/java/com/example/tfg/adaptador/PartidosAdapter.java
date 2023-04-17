@@ -1,7 +1,6 @@
 package com.example.tfg.adaptador;
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +18,7 @@ import java.util.List;
 
 public class PartidosAdapter extends RecyclerView.Adapter<PartidosAdapter.PartidosViewHolder>  {
 
-    private Context contexto;
+    private final Context contexto;
     private List<Partido> partidos;
 
     public PartidosAdapter(Context context, List<Partido> partidosList){
@@ -29,35 +28,32 @@ public class PartidosAdapter extends RecyclerView.Adapter<PartidosAdapter.Partid
     }
 
     private void ordenar(List<Partido> partidos) {
-        Comparator<Partido> comparador = new Comparator<Partido>() {
-            @Override
-            public int compare(Partido partido1, Partido partido2) {
-                String division1 = partido1.getDivision();
-                String division2 = partido2.getDivision();
+        Comparator<Partido> comparador = (partido1, partido2) -> {
+            String division1 = partido1.getDivision();
+            String division2 = partido2.getDivision();
 
-                if (division1.equals("DHPF")) {
-                    return -1;
-                } else if (division2.equals("DHPF")) {
-                    return 1;
-                } else if (division1.equals("1NM")) {
-                    return -1;
-                } else if (division2.equals("1NM")) {
-                    return 1;
-                } else if (division1.equals("1NF")) {
-                    return -1;
-                } else if (division2.equals("1NF")) {
-                    return 1;
-                } else if (division1.equals("2NM")) {
-                    return -1;
-                } else if (division2.equals("2NM")) {
-                    return 1;
-                } else if (division1.equals("1TM")) {
-                    return -1;
-                } else if (division2.equals("1TM")) {
-                    return 1;
-                } else {
-                    return 0;
-                }
+            if (division1.equals("DHPF")) {
+                return -1;
+            } else if (division2.equals("DHPF")) {
+                return 1;
+            } else if (division1.equals("1NM")) {
+                return -1;
+            } else if (division2.equals("1NM")) {
+                return 1;
+            } else if (division1.equals("1NF")) {
+                return -1;
+            } else if (division2.equals("1NF")) {
+                return 1;
+            } else if (division1.equals("2NM")) {
+                return -1;
+            } else if (division2.equals("2NM")) {
+                return 1;
+            } else if (division1.equals("1TM")) {
+                return -1;
+            } else if (division2.equals("1TM")) {
+                return 1;
+            } else {
+                return 0;
             }
         };
         Collections.sort(partidos, comparador);
@@ -82,7 +78,7 @@ public class PartidosAdapter extends RecyclerView.Adapter<PartidosAdapter.Partid
         holder.division.setText(partido.getDivision());
         holder.local.setText(partido.getLocal());
         holder.visitante.setText(partido.getVisitante());
-        if (partido.getGolesVisitante() != 0 & partido.getGolesLocal() != 0) {
+        if (partido.getGolesVisitante() != 0 && partido.getGolesLocal() != 0) {
             holder.golesLocal.setText(partido.getGolesLocal() + "");
             holder.golesVisitante.setText(partido.getGolesVisitante() + "");
         }else{

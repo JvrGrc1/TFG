@@ -1,5 +1,7 @@
 package com.example.tfg.entidad;
 
+import androidx.annotation.NonNull;
+
 import java.io.Serializable;
 
 public class Jugador implements Serializable {
@@ -48,6 +50,7 @@ public class Jugador implements Serializable {
         this.posicion = posicion;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return String.format("Jugador[Nombre:%s, 1º Apellido: %s, 2º Apellido: %s, Posición: %s]", getNombre(), getApellido1(), getApellido2(), getPosicion());

@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -39,30 +38,17 @@ public class DetallesJornada extends AppCompatActivity {
         Intent intent = getIntent();
         partidos = (List<Partido>)intent.getSerializableExtra("partidos");
 
-        //detalles.setText(partidos.toString());
-
         View layout = findViewById(R.id.l);
         Animation animacion = AnimationUtils.loadAnimation(this, R.anim.escala);
 
         // Asignar la animación al layout
         layout.startAnimation(animacion);
 
-        layout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-        detalles.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
+        layout.setOnClickListener(v -> finish());
+        detalles.setOnClickListener(v -> {/*Método vacío*/});
 
         recycler.setLayoutManager(new LinearLayoutManager(this));
         PartidosAdapter adapter = new PartidosAdapter(this, partidos);
         recycler.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
     }
 }

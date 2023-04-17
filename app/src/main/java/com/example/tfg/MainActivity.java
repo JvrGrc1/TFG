@@ -1,6 +1,5 @@
 package com.example.tfg;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -13,27 +12,18 @@ import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.example.tfg.databinding.ActivityMainBinding;
 import com.example.tfg.entidad.Partido;
 import com.example.tfg.fragments.EstadisticasFragment;
 import com.example.tfg.fragments.PartidosFragment;
 import com.example.tfg.fragments.TiendaFragment;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.internal.NavigationMenuItemView;
 import com.google.android.material.navigation.NavigationView;
@@ -42,17 +32,12 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.io.File;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -64,8 +49,6 @@ public class MainActivity extends AppCompatActivity {
     List<Partido> j = new ArrayList<>();
 
     FirebaseAuth auth = FirebaseAuth.getInstance();
-    Timer tiempo = new Timer();
-    TimerTask task;
 
 
     @Override
@@ -76,13 +59,6 @@ public class MainActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         if (!intent.hasExtra("lista")) {
-            task = new TimerTask() {
-                @Override
-                public void run() {
-                    j = ConexionFirebase.obtenerPartidos();
-                }
-            };
-            tiempo.schedule(task, task.scheduledExecutionTime());
             iniciar();
         } else {
             j = (List<Partido>) intent.getSerializableExtra("lista");
@@ -142,8 +118,6 @@ public class MainActivity extends AppCompatActivity {
                     Intent intentRegistrar = new Intent(this, RegistrarPartido.class);
                     startActivity(intentRegistrar);
                     break;
-                    /*ConexionFirebase conexion = new ConexionFirebase();
-                    j = conexion.obtenerPartidos();*/
                 case R.id.ajustes:
                     if (auth.getCurrentUser() == null) {
                         auth.signInWithEmailAndPassword("zurdocbl@gmail.com", "gt02102002");
@@ -160,12 +134,9 @@ public class MainActivity extends AppCompatActivity {
             return false;
         });
 
-        abrir.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DrawerLayout drawerLayout = findViewById(R.id.drawer);
-                drawerLayout.openDrawer(GravityCompat.START);
-            }
+        abrir.setOnClickListener(v -> {
+            DrawerLayout drawerLayout = findViewById(R.id.drawer);
+            drawerLayout.openDrawer(GravityCompat.START);
         });
     }
 
@@ -191,40 +162,24 @@ public class MainActivity extends AppCompatActivity {
         String foto = randomFoto();
         StorageReference gsReference = storage.getReferenceFromUrl("gs://balonmano-f213a.appspot.com/imagenes-default/" + foto);
         final long ONE_MEGABYTE = 1024 * 1024;
-        gsReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-            @Override
-            public void onSuccess(byte[] bytes) {
-                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                Bitmap bitmap1 = Bitmap.createScaledBitmap(bitmap,200,200,true);
-                imagen.setImageBitmap(bitmap1);
-                abrir.setImageBitmap(bitmap1);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                Toast.makeText(MainActivity.this, "Error al descargar la imagen", Toast.LENGTH_SHORT).show();
-            }
-        });
+        gsReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(bytes -> {
+            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+            Bitmap bitmap1 = Bitmap.createScaledBitmap(bitmap,200,200,true);
+            imagen.setImageBitmap(bitmap1);
+            abrir.setImageBitmap(bitmap1);
+        }).addOnFailureListener(exception -> Toast.makeText(MainActivity.this, "Error al descargar la imagen", Toast.LENGTH_SHORT).show());
 
     }
     private void imagenPerfil(ImageView imagen, String url){
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference gsReference = storage.getReferenceFromUrl(url);
         final long ONE_MEGABYTE = 4096 * 4096;
-        gsReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-            @Override
-            public void onSuccess(byte[] bytes) {
-                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                Bitmap bitmap1 = Bitmap.createScaledBitmap(bitmap,200,200,true);
-                imagen.setImageBitmap(bitmap1);
-                abrir.setImageBitmap(bitmap1);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                Toast.makeText(MainActivity.this, "Error al descargar la imagen de perfil", Toast.LENGTH_SHORT).show();
-            }
-        });
+        gsReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(bytes -> {
+            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+            Bitmap bitmap1 = Bitmap.createScaledBitmap(bitmap,200,200,true);
+            imagen.setImageBitmap(bitmap1);
+            abrir.setImageBitmap(bitmap1);
+        }).addOnFailureListener(exception -> Toast.makeText(MainActivity.this, "Error al descargar la imagen de perfil", Toast.LENGTH_SHORT).show());
     }
 
     private String randomFoto(){
@@ -246,40 +201,36 @@ public class MainActivity extends AppCompatActivity {
         return "corriendo.png";
     }
 
-    private boolean comprobarExiste(String email, TextView nombre,TextView posicion, ImageView imagen) {
+    private void comprobarExiste(String email, TextView nombre,TextView posicion, ImageView imagen) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("usuarios").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()){
-                    QuerySnapshot snapsot = task.getResult();
-                    for (DocumentSnapshot ds : snapsot){
-                        if (ds.get("correo").equals(email)){
-                            nombre.setText(ds.get("nombre") + " " + ds.get("apellido1"));
-                            posicion.setVisibility(View.VISIBLE);
-                            posicion.setText(ds.get("rol").toString());
-                            imagenPerfil(imagen, ds.get("imagen").toString());
-                        }
+        db.collection("usuarios").get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()){
+                QuerySnapshot snapsot = task.getResult();
+                for (DocumentSnapshot ds : snapsot){
+                    if (ds.get("correo").equals(email)){
+                        nombre.setText(ds.get("nombre") + " " + ds.get("apellido1"));
+                        posicion.setVisibility(View.VISIBLE);
+                        posicion.setText(ds.get("rol").toString());
+                        imagenPerfil(imagen, ds.get("imagen").toString());
                     }
-                    NavigationMenuItemView registrar = lateral.findViewById(R.id.registrarse);
-                    registrar.setVisibility(View.INVISIBLE);
                 }
+                NavigationMenuItemView registrar = lateral.findViewById(R.id.registrarse);
+                if (registrar != null){registrar.setVisibility(View.INVISIBLE);}
             }
         });
-        return false;
     }
 
     private void iniciar() {
         Bundle bundle = new Bundle();
         if ( j != null && !j.isEmpty()) {
             bundle.putSerializable("lista", (Serializable) j);
-            Fragment partidos = new PartidosFragment();
-            partidos.setArguments(bundle);
-            FragmentManager manager = getSupportFragmentManager();
-            FragmentTransaction transaction = manager.beginTransaction();
-            transaction.replace(R.id.frame_layout, partidos);
-            transaction.commit();
         }
+        Fragment partidos = new PartidosFragment();
+        partidos.setArguments(bundle);
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.replace(R.id.frame_layout, partidos);
+        transaction.commit();
     }
 
     private void resetIcons() {
@@ -295,5 +246,10 @@ public class MainActivity extends AppCompatActivity {
         transaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
         transaction.replace(R.id.frame_layout, fragment);
         transaction.commit();
+    }
+
+    @Override
+    public void onBackPressed() {
+        finishAffinity();
     }
 }

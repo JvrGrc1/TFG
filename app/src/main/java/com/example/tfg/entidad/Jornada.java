@@ -1,5 +1,6 @@
 package com.example.tfg.entidad;
 
+import androidx.annotation.NonNull;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +36,7 @@ public class Jornada implements Serializable {
         this.partidos = partidos;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return String.format("Jornada %d. Partidos: %s", getJornada(), getPartidos());
