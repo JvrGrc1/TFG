@@ -133,7 +133,6 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.registrarse:
                     Intent intentSignIn = new Intent(this, RegistrarUsuario.class);
                     startActivity(intentSignIn);
-                    finish();
                     break;
             }
             return false;
@@ -157,6 +156,8 @@ public class MainActivity extends AppCompatActivity {
             imagenRandom(imagen);
             NavigationMenuItemView registrar = lateral.findViewById(R.id.registrarse);
             if (registrar != null){registrar.setVisibility(View.VISIBLE);}
+            NavigationMenuItemView cerrar = lateral.findViewById(R.id.cerrarSesion);
+            if (cerrar != null){cerrar.setVisibility(View.INVISIBLE);}
         }else{
             comprobarExiste(user.getEmail(), nombreUsuario, posicion, imagen);
         }
@@ -166,10 +167,10 @@ public class MainActivity extends AppCompatActivity {
         FirebaseStorage storage = FirebaseStorage.getInstance();
         String foto = randomFoto();
         StorageReference gsReference = storage.getReferenceFromUrl("gs://balonmano-f213a.appspot.com/imagenes-default/" + foto);
-        final long ONE_MEGABYTE = 1024 * 1024;
-        gsReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(bytes -> {
-            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-            Bitmap bitmap1 = Bitmap.createScaledBitmap(bitmap,200,200,true);
+        final long MEGABYTES =  5 * 1024 * 1024;    //Sirve para establecer un limite de tamaño a la imagen y si se pasa no se descargara completamente.
+        gsReference.getBytes(MEGABYTES).addOnSuccessListener(bytes -> {
+            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);              //Decodifica los bytes de la img descargada en un Bitmap
+            Bitmap bitmap1 = Bitmap.createScaledBitmap(bitmap,200,200,true);    //Redimensionar el Bitmap anteriro a una imagen 200*200
             imagen.setImageBitmap(bitmap1);
             abrir.setImageBitmap(bitmap1);
         }).addOnFailureListener(exception -> Toast.makeText(MainActivity.this, "Error al descargar la imagen", Toast.LENGTH_SHORT).show());
@@ -178,7 +179,7 @@ public class MainActivity extends AppCompatActivity {
     private void imagenPerfil(ImageView imagen, String url){
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference gsReference = storage.getReferenceFromUrl(url);
-        final long ONE_MEGABYTE = 4096 * 4096;
+        final long ONE_MEGABYTE = 5 * 1024 * 1024;
         gsReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(bytes -> {
             Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
             Bitmap bitmap1 = Bitmap.createScaledBitmap(bitmap,200,200,true);
@@ -223,6 +224,8 @@ public class MainActivity extends AppCompatActivity {
                 }
                 NavigationMenuItemView registrar = lateral.findViewById(R.id.registrarse);
                 if (registrar != null){registrar.setVisibility(View.INVISIBLE);}
+                NavigationMenuItemView cerrar = lateral.findViewById(R.id.cerrarSesion);
+                if (cerrar != null){cerrar.setVisibility(View.VISIBLE);}
             }
         });
     }

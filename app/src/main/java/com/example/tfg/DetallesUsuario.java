@@ -1,5 +1,6 @@
 package com.example.tfg;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -12,12 +13,26 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.example.tfg.conexion.ConexionFirebase;
+import com.example.tfg.entidad.Partido;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class DetallesUsuario extends AppCompatActivity {
 
     private RadioGroup radioGroup;
     private RadioButton radioButton;
     private LinearLayout linearLayoutCodigo;
-    private EditText codigo;
+    private EditText codigo, nombre, apellido1, apellido2, tlf;
+    private Button continuar;
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private final FirebaseAuth user = FirebaseAuth.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,8 +42,14 @@ public class DetallesUsuario extends AppCompatActivity {
         radioGroup = findViewById(R.id.radio_group);
         linearLayoutCodigo = findViewById(R.id.linearLayoutCodigo);
         codigo = findViewById(R.id.codigoRol);
+        continuar = findViewById(R.id.continuarButton);
+        nombre = findViewById(R.id.nombreDetallesUser);
+        apellido1 = findViewById(R.id.apellido1DetallesUser);
+        apellido2 = findViewById(R.id.apellido2DetallesUser);
+        tlf = findViewById(R.id.telefonoDetallesUser);
 
         String correo = getIntent().getStringExtra("correo");
+        String psswrd = getIntent().getStringExtra("psswrd");
 
         radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
             radioButton = radioGroup.findViewById(checkedId);
@@ -49,5 +70,107 @@ public class DetallesUsuario extends AppCompatActivity {
                     break;
             }
         });
+
+        continuar.setOnClickListener(view -> {
+            if (correcto(nombre.getText().toString(), nombre) && correcto(apellido1.getText().toString(), apellido1) && comprobarRadioButton()){
+                user.createUserWithEmailAndPassword(correo, psswrd).addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        RadioButton radioButton = findViewById(radioGroup.getCheckedRadioButtonId());
+                        String elegido = radioButton.getText().toString();
+                        agregarUser(correo, nombre.getText().toString(), apellido1.getText().toString(), elegido);
+                    } else {
+                        Toast.makeText(DetallesUsuario.this, "El usuario o la contraseña con erroneos", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
+    }
+
+    private boolean correcto(String string, EditText text){
+        if (!text.equals(apellido2) && string.isEmpty()){
+            text.setError("Este campo no puede estar vacío.");
+            return false;
+        } else if(string.startsWith(" ") || string.endsWith(" ")){
+            text.setError("No puede empezar ni termniar no espacios.");
+            return false;
+        }else if(!string.matches("[a-zA-Z\\s'-]+") || string.matches(".*[-']{2,}.*")){
+            text.setError("El nombre solo puede contener: letras, espacios, guiones y apóstrofes.");
+            return false;
+        }else{
+            return true;
+        }
+    }
+
+    private boolean comprobarRadioButton(){
+        if (radioGroup.getCheckedRadioButtonId() != -1){
+            return false;
+        } else if (radioGroup.getCheckedRadioButtonId() != R.id.jugadorOption && codigo.getText().toString().isEmpty()) {
+            codigo.setError("El campo no puede estar vacío.");
+            return false;
+        } else if (radioGroup.getCheckedRadioButtonId() == R.id.adminOption && !codigo.getText().toString().equals("admin123")) {
+                codigo.setError("El codigo es incorrecto.");
+                return false;
+        }else{
+            return true;
+        }
+    }
+
+    private boolean tlfCorrecto(String tlf){
+        if (tlf.isEmpty()){
+            return false;
+        }else if (tlf.contains(" ")){
+            Toast.makeText(this, "No puede contener espacios", Toast.LENGTH_SHORT).show();
+            return false;
+        }else if (!tlf.matches("^[6|7|8|9][0-9]{8}$")){
+            Toast.makeText(this, "El telefono debe tener 9 digitos y empezar por: 6,7,8 o 9.", Toast.LENGTH_SHORT).show();
+            return false;
+        }else{
+        return true;
+        }
+    }
+
+    private void agregarUser(String correo, String nombre, String apellido1, String rol){
+        Map<String, Object> usuario = new HashMap<>();
+        usuario.put("correo", correo);
+        usuario.put("nombre", nombre);
+        usuario.put("apellido1", apellido1);
+        usuario.put("rol", rol);
+        if (!apellido2.getText().toString().isEmpty() && correcto(apellido2.getText().toString(), apellido2)){
+            usuario.put("apellido2", apellido2.getText().toString());
+        }else if (tlfCorrecto(tlf.getText().toString())){
+            usuario.put("telefono", tlf.getText().toString());
+        }
+        db.collection("usuarios").add(usuario).addOnSuccessListener(documentReference -> {
+            Toast.makeText(this, "Usuario agregado correctamente.", Toast.LENGTH_SHORT).show();
+            intentMainActivity();
+        }).addOnFailureListener(e ->Toast.makeText(this, "Error al agregar el usuario a la base de datos.", Toast.LENGTH_SHORT).show());
+    }
+
+    private void intentMainActivity() {
+        ConexionFirebase conexion = new ConexionFirebase();
+        Task<List<Partido>> task = conexion.obtenerPartidos();
+        task.addOnCompleteListener(task1 -> {
+            if (task1.isSuccessful()) {
+                List<Partido> partidos = task1.getResult();
+                Intent intent = new Intent(DetallesUsuario.this, MainActivity.class);
+                intent.putExtra("lista", (Serializable) partidos);
+                startActivity(intent);
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                finish();
+            } else {
+                Toast.makeText(DetallesUsuario.this, "Error obteniendo partidos", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @Override
+    public void onBackPressed() {   //Si confirma la salida le devuelve a la MainActivity y si no se queda en DetallesUuario
+        AlertDialog dialog = new AlertDialog.Builder(DetallesUsuario.this)
+                .setPositiveButton("Confirmar", (dialogInterface, i) -> intentMainActivity())
+                .setNegativeButton("Cancelar", (dialogInterface, i) -> dialogInterface.dismiss())
+                .setTitle("¿Estás seguro?")
+                .setMessage("Si confirmas volveras a la pantalla pricipal y no se creará tu usuario.")
+                .create();
+        dialog.create();
     }
 }

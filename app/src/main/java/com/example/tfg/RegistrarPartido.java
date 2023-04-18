@@ -77,7 +77,7 @@ public class RegistrarPartido extends AppCompatActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
+                /*Si no ha seleccionado nada no se realiza ninguna acción*/
             }
         });
 
@@ -190,6 +190,9 @@ public class RegistrarPartido extends AppCompatActivity {
                             for (QueryDocumentSnapshot document : task.getResult()){
                                 listaJornadas.add(numDocs++);
                             }
+                            /*for (int i = 1; i <= task.getResult().size(); i++){
+                                listaJornadas.add(i);
+                            }*/
                             jornada.setAdapter(new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item, listaJornadas));
                             jornada.setEnabled(true);
                         }else{

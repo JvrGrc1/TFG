@@ -1,5 +1,6 @@
 package com.example.tfg;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -9,16 +10,7 @@ import android.text.method.PasswordTransformationMethod;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.util.HashMap;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -28,8 +20,6 @@ public class RegistrarUsuario extends AppCompatActivity {
 
     private EditText correo, psswrd;
     private TextView iniciarSesion;
-    private final FirebaseAuth user = FirebaseAuth.getInstance();
-    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private boolean isPsswrdVisible = false;
 
     @Override
@@ -45,13 +35,11 @@ public class RegistrarUsuario extends AppCompatActivity {
 
         registro.setOnClickListener(view -> {
             if (correoValido(correo.getText().toString()) && psswrdValida(psswrd.getText().toString())) {
-                user.createUserWithEmailAndPassword(correo.getText().toString(), psswrd.getText().toString()).addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        agregarUser();
-                    } else {
-                        Toast.makeText(RegistrarUsuario.this, "El usuario o la contraseña con erroneos", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                Intent intent = new Intent(getApplicationContext(), DetallesUsuario.class);
+                intent.putExtra("correo", correo.getText().toString());
+                intent.putExtra("psswrd", psswrd.getText().toString());
+                startActivity(intent);
+                finish();
             }
         });
 
@@ -70,27 +58,25 @@ public class RegistrarUsuario extends AppCompatActivity {
             Intent intent = new Intent(this, Login.class);
             startActivity(intent);
             overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-            finish();
         });
     }
 
     private boolean correoValido(String correo){
 
         if (correo != null && !correo.equals("")){
-            for (int i = 0; i < correo.length(); i++){
-                if (correo.charAt(i) == ' ') {
-                    this.correo.setError("El correo no puede contener espacios.");
+            if (correo.contains(" ")) {
+                this.correo.setError("El correo no puede contener espacios.");
+                return false;
+            }else{
+                String formatoCorreo = "^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$"; //Expresión regular para validar que un correo está bien formado.
+                Pattern pattern = Pattern.compile(formatoCorreo);
+                Matcher matcher = pattern.matcher(correo);
+                if (matcher.matches()){
+                    return true;
+                }else{
+                    this.correo.setError("El correo está mal escrito.");
                     return false;
                 }
-            }
-            String formatoCorreo = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$"; //Expresión regular para validar que un correo está bien formado.
-            Pattern pattern = Pattern.compile(formatoCorreo);
-            Matcher matcher = pattern.matcher(correo);
-            if (matcher.matches()){
-                return true;
-            }else{
-                this.correo.setError("El correo está mal escrito.");
-                return false;
             }
         }else {
             this.correo.setError("El correo no puede estar vacío.");
@@ -100,13 +86,10 @@ public class RegistrarUsuario extends AppCompatActivity {
 
     private boolean psswrdValida(String psswrd){
         if (psswrd != null && !psswrd.equals("")){
-            for (int i = 0; i < psswrd.length(); i++){
-                if (psswrd.charAt(i) == ' ') {
-                    this.psswrd.setError("La contraseña no puede contener espacios.");
-                    return false;
-                }
-            }
-            if (psswrd.length() < 6){
+            if (psswrd.contains(" ")) {
+                this.psswrd.setError("La contraseña no puede contener espacios.");
+                return false;
+            }else if (psswrd.length() < 6){
                 this.psswrd.setError("La contraseña debe contener mínimo 6 caracteres.");
                 return false;
             }
@@ -117,17 +100,18 @@ public class RegistrarUsuario extends AppCompatActivity {
         }
     }
 
-    private void agregarUser(){
-        Map<String, Object> usuario = new HashMap<>();
-        usuario.put("correo", correo.getText().toString());
-        db.collection("usuarios").add(usuario).addOnSuccessListener(documentReference -> {
-            Intent intent = new Intent(getApplicationContext(), DetallesUsuario.class);
-            intent.putExtra("correo", correo.getText().toString());
-            startActivity(intent);
+    @Override
+    public void onBackPressed() {
+        if (!correo.getText().toString().isEmpty() || !psswrd.getText().toString().isEmpty()) {
+            AlertDialog dialog = new AlertDialog.Builder(RegistrarUsuario.this)
+                    .setPositiveButton("Confirmar", (dialogInterface, i) -> finish())
+                    .setNegativeButton("Cancelar", (dialogInterface, i) -> dialogInterface.dismiss())
+                    .setTitle("¿Seguro que quieres hacerlo?")
+                    .setMessage("Si sales perderas los datos introducidos.")
+                    .create();
+            dialog.create();
+        }else{
             finish();
-        }).addOnFailureListener(e ->{
-            Toast.makeText(this, "Error al agregar el usuario a la base de datos.", Toast.LENGTH_SHORT).show();
-        });
-
+        }
     }
 }
