@@ -1,12 +1,5 @@
 package com.example.tfg;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
@@ -19,8 +12,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
 import com.example.tfg.databinding.ActivityMainBinding;
 import com.example.tfg.entidad.Partido;
+import com.example.tfg.entidad.Prenda;
 import com.example.tfg.fragments.EstadisticasFragment;
 import com.example.tfg.fragments.PartidosFragment;
 import com.example.tfg.fragments.TiendaFragment;
@@ -38,15 +39,16 @@ import com.google.firebase.storage.StorageReference;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
-    ActivityMainBinding binding;
-
-    BottomNavigationView bottomNav;
-    NavigationView lateral;
-    ImageView logo, abrir;
-    List<Partido> j = new ArrayList<>();
+    private ActivityMainBinding binding;
+    private BottomNavigationView bottomNav;
+    private NavigationView lateral;
+    private ImageView abrir;
+    private List<Partido> j = new ArrayList<>();
+    private List<Prenda> prendas = new ArrayList<>();
 
     FirebaseAuth auth = FirebaseAuth.getInstance();
 
@@ -59,13 +61,14 @@ public class MainActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         if (!intent.hasExtra("lista")) {
-            iniciar();
+            iniciarPartidos();
         } else {
             j = (List<Partido>) intent.getSerializableExtra("lista");
-            iniciar();
+            prendas = (List<Prenda>) intent.getSerializableExtra("ropa");
+            iniciarPartidos();
+            iniciarPrendas();
         }
 
-        logo = findViewById(R.id.logo);
         bottomNav = findViewById(R.id.bottomNavigationView);
         lateral = findViewById(R.id.lateral);
         abrir = findViewById(R.id.botonAbrir);
@@ -100,7 +103,11 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.tienda:
                         animSet.start();
                         item.setIcon(R.drawable.tienda);
-                        cambiarFragment(new TiendaFragment());
+                        Bundle bt = new Bundle();
+                        if (!j.isEmpty()) {bt.putSerializable("lista", (Serializable) prendas);}
+                        Fragment tienda = new TiendaFragment();
+                        tienda.setArguments(bt);
+                        cambiarFragment(tienda);
                         break;
                     case R.id.estadisticas:
                         animSet.start();
@@ -143,7 +150,6 @@ public class MainActivity extends AppCompatActivity {
             drawerLayout.openDrawer(GravityCompat.START);
         });
     }
-
     private void comprobarUser() {
         View header = lateral.getHeaderView(0);
         TextView nombreUsuario = header.findViewById(R.id.nombreUsuario);
@@ -213,12 +219,12 @@ public class MainActivity extends AppCompatActivity {
             if (task.isSuccessful()){
                 QuerySnapshot snapsot = task.getResult();
                 for (DocumentSnapshot ds : snapsot){
-                    if (ds.get("correo").equals(email)){
-                        nombre.setText(ds.get("nombre") + " " + ds.get("apellido1"));
+                    if (Objects.equals(ds.getString("correo"), email)){
+                        nombre.setText(String.format("%s %s", ds.getString("nombre"),ds.getString("apellido1")));
                         posicion.setVisibility(View.VISIBLE);
-                        posicion.setText(ds.get("rol").toString());
-                        if (ds.get("imagen").toString() != null) {
-                            imagenPerfil(imagen, ds.get("imagen").toString());
+                        posicion.setText(ds.getString("rol"));
+                        if (ds.getString("imagen") != null) {
+                            imagenPerfil(imagen, ds.getString("imagen"));
                         }
                     }
                 }
@@ -230,7 +236,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void iniciar() {
+    private void iniciarPartidos() {
         Bundle bundle = new Bundle();
         if ( j != null && !j.isEmpty()) {
             bundle.putSerializable("lista", (Serializable) j);
@@ -240,6 +246,19 @@ public class MainActivity extends AppCompatActivity {
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.replace(R.id.frame_layout, partidos);
+        transaction.commit();
+    }
+
+    private void iniciarPrendas() {
+        Bundle bundle = new Bundle();
+        if (prendas != null && !prendas.isEmpty()){
+            bundle.putSerializable("ropa", (Serializable) prendas);
+        }
+        Fragment tienda = new TiendaFragment();
+        tienda.setArguments(bundle);
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.replace(R.id.frame_layout, tienda);
         transaction.commit();
     }
 
