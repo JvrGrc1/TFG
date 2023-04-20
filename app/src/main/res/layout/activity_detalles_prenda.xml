@@ -26,7 +26,7 @@
             android:layout_height="match_parent">
 
             <Button
-                android:id="@+id/button"
+                android:id="@+id/buttonAniadirPrenda"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
@@ -42,100 +42,110 @@
                 app:layout_constraintStart_toStartOf="parent" />
 
             <TextView
-                android:id="@+id/textView8"
+                android:id="@+id/precioDetallesPrenda"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="25dp"
-                android:layout_marginBottom="10dp"
+                android:layout_marginBottom="20dp"
                 android:fontFamily="@font/thinoobold"
                 android:text="Desde: 20€"
                 android:textColor="#000000"
                 android:textSize="16sp"
-                app:layout_constraintBottom_toTopOf="@+id/button"
+                app:layout_constraintBottom_toTopOf="@+id/buttonAniadirPrenda"
                 app:layout_constraintEnd_toEndOf="parent" />
 
             <RadioGroup
-                android:id="@+id/radioGroup"
+                android:id="@+id/radioGroupTallas"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="25dp"
-                android:layout_marginBottom="10dp"
+                android:layout_marginBottom="30dp"
                 android:orientation="horizontal"
-                app:layout_constraintBottom_toTopOf="@+id/textView8"
+                app:layout_constraintBottom_toTopOf="@+id/precioDetallesPrenda"
                 app:layout_constraintEnd_toEndOf="parent">
 
                 <RadioButton
-                    android:id="@+id/radioButton2"
+                    android:id="@+id/buttonXL"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="XL" />
 
                 <RadioButton
-                    android:id="@+id/radioButton3"
+                    android:id="@+id/buttonL"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="L" />
 
                 <RadioButton
-                    android:id="@+id/radioButton4"
+                    android:id="@+id/buttonM"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="M" />
 
                 <RadioButton
-                    android:id="@+id/radioButton5"
+                    android:id="@+id/buttonS"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="S" />
 
                 <RadioButton
-                    android:id="@+id/radioButton6"
+                    android:id="@+id/buttonXS"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="XS" />
             </RadioGroup>
 
             <TextView
-                android:id="@+id/textView9"
+                android:id="@+id/textViewTalla"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="15dp"
+                android:layout_marginBottom="35dp"
                 android:fontFamily="@font/thinoobold"
                 android:text="Talla:"
                 android:textColor="#000000"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@+id/textView8"
-                app:layout_constraintEnd_toStartOf="@+id/radioGroup"
+                app:layout_constraintBottom_toTopOf="@+id/precioDetallesPrenda"
+                app:layout_constraintEnd_toStartOf="@+id/radioGroupTallas"
                 app:layout_constraintStart_toStartOf="parent" />
 
             <TextView
-                android:id="@+id/textView11"
+                android:id="@+id/nombreDetallesPrenda"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
+                android:layout_marginBottom="40dp"
                 android:fontFamily="@font/thinoobold"
                 android:text="1ª Equipación 22/23"
                 android:textColor="#000000"
                 android:textSize="22sp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@+id/radioGroup"
+                app:layout_constraintBottom_toTopOf="@+id/radioGroupTallas"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
 
             <ImageView
-                android:id="@+id/imageView3"
+                android:id="@+id/imagenDetallesPrenda"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="25dp"
                 android:layout_marginTop="25dp"
                 android:layout_marginEnd="25dp"
                 android:layout_marginBottom="25dp"
-                app:layout_constraintBottom_toTopOf="@+id/textView11"
+                app:layout_constraintBottom_toTopOf="@+id/nombreDetallesPrenda"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:srcCompat="@tools:sample/avatars" />
+
+            <Spinner
+                android:id="@+id/cantidadSpinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                app:layout_constraintBottom_toTopOf="@+id/buttonAniadirPrenda"
+                app:layout_constraintEnd_toStartOf="@+id/precioDetallesPrenda"
+                app:layout_constraintHorizontal_bias="0.165"
+                app:layout_constraintStart_toStartOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

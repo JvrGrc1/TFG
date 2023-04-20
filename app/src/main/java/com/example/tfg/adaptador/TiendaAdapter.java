@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.tfg.MainActivity;
 import com.example.tfg.R;
+import com.example.tfg.conexion.ConexionFirebase;
 import com.example.tfg.entidad.Prenda;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -25,7 +26,7 @@ public class TiendaAdapter extends RecyclerView.Adapter<TiendaAdapter.TiendaView
 
     private final Context contexto;
     private List<Prenda> prendas;
-    private FirebaseStorage storage = FirebaseStorage.getInstance();
+    private ConexionFirebase conexion = new ConexionFirebase();
 
     public TiendaAdapter(Context contexto, List<Prenda> prendas) {
         this.contexto = contexto;
@@ -48,18 +49,8 @@ public class TiendaAdapter extends RecyclerView.Adapter<TiendaAdapter.TiendaView
 
         holder.nombre.setText(prenda.getNombre());
         holder.precio.setText(String.format("%f€", prenda.getPrecio()));
-        imagen(holder, prenda);
+        conexion.imagenPrenda(contexto,holder.imagen, prenda.getImagen());
 
-    }
-
-    private void imagen(@NonNull TiendaViewHolder holder, Prenda prenda) {
-        StorageReference gsReference = storage.getReferenceFromUrl(prenda.getImagen());
-        final long ONE_MEGABYTE = 5 * 1024 * 1024;
-        gsReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(bytes -> {
-            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-            Bitmap bitmap1 = Bitmap.createScaledBitmap(bitmap,200,200,true);
-            holder.imagen.setImageBitmap(bitmap1);
-        }).addOnFailureListener(exception -> Toast.makeText(contexto, "Error al descargar la imagen de perfil", Toast.LENGTH_SHORT).show());
     }
 
     @Override
@@ -69,7 +60,7 @@ public class TiendaAdapter extends RecyclerView.Adapter<TiendaAdapter.TiendaView
 
     public static class TiendaViewHolder extends RecyclerView.ViewHolder {
         private TextView nombre, precio;
-        private ImageView imagen;
+        public ImageView imagen;
 
         public TiendaViewHolder(@NonNull View itemView) {
             super(itemView);

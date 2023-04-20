@@ -14,10 +14,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.tfg.DetallesJornada;
 import com.example.tfg.DetallesPrenda;
+import com.example.tfg.PreCompra;
 import com.example.tfg.R;
 import com.example.tfg.adaptador.RecyclerItemClickListener;
 import com.example.tfg.adaptador.TiendaAdapter;
+import com.example.tfg.conexion.ConexionFirebase;
+import com.example.tfg.entidad.Pedido;
 import com.example.tfg.entidad.Prenda;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.Serializable;
 import java.util.List;
@@ -32,6 +39,9 @@ public class TiendaFragment extends Fragment {
     private RecyclerView recyclerView;
     private TiendaAdapter adapter;
     private Button compra;
+
+    private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    private ConexionFirebase conexion = new ConexionFirebase();
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
@@ -60,6 +70,9 @@ public class TiendaFragment extends Fragment {
         recyclerView = root.findViewById(R.id.recyclerTienda);
         compra = root.findViewById(R.id.botonCompra);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        if (user == null){
+            compra.setEnabled(false);
+        }
 
         Bundle args = getArguments();
         if (args != null && args.containsKey("lista")){
@@ -71,18 +84,29 @@ public class TiendaFragment extends Fragment {
         recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getContext(), recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View v, int posicion) {
-                Intent intent = new Intent(v.getContext(), DetallesPrenda.class);
-                intent.putExtra("prenda", (Serializable) adapter.getDatos().get(posicion));
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                if (user != null) {
+                    Intent intent = new Intent(v.getContext(), DetallesPrenda.class);
+                    intent.putExtra("prenda", adapter.getDatos().get(posicion));
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                    getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                }else{
+                    Toast.makeText(getContext(), "Debes estar registrado para realizar una compra.", Toast.LENGTH_SHORT).show();
+                }
             }
-
             @Override
             public void onLongItemClick(View v, int posicion) {
                 Toast.makeText(getContext(), "No puedes hacer nada.", Toast.LENGTH_SHORT).show();
             }
         }));
+
+        compra.setOnClickListener(view -> {
+            List<Pedido> pedidos = conexion.obtenerPedidos(user.getEmail()).getResult();
+            Intent intent = new Intent(getContext(), PreCompra.class);
+            intent.putExtra("pedido", (Serializable) pedidos);
+            startActivity(intent);
+            getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+        });
 
         return root;
     }
