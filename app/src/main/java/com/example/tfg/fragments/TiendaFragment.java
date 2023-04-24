@@ -5,15 +5,14 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.tfg.DetallesJornada;
-import com.example.tfg.DetallesPrenda;
+import com.example.tfg.detalles.DetallesPrenda;
 import com.example.tfg.PreCompra;
 import com.example.tfg.R;
 import com.example.tfg.adaptador.RecyclerItemClickListener;
@@ -24,9 +23,9 @@ import com.example.tfg.entidad.Prenda;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -38,10 +37,10 @@ public class TiendaFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private TiendaAdapter adapter;
-    private Button compra;
-
-    private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-    private ConexionFirebase conexion = new ConexionFirebase();
+    private ImageButton compra;
+    private List<Prenda> prendas = new ArrayList<>();
+    private FirebaseUser user;
+    private final ConexionFirebase conexion = new ConexionFirebase();
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
@@ -60,27 +59,24 @@ public class TiendaFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        Bundle args = getArguments();
+        if (args != null && args.containsKey("ropa")){
+            prendas = (List<Prenda>) args.getSerializable("ropa");
+        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_tienda, container, false);
-
+        user  = FirebaseAuth.getInstance().getCurrentUser();
         recyclerView = root.findViewById(R.id.recyclerTienda);
         compra = root.findViewById(R.id.botonCompra);
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        recyclerView.setLayoutManager(new GridLayoutManager(root.getContext(), 2));
+        adapter = new TiendaAdapter(getContext(), prendas);
+        recyclerView.setAdapter(adapter);
         if (user == null){
-            compra.setEnabled(false);
+            compra.setVisibility(View.INVISIBLE);
         }
-
-        Bundle args = getArguments();
-        if (args != null && args.containsKey("lista")){
-            List<Prenda> prendas = (List<Prenda>) args.getSerializable("ropa");
-            adapter = new TiendaAdapter(getContext(), prendas);
-            recyclerView.setAdapter(adapter);
-        }
-
         recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getContext(), recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View v, int posicion) {
@@ -101,11 +97,22 @@ public class TiendaFragment extends Fragment {
         }));
 
         compra.setOnClickListener(view -> {
-            List<Pedido> pedidos = conexion.obtenerPedidos(user.getEmail()).getResult();
-            Intent intent = new Intent(getContext(), PreCompra.class);
-            intent.putExtra("pedido", (Serializable) pedidos);
-            startActivity(intent);
-            getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+            Task<List<Pedido>> pedidos = conexion.obtenerPedidos(user.getEmail());
+            pedidos.addOnCompleteListener(task1 -> {
+                if (task1.isSuccessful()){
+                    List<Pedido> prendas1 = task1.getResult();
+                    if (prendas1.isEmpty()){
+                        Toast.makeText(getContext(), "No hay ninguna prenda de ropa.", Toast.LENGTH_SHORT).show();
+                    }else {
+                        Intent intent = new Intent(getContext(), PreCompra.class);
+                        intent.putExtra("pedido", (Serializable) prendas1);
+                        startActivity(intent);
+                        getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                    }
+                }else{
+                    Toast.makeText(getContext(), "Error obteniendo los pedidos", Toast.LENGTH_SHORT).show();
+                }
+            });
         });
 
         return root;

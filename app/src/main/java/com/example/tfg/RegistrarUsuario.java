@@ -7,9 +7,14 @@ import android.text.method.PasswordTransformationMethod;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.tfg.conexion.ConexionFirebase;
+import com.example.tfg.detalles.DetallesUsuario;
+import com.google.android.gms.tasks.Task;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -21,7 +26,7 @@ public class RegistrarUsuario extends AppCompatActivity {
     private EditText correo, psswrd;
     private TextView iniciarSesion;
     private boolean isPsswrdVisible = false;
-
+    private final ConexionFirebase conexion = new ConexionFirebase();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,11 +40,25 @@ public class RegistrarUsuario extends AppCompatActivity {
 
         registro.setOnClickListener(view -> {
             if (correoValido(correo.getText().toString()) && psswrdValida(psswrd.getText().toString())) {
-                Intent intent = new Intent(getApplicationContext(), DetallesUsuario.class);
-                intent.putExtra("correo", correo.getText().toString());
-                intent.putExtra("psswrd", psswrd.getText().toString());
-                startActivity(intent);
-                finish();
+                Task<Boolean> taskCorreo = conexion.correoNoRegistrado(correo.getText().toString());
+                taskCorreo.addOnCompleteListener(task -> {
+                    if (task.isSuccessful()){
+                        boolean valido = task.getResult();
+                        if (valido){
+                            Intent intent = new Intent(getApplicationContext(), DetallesUsuario.class);
+                            intent.putExtra("correo", correo.getText().toString());
+                            intent.putExtra("psswrd", psswrd.getText().toString());
+                            startActivity(intent);
+                            finish();
+                        }else {
+                            correo.setError("Este correo ya está en uso.");
+                        }
+                    }else{
+                        Toast.makeText(this, "Error validando el correo.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }else{
+                Toast.makeText(this, "error", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -103,13 +122,12 @@ public class RegistrarUsuario extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         if (!correo.getText().toString().isEmpty() || !psswrd.getText().toString().isEmpty()) {
-            AlertDialog dialog = new AlertDialog.Builder(RegistrarUsuario.this)
+            new AlertDialog.Builder(RegistrarUsuario.this)
                     .setPositiveButton("Confirmar", (dialogInterface, i) -> finish())
                     .setNegativeButton("Cancelar", (dialogInterface, i) -> dialogInterface.dismiss())
                     .setTitle("¿Seguro que quieres hacerlo?")
                     .setMessage("Si sales perderas los datos introducidos.")
-                    .create();
-            dialog.create();
+                    .show();
         }else{
             finish();
         }

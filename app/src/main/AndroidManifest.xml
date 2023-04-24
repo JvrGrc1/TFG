@@ -17,11 +17,11 @@
             android:name=".PreCompra"
             android:exported="false" />
         <activity
-            android:name=".DetallesPrenda"
+            android:name=".detalles.DetallesPrenda"
             android:exported="false"
             android:theme="@style/Theme.Transparent" />
         <activity
-            android:name=".DetallesUsuario"
+            android:name=".detalles.DetallesUsuario"
             android:exported="false"
             android:windowSoftInputMode="adjustPan" />
         <activity
@@ -34,7 +34,7 @@
             android:name=".RegistrarPartido"
             android:exported="false" />
         <activity
-            android:name=".DetallesJornada"
+            android:name=".detalles.DetallesJornada"
             android:exported="false"
             android:theme="@style/Theme.Transparent" />
         <activity

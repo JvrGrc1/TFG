@@ -1,35 +1,43 @@
-package com.example.tfg;
+package com.example.tfg.detalles;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.tfg.R;
 import com.example.tfg.conexion.ConexionFirebase;
 import com.example.tfg.entidad.Pedido;
 import com.example.tfg.entidad.Prenda;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class DetallesPrenda extends AppCompatActivity {
 
-    private TextView nombrePrenda, precioPrenda;
+    private ConstraintLayout constrain, constrain2;
+    private TextView nombrePrenda, precioPrenda, tallas;
     private Button aniadir;
     private RadioGroup grupo;
     private RadioButton radioButton;
     private Spinner cantidad;
-    private ConexionFirebase conexion = new ConexionFirebase();
-    private FirebaseAuth auth = FirebaseAuth.getInstance();
+    private ImageView imagen;
+    private final ConexionFirebase conexion = new ConexionFirebase();
+    private final FirebaseAuth auth = FirebaseAuth.getInstance();
 
     @SuppressLint("DefaultLocale")
     @Override
@@ -39,19 +47,34 @@ public class DetallesPrenda extends AppCompatActivity {
 
         getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
+        constrain = findViewById(R.id.constrain);
+        constrain2 = findViewById(R.id.constrain2);
         nombrePrenda = findViewById(R.id.nombreDetallesPrenda);
         precioPrenda = findViewById(R.id.precioDetallesPrenda);
         aniadir = findViewById(R.id.buttonAniadirPrenda);
         grupo = findViewById(R.id.radioGroupTallas);
         cantidad = findViewById(R.id.cantidadSpinner);
+        imagen = findViewById(R.id.imagenDetallesPrenda);
+        tallas = findViewById(R.id.textViewTalla);
 
         Prenda prenda = (Prenda) getIntent().getSerializableExtra("prenda");
         Pedido pedido = new Pedido();
 
-        pedido.setPrenda(prenda.getNombre());
+        if (prenda.getTallas().isEmpty()){
+            grupo.setVisibility(View.INVISIBLE);
+            tallas.setVisibility(View.INVISIBLE);
+        }
 
-        precioPrenda.setText(String.format("Desde: %f€", prenda.getPrecio()));
+        pedido.setPrenda(prenda.getNombre());
+        conexion.imagenPrenda(this, imagen, prenda.getImagen());
+
+        nombrePrenda.setText(prenda.getNombre());
+        precioPrenda.setText(String.format("Desde: %.2f€", prenda.getPrecio()));
         pedido.setPrecioUnidad(prenda.getPrecio());
+
+        constrain.setOnClickListener(v -> finish());
+        constrain2.setOnClickListener(v -> {});
+
 
         grupo.setOnCheckedChangeListener((group, id) -> {
             radioButton = grupo.findViewById(id);
@@ -90,5 +113,12 @@ public class DetallesPrenda extends AppCompatActivity {
                 Toast.makeText(this, "Debes elegir la talla antes de añadirlo al carrito.", Toast.LENGTH_SHORT).show();
             }
         });
+
+        ArrayList<Integer> lista = new ArrayList<>();
+        for (int x = 1; x <= 9; x++){
+            lista.add(x);
+        }
+        ArrayAdapter<Integer> adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item, lista);
+        cantidad.setAdapter(adapter);
     }
 }

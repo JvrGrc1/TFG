@@ -25,7 +25,7 @@ public class PreCompra extends AppCompatActivity {
         recycler = findViewById(R.id.recyclerPedidos);
         confirmar = findViewById(R.id.buttonConfirmarPedido);
 
-        List<Pedido> pedidos = (List<Pedido>) getIntent().getSerializableExtra("pedidos");
+        List<Pedido> pedidos = (List<Pedido>) getIntent().getSerializableExtra("pedido");
 
         recycler.setLayoutManager(new LinearLayoutManager(this));
         PedidosAdapter adapter = new PedidosAdapter(this, pedidos);

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF"
-    tools:context=".DetallesUsuario">
+    tools:context=".detalles.DetallesUsuario">
 
     <TextView
         android:id="@+id/textView4"
@@ -72,7 +72,6 @@
         android:hint="2º Apellido (opcional)"
         android:inputType="textPersonName"
         android:padding="10dp"
-        android:textColor="#CC000180"
         android:textColorHint="#CC000180"
         android:textSize="20sp"
         android:textStyle="bold"
@@ -173,8 +172,9 @@
             android:fontFamily="@font/thinoobold"
             android:gravity="center"
             android:inputType="textPersonName"
-            android:textColor="#CC000180"
-            android:textSize="20sp" />
+            android:textColorHint="#CC000180"
+            android:textSize="20sp"
+            android:textStyle="bold" />
     </LinearLayout>
 
     <EditText
@@ -182,7 +182,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="35dp"
-        android:layout_marginTop="135dp"
+        android:layout_marginTop="125dp"
         android:ems="10"
         android:fontFamily="@font/thinoobold"
         android:hint="Telefono (opcional)"

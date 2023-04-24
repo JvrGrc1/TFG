@@ -47,6 +47,5 @@ public class SplashScreen extends AppCompatActivity {
                 Toast.makeText(SplashScreen.this, "Error obteniendo partidos", Toast.LENGTH_SHORT).show();
             }
         });
-
     }
 }

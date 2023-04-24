@@ -101,7 +101,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="1dp"
         android:fontFamily="@font/industrial_light"
-        android:text="La contraseña debe contener min. 4 caracteres."
+        android:text="La contraseña debe contener min. 6 caracteres."
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/psswrdRegistroUser" />

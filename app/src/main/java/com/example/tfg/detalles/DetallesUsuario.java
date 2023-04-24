@@ -1,4 +1,4 @@
-package com.example.tfg;
+package com.example.tfg.detalles;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +13,8 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.tfg.MainActivity;
+import com.example.tfg.R;
 import com.example.tfg.conexion.ConexionFirebase;
 import com.example.tfg.entidad.Partido;
 import com.google.android.gms.tasks.Task;
@@ -72,6 +74,7 @@ public class DetallesUsuario extends AppCompatActivity {
         });
 
         continuar.setOnClickListener(view -> {
+            Toast.makeText(this, "Hola", Toast.LENGTH_SHORT).show();
             if (correcto(nombre.getText().toString(), nombre) && correcto(apellido1.getText().toString(), apellido1) && comprobarRadioButton()){
                 user.createUserWithEmailAndPassword(correo, psswrd).addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -82,6 +85,8 @@ public class DetallesUsuario extends AppCompatActivity {
                         Toast.makeText(DetallesUsuario.this, "El usuario o la contraseña con erroneos", Toast.LENGTH_SHORT).show();
                     }
                 });
+            }else{
+                Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -102,7 +107,7 @@ public class DetallesUsuario extends AppCompatActivity {
     }
 
     private boolean comprobarRadioButton(){
-        if (radioGroup.getCheckedRadioButtonId() != -1){
+        if (radioGroup.getCheckedRadioButtonId() == -1){
             return false;
         } else if (radioGroup.getCheckedRadioButtonId() != R.id.jugadorOption && codigo.getText().toString().isEmpty()) {
             codigo.setError("El campo no puede estar vacío.");
@@ -165,12 +170,11 @@ public class DetallesUsuario extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {   //Si confirma la salida le devuelve a la MainActivity y si no se queda en DetallesUuario
-        AlertDialog dialog = new AlertDialog.Builder(DetallesUsuario.this)
+        new AlertDialog.Builder(DetallesUsuario.this)
                 .setPositiveButton("Confirmar", (dialogInterface, i) -> intentMainActivity())
                 .setNegativeButton("Cancelar", (dialogInterface, i) -> dialogInterface.dismiss())
                 .setTitle("¿Estás seguro?")
-                .setMessage("Si confirmas volveras a la pantalla pricipal y no se creará tu usuario.")
-                .create();
-        dialog.create();
+                .setMessage("Si confirmas volveras a la pantalla principal y no se creará tu usuario.")
+                .show();
     }
 }

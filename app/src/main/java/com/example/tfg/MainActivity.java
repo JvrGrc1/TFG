@@ -19,15 +19,18 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.tfg.conexion.ConexionFirebase;
 import com.example.tfg.databinding.ActivityMainBinding;
 import com.example.tfg.entidad.Partido;
 import com.example.tfg.entidad.Prenda;
 import com.example.tfg.fragments.EstadisticasFragment;
 import com.example.tfg.fragments.PartidosFragment;
 import com.example.tfg.fragments.TiendaFragment;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.internal.NavigationMenuItemView;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -49,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageView abrir;
     private List<Partido> j = new ArrayList<>();
     private List<Prenda> prendas = new ArrayList<>();
+    private ConexionFirebase conexion = new ConexionFirebase();
 
     FirebaseAuth auth = FirebaseAuth.getInstance();
 
@@ -65,8 +69,8 @@ public class MainActivity extends AppCompatActivity {
         } else {
             j = (List<Partido>) intent.getSerializableExtra("lista");
             prendas = (List<Prenda>) intent.getSerializableExtra("ropa");
-            iniciarPartidos();
             iniciarPrendas();
+            iniciarPartidos();
         }
 
         bottomNav = findViewById(R.id.bottomNavigationView);
@@ -104,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
                         animSet.start();
                         item.setIcon(R.drawable.tienda);
                         Bundle bt = new Bundle();
-                        if (!j.isEmpty()) {bt.putSerializable("lista", (Serializable) prendas);}
+                        if (!j.isEmpty()) {bt.putSerializable("ropa", (Serializable) prendas);}
                         Fragment tienda = new TiendaFragment();
                         tienda.setArguments(bt);
                         cambiarFragment(tienda);
@@ -141,6 +145,9 @@ public class MainActivity extends AppCompatActivity {
                     Intent intentSignIn = new Intent(this, RegistrarUsuario.class);
                     startActivity(intentSignIn);
                     break;
+                case R.id.cerrar:
+                    auth.signOut();
+                    intentMainAcitivity();
             }
             return false;
         });
@@ -161,9 +168,9 @@ public class MainActivity extends AppCompatActivity {
             posicion.setVisibility(View.INVISIBLE);
             imagenRandom(imagen);
             NavigationMenuItemView registrar = lateral.findViewById(R.id.registrarse);
+            NavigationMenuItemView cerrar = lateral.findViewById(R.id.cerrar);
             if (registrar != null){registrar.setVisibility(View.VISIBLE);}
-            NavigationMenuItemView cerrar = lateral.findViewById(R.id.cerrarSesion);
-            if (cerrar != null){cerrar.setVisibility(View.INVISIBLE);}
+            else if (cerrar != null){cerrar.setVisibility(View.INVISIBLE);}
         }else{
             comprobarExiste(user.getEmail(), nombreUsuario, posicion, imagen);
         }
@@ -229,9 +236,9 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
                 NavigationMenuItemView registrar = lateral.findViewById(R.id.registrarse);
+                NavigationMenuItemView cerrar = lateral.findViewById(R.id.cerrar);
                 if (registrar != null){registrar.setVisibility(View.INVISIBLE);}
-                NavigationMenuItemView cerrar = lateral.findViewById(R.id.cerrarSesion);
-                if (cerrar != null){cerrar.setVisibility(View.VISIBLE);}
+                else if (cerrar != null){cerrar.setVisibility(View.VISIBLE);}
             }
         });
     }
@@ -275,6 +282,31 @@ public class MainActivity extends AppCompatActivity {
         transaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
         transaction.replace(R.id.frame_layout, fragment);
         transaction.commit();
+    }
+
+    private void intentMainAcitivity(){
+        Task<List<Partido>> partidos = conexion.obtenerPartidos();
+        partidos.addOnCompleteListener(task1 -> {
+            if (task1.isSuccessful()) {
+                List<Partido> partidos1 = task1.getResult();
+                Task<List<Prenda>> prendas = conexion.obtenerTienda();
+                prendas.addOnCompleteListener(task2 -> {
+                    if (task2.isSuccessful()){
+                        List<Prenda> prendas1 = task2.getResult();
+                        Intent intent = new Intent(this, MainActivity.class);
+                        intent.putExtra("lista", (Serializable) partidos1);
+                        intent.putExtra("ropa", (Serializable) prendas1);
+                        startActivity(intent);
+                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                        finishAffinity();
+                    }else{
+                        Toast.makeText(this, "Error obteniendo las prendas", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } else {
+                Toast.makeText(this, "Error obteniendo partidos", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override

@@ -26,11 +26,11 @@ public class TiendaAdapter extends RecyclerView.Adapter<TiendaAdapter.TiendaView
 
     private final Context contexto;
     private List<Prenda> prendas;
-    private ConexionFirebase conexion = new ConexionFirebase();
+    private final ConexionFirebase conexion = new ConexionFirebase();
 
-    public TiendaAdapter(Context contexto, List<Prenda> prendas) {
+    public TiendaAdapter(Context contexto, List<Prenda> prendasList) {
         this.contexto = contexto;
-        this.prendas = prendas;
+        this.prendas = prendasList;
     }
 
     public void setDatos(List<Prenda> datos){this.prendas = datos;}
@@ -48,7 +48,7 @@ public class TiendaAdapter extends RecyclerView.Adapter<TiendaAdapter.TiendaView
         Prenda prenda = prendas.get(position);
 
         holder.nombre.setText(prenda.getNombre());
-        holder.precio.setText(String.format("%f€", prenda.getPrecio()));
+        holder.precio.setText(String.format("%.2f€", prenda.getPrecio()));
         conexion.imagenPrenda(contexto,holder.imagen, prenda.getImagen());
 
     }
@@ -59,8 +59,8 @@ public class TiendaAdapter extends RecyclerView.Adapter<TiendaAdapter.TiendaView
     }
 
     public static class TiendaViewHolder extends RecyclerView.ViewHolder {
-        private TextView nombre, precio;
-        public ImageView imagen;
+        TextView nombre, precio;
+        ImageView imagen;
 
         public TiendaViewHolder(@NonNull View itemView) {
             super(itemView);

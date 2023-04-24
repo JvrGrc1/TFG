@@ -15,5 +15,5 @@
     <item android:title="Registrarse"
         android:id="@+id/registrarse"/>
     <item android:title="Cerrar Sesión"
-        android:id="@+id/cerrarSesion"/>
+        android:id="@+id/cerrar"/>
 </menu>

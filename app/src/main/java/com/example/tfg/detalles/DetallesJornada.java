@@ -1,4 +1,4 @@
-package com.example.tfg;
+package com.example.tfg.detalles;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.tfg.R;
 import com.example.tfg.adaptador.PartidosAdapter;
 import com.example.tfg.entidad.Partido;
 

@@ -14,7 +14,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.tfg.DetallesUsuario;
 import com.example.tfg.R;
 import com.example.tfg.conexion.ConexionFirebase;
 import com.example.tfg.entidad.Pedido;
@@ -25,7 +24,7 @@ public class PedidosAdapter extends RecyclerView.Adapter<PedidosAdapter.PedidosV
 
     private final Context context;
     private List<Pedido> pedidos;
-    private ConexionFirebase conexion = new ConexionFirebase();
+    private final ConexionFirebase conexion = new ConexionFirebase();
 
     public PedidosAdapter(Context context, List<Pedido> pedidos) {
         this.context = context;
@@ -51,7 +50,7 @@ public class PedidosAdapter extends RecyclerView.Adapter<PedidosAdapter.PedidosV
         conexion.imagenPedido(context,holder.imagen, pedido.getPrenda());
         holder.nombre.setText(pedido.getPrenda());
         holder.cantidad.setText(String.format("%d", pedido.getCantidad()));
-        holder.precio.setText(String.format("%f", pedido.getPrecioUnidad()*pedido.getCantidad()));
+        holder.precio.setText(String.format("%.2f€", pedido.getPrecioUnidad()*pedido.getCantidad()));
 
     }
 

@@ -15,13 +15,15 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.tfg.DetallesJornada;
+import com.example.tfg.detalles.DetallesJornada;
 import com.example.tfg.R;
 import com.example.tfg.adaptador.JornadasAdapter;
 import com.example.tfg.adaptador.RecyclerItemClickListener;
 import com.example.tfg.entidad.Partido;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -76,7 +78,7 @@ public class PartidosFragment extends Fragment {
         equipos = root.findViewById(R.id.spinnerDivisionPartidos);
 
         recycler = root.findViewById(R.id.recycler);
-        recycler.setLayoutManager(new LinearLayoutManager(getContext()));
+        recycler.setLayoutManager(new LinearLayoutManager(root.getContext()));
 
         Bundle args = getArguments();
         if (args != null && args.containsKey("lista")){
@@ -124,7 +126,7 @@ public class PartidosFragment extends Fragment {
         listaEquipos.add("2NM");
         listaEquipos.add("1TM");
 
-        rellenarTemporadas();
+        rellenarTemporadas(root);
         rellenarEquipos(listaEquipos);
         rellenarJornadas();
 
@@ -179,8 +181,25 @@ public class PartidosFragment extends Fragment {
         return null;
     }
 
-    private void rellenarTemporadas() {
+    private void rellenarTemporadas(View inflater) {
         db.collection("temporadas").get().addOnCompleteListener(task -> {
+            List<String> lista = new ArrayList<>();
+            if (task.isSuccessful()){
+                lista.add("");
+                QuerySnapshot snapsot = task.getResult();
+                for (DocumentSnapshot ds : snapsot.getDocuments()){
+                    lista.add(ds.getId());
+                }
+            }else{
+                Toast.makeText(getContext(), "Error al encontrar temporadas", Toast.LENGTH_SHORT).show();
+                lista.add("");
+            }
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(inflater.getContext(), android.R.layout.simple_spinner_item, lista);
+            temporadas.setAdapter(adapter);
+            equipos.setEnabled(false);
+            jornadas.setEnabled(false);
+        });
+        /*db.collection("temporadas").get().addOnCompleteListener(task -> {
             List<String> listaAnios = new ArrayList<>();
             listaAnios.add("");
             if (task.isSuccessful()){
@@ -194,7 +213,7 @@ public class PartidosFragment extends Fragment {
             temporadas.setAdapter(adapter);
             equipos.setEnabled(false);
             jornadas.setEnabled(false);
-        });
+        });*/
     }
 
     private void rellenarEquipos(List<String> listaEquipos) {

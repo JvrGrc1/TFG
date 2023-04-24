@@ -15,20 +15,21 @@
             android:id="@+id/imagenPrendaPedido"
             android:layout_width="100dp"
             android:layout_height="100dp"
+            android:layout_gravity="center"
             tools:srcCompat="@tools:sample/avatars" />
 
         <LinearLayout
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="20dp"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/nombrePrendaPedido"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/industrial_light"
+                android:fontFamily="@font/thinoobold"
                 android:text="TextView"
                 android:textColor="#000000"
                 android:textSize="18sp"
@@ -38,8 +39,8 @@
                 android:id="@+id/precioPrendaPedido"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:fontFamily="@font/industrial_light"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/thinoobold"
                 android:text="TextView"
                 android:textColor="#000000"
                 android:textSize="18sp"
@@ -54,8 +55,8 @@
 
             <Button
                 android:id="@+id/buttonBasuraPrendaPedido"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:layout_gravity="right|top"
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="5dp"
@@ -69,8 +70,9 @@
 
                 <Button
                     android:id="@+id/buttonMasPrendaPedido"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="10dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center_vertical"
                     android:layout_weight="1"
                     android:background="@drawable/mas" />
 
@@ -79,16 +81,19 @@
                     android:layout_width="40dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:layout_weight="1"
                     android:fontFamily="@font/thinoobold"
                     android:gravity="center"
                     android:text="9"
                     android:textColor="#000000"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
 
                 <Button
                     android:id="@+id/buttonMenosprendaPedido"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="10dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center_vertical"
                     android:layout_weight="1"
                     android:background="@drawable/menos" />
             </LinearLayout>
