@@ -4,19 +4,20 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
@@ -32,9 +33,7 @@ import com.example.tfg.fragments.PartidosFragment;
 import com.example.tfg.fragments.TiendaFragment;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.internal.NavigationMenuItemView;
 import com.google.android.material.navigation.NavigationView;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -58,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
     private List<Prenda> prendas = new ArrayList<>();
     private ConexionFirebase conexion = new ConexionFirebase();
     private DrawerLayout drawerLayout;
+    private MenuItem cerrar, registroUser, usuario, registroPartido;
 
     FirebaseAuth auth = FirebaseAuth.getInstance();
 
@@ -82,6 +82,10 @@ public class MainActivity extends AppCompatActivity {
         lateral = findViewById(R.id.lateral);
         abrir = findViewById(R.id.botonAbrir);
         drawerLayout = findViewById(R.id.drawer);
+        cerrar = lateral.getMenu().findItem(R.id.cerrar);
+        registroUser = lateral.getMenu().findItem(R.id.registrarse);
+        usuario = lateral.getMenu().findItem(R.id.user);
+        registroPartido = lateral.getMenu().findItem(R.id.registrarPartido);
 
         comprobarUser();
 
@@ -132,9 +136,13 @@ public class MainActivity extends AppCompatActivity {
         lateral.setNavigationItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.registrarPartido:
+                    if (auth.getCurrentUser() != null){
                     Intent intentRegistrar = new Intent(this, RegistrarPartido.class);
                     startActivity(intentRegistrar);
                     drawerLayout.closeDrawer(GravityCompat.START);
+                    }else{
+                        Toast.makeText(this, "Solo los entrenadores y administradores pueden usar esta función", Toast.LENGTH_SHORT).show();
+                    }
                     break;
                 case R.id.ajustes:
                     Intent intentAjustes = new Intent(this, Ajustes.class);
@@ -154,6 +162,8 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.cerrar:
                     auth.signOut();
                     intentMainActivity();
+                case R.id.consultaEquipo:
+                    break;
             }
             return false;
         });
@@ -162,6 +172,7 @@ public class MainActivity extends AppCompatActivity {
             drawerLayout.openDrawer(GravityCompat.START);
         });
     }
+
     private void comprobarUser() {
         View header = lateral.getHeaderView(0);
         TextView nombreUsuario = header.findViewById(R.id.nombreUsuario);
@@ -169,13 +180,14 @@ public class MainActivity extends AppCompatActivity {
         ImageView imagen = header.findViewById(R.id.imagenUsuario);
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user == null){
-            NavigationMenuItemView cerrar = lateral.findViewById(R.id.cerrar);
-            if (cerrar != null){cerrar.setVisibility(View.INVISIBLE);}
             nombreUsuario.setText("Sin registrar");
             posicion.setVisibility(View.INVISIBLE);
-            imagenRandom(imagen);
-            NavigationMenuItemView registrar = lateral.findViewById(R.id.registrarse);
-            if (registrar != null){registrar.setVisibility(View.VISIBLE);}
+            cerrar.setVisible(false);
+            registroUser.setVisible(true);
+            usuario.setVisible(false);
+            registroPartido.setVisible(false);
+            //imagenRandom(imagen);
+            conexion.cargarImagen(MainActivity.this, imagen, abrir, null);
         }else{
             comprobarExiste(user.getEmail(), nombreUsuario, posicion, imagen);
         }
@@ -237,14 +249,18 @@ public class MainActivity extends AppCompatActivity {
                         posicion.setVisibility(View.VISIBLE);
                         posicion.setText(ds.getString("rol"));
                         if (ds.getString("imagen") != null) {
-                            imagenPerfil(imagen, ds.getString("imagen"));
+                            conexion.cargarImagen(MainActivity.this, imagen, abrir, ds.getString("imagen"));
+                        }
+                        if (ds.getString("rol").equals("Jugador")){
+                            registroPartido.setVisible(false);
+                        }else{
+                            registroPartido.setVisible(true);
                         }
                     }
                 }
-                NavigationMenuItemView registrar = lateral.findViewById(R.id.registrarse);
-                NavigationMenuItemView cerrar = lateral.findViewById(R.id.cerrar);
-                if (registrar != null) {registrar.setVisibility(View.INVISIBLE);}
-                else if(cerrar != null) {cerrar.setVisibility(View.VISIBLE);cerrar.setTextColor(ColorStateList.valueOf(Color.rgb(255, 0, 0)));}
+                registroUser.setVisible(false);
+                cerrar.setVisible(true);
+                usuario.setVisible(true);
             }
         });
     }
@@ -287,7 +303,6 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
         transaction.replace(R.id.frame_layout, fragment);
-        transaction.addToBackStack(null);       //Mantiene el fragment anterior corriendo, no lo destruye.
         transaction.commit();
     }
 

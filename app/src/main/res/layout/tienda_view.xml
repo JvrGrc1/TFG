@@ -12,13 +12,13 @@
 
         <ImageView
             android:id="@+id/imagenPrenda"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="180dp"
+            android:layout_height="180dp"
             android:layout_gravity="center_horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:srcCompat="@tools:sample/avatars" />
+            tools:srcCompat="@drawable/imagenes" />
 
         <TextView
             android:id="@+id/nombrePrenda"

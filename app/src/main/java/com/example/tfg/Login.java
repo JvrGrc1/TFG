@@ -2,6 +2,8 @@ package com.example.tfg;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -21,11 +23,12 @@ import java.util.List;
 
 public class Login extends AppCompatActivity {
 
-    private Button login;
-    private EditText correo, passwd;
+    private Button login, ver;
+    private EditText correo, psswrd;
     private TextView nueva;
     private final FirebaseAuth user = FirebaseAuth.getInstance();
     private final ConexionFirebase conexion = new ConexionFirebase();
+    private boolean isPsswrdVisible = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,12 +37,13 @@ public class Login extends AppCompatActivity {
 
         login = findViewById(R.id.loginButton);
         correo = findViewById(R.id.correoUser);
-        passwd = findViewById(R.id.contrasenaUser);
+        psswrd = findViewById(R.id.contrasenaUser);
         nueva = findViewById(R.id.nuevaCuenta);
+        ver = findViewById(R.id.buttonVer2);
 
         login.setOnClickListener(view -> {
-            if (correoValido(correo.getText().toString()) && psswrdValida(passwd.getText().toString())) {
-                user.signInWithEmailAndPassword(correo.getText().toString(), passwd.getText().toString()).addOnCompleteListener(task -> {
+            if (correoValido(correo.getText().toString()) && psswrdValida(psswrd.getText().toString())) {
+                user.signInWithEmailAndPassword(correo.getText().toString(), psswrd.getText().toString()).addOnCompleteListener(task -> {
                     iniciarMainActivity(task);
                 });
             }
@@ -48,7 +52,18 @@ public class Login extends AppCompatActivity {
         nueva.setOnClickListener(view -> {
             Intent intent = new Intent(this, RegistrarUsuario.class);
             startActivity(intent);
-            finish();
+        });
+
+        ver.setOnClickListener(v -> {
+            if (isPsswrdVisible) {
+                psswrd.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                ver.setBackgroundResource(R.drawable.ojo_abierto);
+                isPsswrdVisible = false;
+            }else {
+                psswrd.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                ver.setBackgroundResource(R.drawable.ojo_cerrado);
+                isPsswrdVisible = true;
+            }
         });
     }
 

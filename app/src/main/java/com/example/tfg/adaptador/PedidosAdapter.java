@@ -87,7 +87,7 @@ public class PedidosAdapter extends RecyclerView.Adapter<PedidosAdapter.PedidosV
             trash.setOnClickListener(view -> {
                 new AlertDialog.Builder(view.getContext())
                         .setPositiveButton("Confirmar", (dialogInterface, i) -> {
-                            conexion.borrarPedido(view.getContext(), nombre.getText().toString());
+                            conexion.borrarPedido(view.getContext(), adapter1.getDatos().get(getAdapterPosition()));
                             adapter.borrarItem(getAdapterPosition());
                             Toast.makeText(view.getContext(), "Prenda de ropa eleminada de la lista.", Toast.LENGTH_SHORT).show();
                         })
@@ -102,7 +102,8 @@ public class PedidosAdapter extends RecyclerView.Adapter<PedidosAdapter.PedidosV
                     Toast.makeText(view.getContext(), "No puedes añadir más de 9 unidades por prenda.", Toast.LENGTH_SHORT).show();
                 }else {
                     int cantidadNueva = (Integer.parseInt(cantidad.getText().toString()) + 1);
-                    cantidad.setText(cantidadNueva);
+                    cantidad.setText(cantidadNueva + "");
+                    //conexion.updatePedido(cantidadNueva);
                 }
             });
 
@@ -111,7 +112,8 @@ public class PedidosAdapter extends RecyclerView.Adapter<PedidosAdapter.PedidosV
                     Toast.makeText(view.getContext(), "Si quiere eliminar este producto de su compra pulse el icono de la papelera.", Toast.LENGTH_SHORT).show();
                 }else {
                     int cantidadNueva = (Integer.parseInt(cantidad.getText().toString()) - 1);
-                    cantidad.setText(cantidadNueva);
+                    cantidad.setText(cantidadNueva + "");
+                    //conexion.updatePedido(cantidadNueva);
                 }
             });
         }

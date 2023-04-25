@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -68,7 +69,7 @@ public class DetallesPrenda extends AppCompatActivity {
         }
 
         pedido.setPrenda(prenda.getNombre());
-        conexion.imagenPrenda(this, imagen, prenda.getImagen());
+        conexion.cargarImagen(this, imagen, null, prenda.getImagen());
 
         nombrePrenda.setText(prenda.getNombre());
         precioPrenda.setText(String.format("Desde: %.2f€", prenda.getPrecio()));
@@ -104,7 +105,17 @@ public class DetallesPrenda extends AppCompatActivity {
             }
         });
 
-        pedido.setCantidad(cantidad.getSelectedItemId());
+        cantidad.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                pedido.setCantidad(parent.getItemIdAtPosition(position + 1));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         aniadir.setOnClickListener(view -> {
             if (grupo.getCheckedRadioButtonId() != -1){

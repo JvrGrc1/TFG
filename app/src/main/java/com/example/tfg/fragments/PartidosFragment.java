@@ -15,19 +15,15 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.tfg.RegistrarPartido;
-import com.example.tfg.adaptador.PartidosAdapter;
 import com.example.tfg.conexion.ConexionFirebase;
 import com.example.tfg.detalles.DetallesJornada;
 import com.example.tfg.R;
 import com.example.tfg.adaptador.JornadasAdapter;
 import com.example.tfg.adaptador.RecyclerItemClickListener;
-import com.example.tfg.entidad.Jornada;
 import com.example.tfg.entidad.Partido;
-import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -131,8 +127,8 @@ public class PartidosFragment extends Fragment {
         listaEquipos.add("2NM");
         listaEquipos.add("1TM");
 
-        rellenarTemporadas(root);
-        rellenarEquipos(listaEquipos);
+        rellenarTemporadas();
+        rellenarEquipos();
         rellenarJornadas();
 
         jornadas.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -152,7 +148,7 @@ public class PartidosFragment extends Fragment {
 
     private void actualizarDatos() {
         List<Partido> partidos = new ArrayList<>();
-        if (!jornadas.getSelectedItem().toString().equals("") || !jornadas.getSelectedItem().toString().equals("TODAS")) {
+        if (!jornadas.getSelectedItem().toString().equals("TODAS")) {
             db.collection("temporadas").document(temporadas.getSelectedItem().toString()).collection(equipos.getSelectedItem().toString()).get().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
@@ -161,7 +157,6 @@ public class PartidosFragment extends Fragment {
                             partidos.add(partido);
                             adapter = new JornadasAdapter(getContext(), partidos);
                             recycler.setAdapter(adapter);
-                            recycler.notifyAll();
                         }
                     }
                 } else {
@@ -176,7 +171,6 @@ public class PartidosFragment extends Fragment {
                         partidos.add(partido);
                         adapter = new JornadasAdapter(getContext(), partidos);
                         recycler.setAdapter(adapter);
-                        recycler.notifyAll();
                     }
                 } else {
                     Toast.makeText(getContext(), "Error al conseguir los documentos.", Toast.LENGTH_SHORT).show();
@@ -192,9 +186,8 @@ public class PartidosFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (!equipos.getSelectedItem().equals("") && !equipos.getSelectedItem().equals("TODOS")){
-                    db.collection("temporadas").document(temporadas.getSelectedItem().toString()).collection(getEquipos()).get().addOnCompleteListener(task -> {
+                    db.collection("temporadas").document(temporadas.getSelectedItem().toString()).collection(getEquipos(null)).get().addOnCompleteListener(task -> {
                         List<String> listaJornadas = new ArrayList<>();
-                        listaJornadas.add("");
                         listaJornadas.add("TODAS");
                         if (task.isSuccessful()){
                             int numDocs = 1;
@@ -218,8 +211,10 @@ public class PartidosFragment extends Fragment {
         });
     }
 
-    private String getEquipos() {
-        String equipo = equipos.getSelectedItem().toString();
+    private String getEquipos(String equipo) {
+        if (equipo == null) {
+            equipo = equipos.getSelectedItem().toString();
+        }
         switch (equipo){
             case "1NM":
                 return "1NacionalMasc";
@@ -231,39 +226,54 @@ public class PartidosFragment extends Fragment {
                 return "2NacionalMasc";
             case "1TM":
                 return "1TerritorialMasc";
+            case "1NacionalMasc":
+                return "1NM";
+            case "1NacionalFem":
+                return "1NF";
+            case "2NacionalMasc":
+                return "2NM";
+            case "1TerritorialMasc":
+                return "1TM";
         }
         return null;
     }
 
-    private void rellenarTemporadas(View inflater) {
+    private void rellenarTemporadas() {
         db.collection("temporadas").get().addOnCompleteListener(task -> {
             List<String> lista = new ArrayList<>();
-            lista.add("");
             if (task.isSuccessful()){
-                QuerySnapshot snapsot = task.getResult();
-                for (DocumentSnapshot ds : snapsot.getDocuments()){
-                    lista.add(ds.getId());
+                for (QueryDocumentSnapshot document : task.getResult()){
+                    lista.add(document.getId());
                 }
             }else{
                 Toast.makeText(getContext(), "Error al encontrar temporadas", Toast.LENGTH_SHORT).show();
             }
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(inflater.getContext(), android.R.layout.simple_spinner_item, lista);
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, lista);
             temporadas.setAdapter(adapter);
             equipos.setEnabled(false);
             jornadas.setEnabled(false);
         });
     }
 
-    private void rellenarEquipos(List<String> listaEquipos) {
+    private void rellenarEquipos() {
         temporadas.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (!temporadas.getSelectedItem().equals("")){
-                    //List<String> listEquiposConexion = conexion.equiposFromTemporada(temporadas.getSelectedItem().toString(), getContext());
-                    //listEquiposCoNexion.add("TODOS");
-                    //equipos.setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, listEquiposConexion));
-                    equipos.setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, listaEquipos));
-                    equipos.setEnabled(true);
+                    Task<List<String>> listEquiposConexion = conexion.equiposFromTemporada(temporadas.getSelectedItem().toString());
+                    listEquiposConexion.addOnCompleteListener(task1 -> {
+                        if (task1.isSuccessful()){
+                            List<String> equipos1 = task1.getResult();
+                            for (String equipo : equipos1){
+                                equipos1.set(equipos1.indexOf(equipo), getEquipos(equipo));
+                            }
+                            equipos1.add(0,"TODOS");
+                            equipos.setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, equipos1));
+                            equipos.setEnabled(true);
+                        }else{
+                            Toast.makeText(getContext(), "Error obteniendo los pedidos", Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 }else {
                     equipos.setSelection(0);
                     jornadas.setSelection(0);

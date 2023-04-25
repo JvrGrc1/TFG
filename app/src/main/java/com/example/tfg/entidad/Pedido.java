@@ -41,6 +41,6 @@ public class Pedido implements Serializable {
     @SuppressLint("DefaultLocale")
     @Override
     public String toString() {
-        return String.format("Pedido [Prenda: %s, Talla: %s, Cantidad: %d, Precio por unidad: %f] Pagado:%b", getPrenda(), getTalla() ,getCantidad(), getPrecioUnidad());
+        return String.format("Pedido [Prenda: %s, Talla: %s, Cantidad: %d, Precio por unidad: %f] Pagado: %b", getPrenda(), getTalla() ,getCantidad(), getPrecioUnidad(), isPagado());
     }
 }

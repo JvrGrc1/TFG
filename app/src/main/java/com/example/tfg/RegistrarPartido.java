@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.tfg.conexion.ConexionFirebase;
@@ -34,7 +35,6 @@ public class RegistrarPartido extends AppCompatActivity {
     private EditText fecha, hora, local, visitante, gL, gV, pabellon;
     private FloatingActionButton agregar, editar;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private FirebaseAuth auth = FirebaseAuth.getInstance();
     private ConexionFirebase conexion = new ConexionFirebase();
     private String id;
 
@@ -56,9 +56,7 @@ public class RegistrarPartido extends AppCompatActivity {
         agregar = findViewById(R.id.buttonAgregar);
         editar = findViewById(R.id.buttonEditar);
 
-        if (auth.getCurrentUser() != null){
-            isAdmin(auth.getCurrentUser());
-        }
+        conexion.comprobarAdmin(editar, RegistrarPartido.this);
         local.setEnabled(false);
         visitante.setEnabled(false);
         hora.setEnabled(false);
@@ -76,9 +74,7 @@ public class RegistrarPartido extends AppCompatActivity {
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                /*Si no ha seleccionado nada no se realiza ninguna acción*/
-            }
+            public void onNothingSelected(AdapterView<?> parent) {}
         });
 
         agregar.setOnClickListener(v -> {
@@ -86,37 +82,11 @@ public class RegistrarPartido extends AppCompatActivity {
                 Toast.makeText(RegistrarPartido.this, "No has seleccionado jornada", Toast.LENGTH_SHORT).show();
             }else{
                 if (todoRelleno()){
-                    DocumentReference docRef = db.collection("temporadas").document(anios.getSelectedItem().toString()).collection(division.getSelectedItem().toString()).document(id);
-
+                    DocumentReference docRef = conexion.getDocumento(anios.getSelectedItem().toString(), division.getSelectedItem().toString(), id);
                     // Crear un mapa con los campos que se van a actualizar y sus valores
-                    Map<String, Object> datos = new HashMap<>();
-                    datos.put("division", getDivision());
-                    datos.put("fecha", getFecha());
-                    datos.put("golesLocal", Integer.parseInt(gL.getText().toString()));
-                    datos.put("golesVisitante", Integer.parseInt(gV.getText().toString()));
-                    datos.put("hora", getHora());
-                    datos.put("jornada", Integer.parseInt(jornada.getSelectedItem().toString()));
-                    datos.put("local", local.getText().toString());
-                    datos.put("pabellón", pabellon.getText().toString());
-                    datos.put("visitante", visitante.getText().toString());
-
+                    Map<String, Object> partido = crearMapaPartido();
                     // Actualizar los campos del documento en Firebase Firestore
-                    docRef.update(datos).addOnSuccessListener(aVoid -> {
-                        Task<List<Partido>> task = conexion.obtenerPartidos();
-                        task.addOnCompleteListener(task1 -> {
-                            if (task1.isSuccessful()) {
-                                Toast.makeText(RegistrarPartido.this, "Cambios realizados correctamente", Toast.LENGTH_SHORT).show();
-                                List<Partido> partidos = task1.getResult();
-                                Intent intent = new Intent(RegistrarPartido.this, MainActivity.class);
-                                intent.putExtra("lista", (Serializable) partidos);
-                                startActivity(intent);
-                                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                                finish();
-                            } else {
-                                Toast.makeText(RegistrarPartido.this, "Error obteniendo partidos", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                    }).addOnFailureListener(e -> Toast.makeText(RegistrarPartido.this, "Error al agregar el partido", Toast.LENGTH_SHORT).show());
+                    actualizarPartido(docRef, partido);
                 }
             }
         });
@@ -130,6 +100,40 @@ public class RegistrarPartido extends AppCompatActivity {
                 Toast.makeText(RegistrarPartido.this, "Puedes editar los campos", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void actualizarPartido(DocumentReference docRef, Map<String, Object> partido) {
+        docRef.update(partido).addOnSuccessListener(aVoid -> {
+            Task<List<Partido>> task = conexion.obtenerPartidos();
+            task.addOnCompleteListener(task1 -> {
+                if (task1.isSuccessful()) {
+                    Toast.makeText(RegistrarPartido.this, "Cambios realizados correctamente", Toast.LENGTH_SHORT).show();
+                    List<Partido> partidos = task1.getResult();
+                    Intent intent = new Intent(RegistrarPartido.this, MainActivity.class);
+                    intent.putExtra("lista", (Serializable) partidos);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                    finish();
+                } else {
+                    Toast.makeText(RegistrarPartido.this, "Error obteniendo partidos", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }).addOnFailureListener(e -> Toast.makeText(RegistrarPartido.this, "Error al agregar el partido", Toast.LENGTH_SHORT).show());
+    }
+
+    @NonNull
+    private Map<String, Object> crearMapaPartido() {
+        Map<String, Object> datos = new HashMap<>();
+        datos.put("division", getDivision());
+        datos.put("fecha", getFecha());
+        datos.put("golesLocal", Integer.parseInt(gL.getText().toString()));
+        datos.put("golesVisitante", Integer.parseInt(gV.getText().toString()));
+        datos.put("hora", getHora());
+        datos.put("jornada", Integer.parseInt(jornada.getSelectedItem().toString()));
+        datos.put("local", local.getText().toString());
+        datos.put("pabellón", pabellon.getText().toString());
+        datos.put("visitante", visitante.getText().toString());
+        return datos;
     }
 
     private void rellenarAnios() {
@@ -154,17 +158,17 @@ public class RegistrarPartido extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (!anios.getSelectedItem().equals("")) {
-                    List<String> listaEquipos = new ArrayList<>();
-                    listaEquipos.add("");
-                    listaEquipos.add("1NacionalMasc");
-                    listaEquipos.add("DHPF");
-                    listaEquipos.add("1NacionalFem");
-                    listaEquipos.add("2NacionalMasc");
-                    listaEquipos.add("1TerritorialMasc");
-                    //List<String> equipos = conexion.equiposFromTemporada(anios.getSelectedItem().toString(), getApplicationContext());
-                    //division.setAdapter(new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item, equipos));
-                    division.setAdapter(new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item, listaEquipos));
-                    division.setEnabled(true);
+                    Task<List<String>> equipos = conexion.equiposFromTemporada(anios.getSelectedItem().toString());
+                    equipos.addOnCompleteListener(task1 -> {
+                        if (task1.isSuccessful()){
+                            List<String> equipos1 = task1.getResult();
+                            equipos1.add(0, "");
+                            division.setAdapter(new ArrayAdapter<>(RegistrarPartido.this, android.R.layout.simple_spinner_item, equipos1));
+                            division.setEnabled(true);
+                        }else{
+                            Toast.makeText(RegistrarPartido.this, "Error obteniendo los pedidos", Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 } else {
                     division.setSelection(0);
                     jornada.setSelection(0);
@@ -174,9 +178,7 @@ public class RegistrarPartido extends AppCompatActivity {
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
+            public void onNothingSelected(AdapterView<?> parent) {}
         });
     }
     private void rellenarJornadas() {
@@ -191,9 +193,6 @@ public class RegistrarPartido extends AppCompatActivity {
                             for (QueryDocumentSnapshot document : task.getResult()){
                                 listaJornadas.add(numDocs++);
                             }
-                            /*for (int i = 1; i <= task.getResult().size(); i++){
-                                listaJornadas.add(i);
-                            }*/
                             jornada.setAdapter(new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item, listaJornadas));
                             jornada.setEnabled(true);
                         }else{
@@ -211,41 +210,26 @@ public class RegistrarPartido extends AppCompatActivity {
         });
     }
     private void actualizarDatos() {
-        db.collection("temporadas").document(anios.getSelectedItem().toString()).collection(division.getSelectedItem().toString()).get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                for (QueryDocumentSnapshot document : task.getResult()) {
-                    if (Integer.parseInt(document.get("jornada").toString()) == (Integer.parseInt(jornada.getSelectedItem().toString()))){
-                        id = document.getId();
-                        local.setText(document.get("local").toString());
-                        visitante.setText(document.get("visitante").toString());
-                        gL.setText(document.get("golesLocal").toString());
-                        gV.setText(document.get("golesVisitante").toString());
-                        fecha.setText(document.get("fecha").toString());
-                        hora.setText(document.get("hora").toString());
-                        pabellon.setText(document.get("pabellón").toString());
-                    }
-                }
-            } else {
-                Toast.makeText(RegistrarPartido.this, "Error al conseguir los documentos.", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-    private void isAdmin(FirebaseUser currentUser){
-        db.collection("usuarios").get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()){
-                for (DocumentSnapshot document: task.getResult()){
-                    if (document.get("correo").equals(currentUser.getEmail())){
-                        if (document.get("rol").equals("Administrador")){
-                            editar.setVisibility(View.VISIBLE);
-                        }else{
-                            editar.setVisibility(View.INVISIBLE);
+        if (jornada.isEnabled()) {
+            db.collection("temporadas").document(anios.getSelectedItem().toString()).collection(division.getSelectedItem().toString()).get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        if (Integer.parseInt(document.get("jornada").toString()) == (Integer.parseInt(jornada.getSelectedItem().toString()))) {
+                            id = document.getId();
+                            local.setText(document.get("local").toString());
+                            visitante.setText(document.get("visitante").toString());
+                            gL.setText(document.get("golesLocal").toString());
+                            gV.setText(document.get("golesVisitante").toString());
+                            fecha.setText(document.get("fecha").toString());
+                            hora.setText(document.get("hora").toString());
+                            pabellon.setText(document.get("pabellón").toString());
                         }
                     }
+                } else {
+                    Toast.makeText(RegistrarPartido.this, "Error al conseguir los documentos.", Toast.LENGTH_SHORT).show();
                 }
-            }else{
-                Toast.makeText(RegistrarPartido.this, "Error con isAdmin().", Toast.LENGTH_SHORT).show();
-            }
-        });
+            });
+        }
     }
     private boolean todoRelleno(){
         return !local.getText().toString().isEmpty() && !visitante.getText().toString().isEmpty() && !gV.getText().toString().isEmpty() && !gL.getText().toString().isEmpty() && !hora.getText().toString().isEmpty() && !fecha.getText().toString().isEmpty() && !pabellon.getText().toString().isEmpty() && getFecha() != null && getFecha() != null;
@@ -276,7 +260,7 @@ public class RegistrarPartido extends AppCompatActivity {
         }
     }
     private String getFecha(){
-        String patron = "\\d{2}-\\d{2}-(2022|2023)";
+        String patron = "\\d{2}-\\d{2}-(2020|2021|2022|2023)";
         if (fecha.getText().toString().matches(patron)){
             return fecha.getText().toString();
         }else{

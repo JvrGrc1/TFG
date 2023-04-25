@@ -1,24 +1,18 @@
 package com.example.tfg.adaptador;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.tfg.MainActivity;
 import com.example.tfg.R;
 import com.example.tfg.conexion.ConexionFirebase;
 import com.example.tfg.entidad.Prenda;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
 import java.util.List;
 
@@ -49,7 +43,7 @@ public class TiendaAdapter extends RecyclerView.Adapter<TiendaAdapter.TiendaView
 
         holder.nombre.setText(prenda.getNombre());
         holder.precio.setText(String.format("%.2f€", prenda.getPrecio()));
-        conexion.imagenPrenda(contexto,holder.imagen, prenda.getImagen());
+        conexion.cargarImagen(contexto,holder.imagen, null, prenda.getImagen());
 
     }
 

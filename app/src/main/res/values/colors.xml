@@ -10,11 +10,14 @@
 
     <!-- Colores del escudo -->
     <color name="azul_oscuro">#000180</color>
+    <color name="morado_muy_claro">#d5d5f5</color>
+    <color name="azul_casi_blanco">#DFDFFF</color>
 
 
     <!-- Colores mios -->
     <color name="rojo_oscuro">#970000</color>
     <color name="verde_oscuro">#328107</color>
     <color name="gris">#f2f2fc</color>
-    <color name="gris_mas_oscurito">#F0F0F0</color>
+    <color name="blanco_mas_oscurito">#F0F0F0</color>
+    <color name="gris_oscurito">#B5B2B2</color>
 </resources>

@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_columnWeight="1"
-        android:background="#FFFFFF"
+        android:background="@color/white"
         tools:context=".MainActivity">
 
         <TextView
@@ -20,7 +20,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="35dp"
-            android:background="#3CFFFFFF"
             android:fontFamily="@font/favter1"
             android:text="@string/app_name"
             android:textColor="@color/azul_oscuro"
@@ -48,7 +47,7 @@
             android:layout_marginStart="2dp"
             android:layout_marginTop="69dp"
             android:layout_marginEnd="2dp"
-            android:background="#B5B2B2"
+            android:background="@color/gris_oscurito"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/logo" />
@@ -76,9 +75,9 @@
             android:layout_marginBottom="10dp"
             app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior"
             android:background="@drawable/fondo_redondeado"
-            app:itemIconTint="#000180"
-            app:itemRippleColor="#DFDFFF"
-            app:itemTextColor="#000180"
+            app:itemIconTint="@color/azul_oscuro"
+            app:itemRippleColor="@color/azul_casi_blanco"
+            app:itemTextColor="@color/azul_oscuro"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -102,12 +101,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="#FFFFFF"
+        android:background="@color/white"
         app:drawerLayoutCornerSize="10dp"
         app:headerLayout="@layout/header"
-        app:itemShapeFillColor="#d5d5f5"
-        app:itemTextColor="#000180"
+        app:itemShapeFillColor="@color/morado_muy_claro"
+        app:itemTextColor="@color/azul_oscuro"
+        app:itemIconTint="@color/azul_oscuro"
         app:menu="@menu/lateral"
-        app:subheaderColor="#000180"
+        app:subheaderColor="@color/azul_oscuro"
         app:theme="@style/lateral" />
 </androidx.drawerlayout.widget.DrawerLayout>
