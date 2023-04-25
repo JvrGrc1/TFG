@@ -7,4 +7,14 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- Colores del escudo -->
+    <color name="azul_oscuro">#000180</color>
+
+
+    <!-- Colores mios -->
+    <color name="rojo_oscuro">#970000</color>
+    <color name="verde_oscuro">#328107</color>
+    <color name="gris">#f2f2fc</color>
+    <color name="gris_mas_oscurito">#F0F0F0</color>
 </resources>

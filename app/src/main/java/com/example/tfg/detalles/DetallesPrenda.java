@@ -8,6 +8,8 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -72,6 +74,9 @@ public class DetallesPrenda extends AppCompatActivity {
         precioPrenda.setText(String.format("Desde: %.2f€", prenda.getPrecio()));
         pedido.setPrecioUnidad(prenda.getPrecio());
 
+        Animation animacion = AnimationUtils.loadAnimation(this, R.anim.escala);
+        constrain.startAnimation(animacion);
+
         constrain.setOnClickListener(v -> finish());
         constrain2.setOnClickListener(v -> {});
 
@@ -99,6 +104,8 @@ public class DetallesPrenda extends AppCompatActivity {
             }
         });
 
+        pedido.setCantidad(cantidad.getSelectedItemId());
+
         aniadir.setOnClickListener(view -> {
             if (grupo.getCheckedRadioButtonId() != -1){
                 Map<String, Object> map = new HashMap<>();
@@ -107,6 +114,7 @@ public class DetallesPrenda extends AppCompatActivity {
                 map.put("talla", pedido.getTalla());
                 map.put("cantidad", pedido.getCantidad());
                 map.put("precioUnidad", prenda.getPrecio());
+                map.put("pagado", false);
                 conexion.subirPedido(this, map);
 
             }else{

@@ -30,13 +30,13 @@ import java.util.Map;
 
 public class RegistrarPartido extends AppCompatActivity {
 
-    Spinner anios, division, jornada;
-    EditText fecha, hora, local, visitante, gL, gV, pabellon;
-    FloatingActionButton agregar, editar;
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
-    FirebaseAuth auth = FirebaseAuth.getInstance();
-
-    String id;
+    private Spinner anios, division, jornada;
+    private EditText fecha, hora, local, visitante, gL, gV, pabellon;
+    private FloatingActionButton agregar, editar;
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private FirebaseAuth auth = FirebaseAuth.getInstance();
+    private ConexionFirebase conexion = new ConexionFirebase();
+    private String id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,7 +102,6 @@ public class RegistrarPartido extends AppCompatActivity {
 
                     // Actualizar los campos del documento en Firebase Firestore
                     docRef.update(datos).addOnSuccessListener(aVoid -> {
-                        ConexionFirebase conexion = new ConexionFirebase();
                         Task<List<Partido>> task = conexion.obtenerPartidos();
                         task.addOnCompleteListener(task1 -> {
                             if (task1.isSuccessful()) {
@@ -162,6 +161,8 @@ public class RegistrarPartido extends AppCompatActivity {
                     listaEquipos.add("1NacionalFem");
                     listaEquipos.add("2NacionalMasc");
                     listaEquipos.add("1TerritorialMasc");
+                    //List<String> equipos = conexion.equiposFromTemporada(anios.getSelectedItem().toString(), getApplicationContext());
+                    //division.setAdapter(new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item, equipos));
                     division.setAdapter(new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item, listaEquipos));
                     division.setEnabled(true);
                 } else {
@@ -206,9 +207,7 @@ public class RegistrarPartido extends AppCompatActivity {
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
+            public void onNothingSelected(AdapterView<?> parent) {}
         });
     }
     private void actualizarDatos() {

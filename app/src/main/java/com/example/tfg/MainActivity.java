@@ -2,9 +2,12 @@ package com.example.tfg;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -13,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
@@ -53,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
     private List<Partido> j = new ArrayList<>();
     private List<Prenda> prendas = new ArrayList<>();
     private ConexionFirebase conexion = new ConexionFirebase();
+    private DrawerLayout drawerLayout;
 
     FirebaseAuth auth = FirebaseAuth.getInstance();
 
@@ -76,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
         bottomNav = findViewById(R.id.bottomNavigationView);
         lateral = findViewById(R.id.lateral);
         abrir = findViewById(R.id.botonAbrir);
+        drawerLayout = findViewById(R.id.drawer);
 
         comprobarUser();
 
@@ -128,32 +134,31 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.registrarPartido:
                     Intent intentRegistrar = new Intent(this, RegistrarPartido.class);
                     startActivity(intentRegistrar);
+                    drawerLayout.closeDrawer(GravityCompat.START);
                     break;
                 case R.id.ajustes:
-                    if (auth.getCurrentUser() == null) {
-                        auth.signInWithEmailAndPassword("zurdocbl@gmail.com", "gt02102002");
-                        finish();
-                    }
+                    Intent intentAjustes = new Intent(this, Ajustes.class);
+                    startActivity(intentAjustes);
+                    drawerLayout.closeDrawer(GravityCompat.START);
                     break;
-                case R.id.ajustesUser:
-                    if (auth.getCurrentUser() != null) {
-                        auth.signOut();
-                        finish();
-                    }
+                case R.id.user:
+                    Intent intentPerfilUsuario = new Intent(this, PerfilUsuario.class);
+                    startActivity(intentPerfilUsuario);
+                    drawerLayout.closeDrawer(GravityCompat.START);
                     break;
                 case R.id.registrarse:
                     Intent intentSignIn = new Intent(this, RegistrarUsuario.class);
                     startActivity(intentSignIn);
+                    drawerLayout.closeDrawer(GravityCompat.START);
                     break;
                 case R.id.cerrar:
                     auth.signOut();
-                    intentMainAcitivity();
+                    intentMainActivity();
             }
             return false;
         });
 
         abrir.setOnClickListener(v -> {
-            DrawerLayout drawerLayout = findViewById(R.id.drawer);
             drawerLayout.openDrawer(GravityCompat.START);
         });
     }
@@ -164,13 +169,13 @@ public class MainActivity extends AppCompatActivity {
         ImageView imagen = header.findViewById(R.id.imagenUsuario);
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user == null){
+            NavigationMenuItemView cerrar = lateral.findViewById(R.id.cerrar);
+            if (cerrar != null){cerrar.setVisibility(View.INVISIBLE);}
             nombreUsuario.setText("Sin registrar");
             posicion.setVisibility(View.INVISIBLE);
             imagenRandom(imagen);
             NavigationMenuItemView registrar = lateral.findViewById(R.id.registrarse);
-            NavigationMenuItemView cerrar = lateral.findViewById(R.id.cerrar);
             if (registrar != null){registrar.setVisibility(View.VISIBLE);}
-            else if (cerrar != null){cerrar.setVisibility(View.INVISIBLE);}
         }else{
             comprobarExiste(user.getEmail(), nombreUsuario, posicion, imagen);
         }
@@ -220,14 +225,15 @@ public class MainActivity extends AppCompatActivity {
         return "corriendo.png";
     }
 
-    private void comprobarExiste(String email, TextView nombre,TextView posicion, ImageView imagen) {
+    @SuppressLint("RestrictedApi")
+    private void comprobarExiste(String email, TextView nombre, TextView posicion, ImageView imagen) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("usuarios").get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()){
+            if (task.isSuccessful()) {
                 QuerySnapshot snapsot = task.getResult();
-                for (DocumentSnapshot ds : snapsot){
-                    if (Objects.equals(ds.getString("correo"), email)){
-                        nombre.setText(String.format("%s %s", ds.getString("nombre"),ds.getString("apellido1")));
+                for (DocumentSnapshot ds : snapsot) {
+                    if (Objects.equals(ds.getString("correo"), email)) {
+                        nombre.setText(String.format("%s %s", ds.getString("nombre"), ds.getString("apellido1")));
                         posicion.setVisibility(View.VISIBLE);
                         posicion.setText(ds.getString("rol"));
                         if (ds.getString("imagen") != null) {
@@ -237,8 +243,8 @@ public class MainActivity extends AppCompatActivity {
                 }
                 NavigationMenuItemView registrar = lateral.findViewById(R.id.registrarse);
                 NavigationMenuItemView cerrar = lateral.findViewById(R.id.cerrar);
-                if (registrar != null){registrar.setVisibility(View.INVISIBLE);}
-                else if (cerrar != null){cerrar.setVisibility(View.VISIBLE);}
+                if (registrar != null) {registrar.setVisibility(View.INVISIBLE);}
+                else if(cerrar != null) {cerrar.setVisibility(View.VISIBLE);cerrar.setTextColor(ColorStateList.valueOf(Color.rgb(255, 0, 0)));}
             }
         });
     }
@@ -281,10 +287,11 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
         transaction.replace(R.id.frame_layout, fragment);
+        transaction.addToBackStack(null);       //Mantiene el fragment anterior corriendo, no lo destruye.
         transaction.commit();
     }
 
-    private void intentMainAcitivity(){
+    private void intentMainActivity(){
         Task<List<Partido>> partidos = conexion.obtenerPartidos();
         partidos.addOnCompleteListener(task1 -> {
             if (task1.isSuccessful()) {

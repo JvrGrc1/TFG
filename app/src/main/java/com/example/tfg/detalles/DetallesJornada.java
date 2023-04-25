@@ -41,7 +41,6 @@ public class DetallesJornada extends AppCompatActivity {
 
         View layout = findViewById(R.id.l);
         Animation animacion = AnimationUtils.loadAnimation(this, R.anim.escala);
-
         // Asignar la animación al layout
         layout.startAnimation(animacion);
 

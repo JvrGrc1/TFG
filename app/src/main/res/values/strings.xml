@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">BM Leganés</string>
+    <string name="app_name">CB Leganés</string>
     <string name="title_activity_prueba">Prueba</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>

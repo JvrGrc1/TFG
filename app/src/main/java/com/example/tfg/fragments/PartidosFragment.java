@@ -15,10 +15,14 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.tfg.RegistrarPartido;
+import com.example.tfg.adaptador.PartidosAdapter;
+import com.example.tfg.conexion.ConexionFirebase;
 import com.example.tfg.detalles.DetallesJornada;
 import com.example.tfg.R;
 import com.example.tfg.adaptador.JornadasAdapter;
 import com.example.tfg.adaptador.RecyclerItemClickListener;
+import com.example.tfg.entidad.Jornada;
 import com.example.tfg.entidad.Partido;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -41,6 +45,7 @@ public class PartidosFragment extends Fragment {
     private JornadasAdapter adapter;
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private Spinner temporadas, equipos, jornadas;
+    private ConexionFirebase conexion = new ConexionFirebase();
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private String mParam1;
@@ -130,7 +135,56 @@ public class PartidosFragment extends Fragment {
         rellenarEquipos(listaEquipos);
         rellenarJornadas();
 
+        jornadas.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                //actualizarDatos();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                /*Si no se ha seleccionado nada se muestra toda la temporada*/
+            }
+        });
+
         return root;
+    }
+
+    private void actualizarDatos() {
+        List<Partido> partidos = new ArrayList<>();
+        if (!jornadas.getSelectedItem().toString().equals("") || !jornadas.getSelectedItem().toString().equals("TODAS")) {
+            db.collection("temporadas").document(temporadas.getSelectedItem().toString()).collection(equipos.getSelectedItem().toString()).get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        if (Integer.parseInt(document.get("jornada").toString()) == (Integer.parseInt(jornadas.getSelectedItem().toString()))) {
+                            Partido partido = new Partido(document.getString("division"), document.getString("local"), document.getString("visitante"), document.getLong("golesLocal"), document.getLong("golesVisitante"), document.getString("fecha"), document.getString("pabellon"), document.getString("hora"), document.getLong("jornada"));
+                            partidos.add(partido);
+                            adapter = new JornadasAdapter(getContext(), partidos);
+                            recycler.setAdapter(adapter);
+                            recycler.notifyAll();
+                        }
+                    }
+                } else {
+                    Toast.makeText(getContext(), "Error al conseguir los documentos.", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }else if (jornadas.getSelectedItem().toString().equals("TODAS")){
+            db.collection("temporadas").document(temporadas.getSelectedItem().toString()).collection(equipos.getSelectedItem().toString()).get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        Partido partido = new Partido(document.getString("division"), document.getString("local"), document.getString("visitante"), document.getLong("golesLocal"), document.getLong("golesVisitante"), document.getString("fecha"), document.getString("pabellon"), document.getString("hora"), document.getLong("jornada"));
+                        partidos.add(partido);
+                        adapter = new JornadasAdapter(getContext(), partidos);
+                        recycler.setAdapter(adapter);
+                        recycler.notifyAll();
+                    }
+                } else {
+                    Toast.makeText(getContext(), "Error al conseguir los documentos.", Toast.LENGTH_SHORT).show();
+                }
+            });
+        } else if (jornadas.getSelectedItem().toString().equals("")) {
+            //No se que hacer en este caso.
+        }
     }
 
     private void rellenarJornadas() {
@@ -139,11 +193,13 @@ public class PartidosFragment extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (!equipos.getSelectedItem().equals("") && !equipos.getSelectedItem().equals("TODOS")){
                     db.collection("temporadas").document(temporadas.getSelectedItem().toString()).collection(getEquipos()).get().addOnCompleteListener(task -> {
-                        List<Integer> listaJornadas = new ArrayList<>();
+                        List<String> listaJornadas = new ArrayList<>();
+                        listaJornadas.add("");
+                        listaJornadas.add("TODAS");
                         if (task.isSuccessful()){
                             int numDocs = 1;
                             for (QueryDocumentSnapshot document : task.getResult()){
-                                listaJornadas.add(numDocs++);
+                                listaJornadas.add(numDocs++ + "");
                             }
                             jornadas.setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, listaJornadas));
                             jornadas.setEnabled(true);
@@ -158,9 +214,7 @@ public class PartidosFragment extends Fragment {
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
+            public void onNothingSelected(AdapterView<?> parent) {}
         });
     }
 
@@ -184,36 +238,20 @@ public class PartidosFragment extends Fragment {
     private void rellenarTemporadas(View inflater) {
         db.collection("temporadas").get().addOnCompleteListener(task -> {
             List<String> lista = new ArrayList<>();
+            lista.add("");
             if (task.isSuccessful()){
-                lista.add("");
                 QuerySnapshot snapsot = task.getResult();
                 for (DocumentSnapshot ds : snapsot.getDocuments()){
                     lista.add(ds.getId());
                 }
             }else{
                 Toast.makeText(getContext(), "Error al encontrar temporadas", Toast.LENGTH_SHORT).show();
-                lista.add("");
             }
             ArrayAdapter<String> adapter = new ArrayAdapter<>(inflater.getContext(), android.R.layout.simple_spinner_item, lista);
             temporadas.setAdapter(adapter);
             equipos.setEnabled(false);
             jornadas.setEnabled(false);
         });
-        /*db.collection("temporadas").get().addOnCompleteListener(task -> {
-            List<String> listaAnios = new ArrayList<>();
-            listaAnios.add("");
-            if (task.isSuccessful()){
-                for (QueryDocumentSnapshot document : task.getResult()){
-                    listaAnios.add(document.getId());
-                }
-            }else{
-                Toast.makeText(getContext(), "El año " + temporadas.getSelectedItem().toString() + " no existe.", Toast.LENGTH_SHORT).show();
-            }
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, listaAnios);
-            temporadas.setAdapter(adapter);
-            equipos.setEnabled(false);
-            jornadas.setEnabled(false);
-        });*/
     }
 
     private void rellenarEquipos(List<String> listaEquipos) {
@@ -221,6 +259,9 @@ public class PartidosFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (!temporadas.getSelectedItem().equals("")){
+                    //List<String> listEquiposConexion = conexion.equiposFromTemporada(temporadas.getSelectedItem().toString(), getContext());
+                    //listEquiposCoNexion.add("TODOS");
+                    //equipos.setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, listEquiposConexion));
                     equipos.setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, listaEquipos));
                     equipos.setEnabled(true);
                 }else {

@@ -34,11 +34,16 @@ public class PedidosAdapter extends RecyclerView.Adapter<PedidosAdapter.PedidosV
     public void setDatos(List<Pedido> pedidos){this.pedidos = pedidos;}
     public List<Pedido> getDatos(){return pedidos;}
 
+    public void borrarItem(int posicion){
+        pedidos.remove(posicion);
+        notifyItemRemoved(posicion);
+    }
+
     @NonNull
     @Override
     public PedidosAdapter.PedidosViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.pedido_view, parent, false);
-        return new PedidosViewHolder(view);
+        return new PedidosViewHolder(view, this);
     }
 
     @SuppressLint("DefaultLocale")
@@ -65,11 +70,12 @@ public class PedidosAdapter extends RecyclerView.Adapter<PedidosAdapter.PedidosV
         TextView cantidad, nombre, precio;
         Button mas, menos, trash;
         ConexionFirebase conexion = new ConexionFirebase();
+        PedidosAdapter adapter;
 
 
-        public PedidosViewHolder(@NonNull View itemView) {
+        public PedidosViewHolder(@NonNull View itemView, PedidosAdapter adapter1) {
             super(itemView);
-
+            this.adapter = adapter1;
             imagen = itemView.findViewById(R.id.imagenPrendaPedido);
             cantidad = itemView.findViewById(R.id.cantidadPrendaPedido);
             nombre = itemView.findViewById(R.id.nombrePrendaPedido);
@@ -79,24 +85,35 @@ public class PedidosAdapter extends RecyclerView.Adapter<PedidosAdapter.PedidosV
             trash = itemView.findViewById(R.id.buttonBasuraPrendaPedido);
 
             trash.setOnClickListener(view -> {
-                AlertDialog dialog = new AlertDialog.Builder(view.getContext())
-                        .setPositiveButton("Confirmar", (dialogInterface, i) -> conexion.borrarPedido(view.getContext(), nombre.getText().toString()))
+                new AlertDialog.Builder(view.getContext())
+                        .setPositiveButton("Confirmar", (dialogInterface, i) -> {
+                            conexion.borrarPedido(view.getContext(), nombre.getText().toString());
+                            adapter.borrarItem(getAdapterPosition());
+                            Toast.makeText(view.getContext(), "Prenda de ropa eleminada de la lista.", Toast.LENGTH_SHORT).show();
+                        })
                         .setNegativeButton("Cancelar", (dialogInterface, i) -> dialogInterface.dismiss())
                         .setTitle("¿Estás seguro?")
                         .setMessage("Si confirmas eliminarás esta prenda de tu pedido.")
-                        .create();
-                dialog.create();
+                        .show();
             });
 
             mas.setOnClickListener(view -> {
                 if (Integer.parseInt(cantidad.getText().toString()) == 9){
                     Toast.makeText(view.getContext(), "No puedes añadir más de 9 unidades por prenda.", Toast.LENGTH_SHORT).show();
-                }else{
+                }else {
                     int cantidadNueva = (Integer.parseInt(cantidad.getText().toString()) + 1);
-                    cantidad.setText(String.format("%d", cantidadNueva));
+                    cantidad.setText(cantidadNueva);
                 }
             });
 
+            menos.setOnClickListener(view -> {
+                if (Integer.parseInt(cantidad.getText().toString()) == 1){
+                    Toast.makeText(view.getContext(), "Si quiere eliminar este producto de su compra pulse el icono de la papelera.", Toast.LENGTH_SHORT).show();
+                }else {
+                    int cantidadNueva = (Integer.parseInt(cantidad.getText().toString()) - 1);
+                    cantidad.setText(cantidadNueva);
+                }
+            });
         }
     }
 }

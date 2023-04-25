@@ -113,10 +113,11 @@
 
             <TextView
                 android:id="@+id/nombreDetallesPrenda"
-                android:layout_width="wrap_content"
+                android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="40dp"
                 android:fontFamily="@font/thinoobold"
+                android:gravity="center"
                 android:text="1ª Equipación 22/23"
                 android:textColor="#000000"
                 android:textSize="22sp"
@@ -143,6 +144,7 @@
                 android:id="@+id/cantidadSpinner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
                 android:layout_marginBottom="20dp"
                 app:layout_constraintBottom_toTopOf="@+id/buttonAniadirPrenda"
                 app:layout_constraintEnd_toStartOf="@+id/precioDetallesPrenda"

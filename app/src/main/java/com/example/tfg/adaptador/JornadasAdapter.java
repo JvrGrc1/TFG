@@ -33,10 +33,10 @@ public class JornadasAdapter extends RecyclerView.Adapter<JornadasAdapter.Jornad
         setJornadas(partidos);
     }
 
-    private void setJornadas(List<Partido> jugadores) {
-        for(int x = 1; x < jugadores.size(); x++){
+    private void setJornadas(List<Partido> partidos) {
+        for(int x = 1; x < partidos.size(); x++){
             List<Partido> elegidos = new ArrayList<>();
-            for (Partido p : jugadores){
+            for (Partido p : partidos){
                 if (p.getJornada() == x){
                     elegidos.add(p);
                 }
