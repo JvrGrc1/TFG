@@ -66,6 +66,9 @@ public class DetallesPrenda extends AppCompatActivity {
         if (prenda.getTallas().isEmpty()){
             grupo.setVisibility(View.INVISIBLE);
             tallas.setVisibility(View.INVISIBLE);
+            pedido.setTalla(null);
+        }else{
+            pedido.setTalla("-1");
         }
 
         pedido.setPrenda(prenda.getNombre());
@@ -101,6 +104,7 @@ public class DetallesPrenda extends AppCompatActivity {
                     pedido.setTalla("XS");
                     break;
                 default:
+                    pedido.setTalla("-1");
                     Toast.makeText(this, radioButton.getId() + "", Toast.LENGTH_SHORT).show();
             }
         });
@@ -118,7 +122,7 @@ public class DetallesPrenda extends AppCompatActivity {
         });
 
         aniadir.setOnClickListener(view -> {
-            if (grupo.getCheckedRadioButtonId() != -1){
+            if (pedido.getTalla() == null || !pedido.getTalla().equals("-1")){
                 Map<String, Object> map = new HashMap<>();
                 map.put("comprador", auth.getCurrentUser().getEmail());
                 map.put("prenda", pedido.getPrenda());
