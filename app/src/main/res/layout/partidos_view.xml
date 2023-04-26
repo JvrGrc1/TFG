@@ -16,7 +16,7 @@
         android:layout_marginTop="5dp"
         android:layout_weight="2"
         android:fontFamily="@font/industrial_light"
-        android:text="TextView"
+        android:text="@string/text_view"
         android:textColor="@color/black"
         android:textSize="20sp"
         android:textStyle="bold" />
@@ -36,7 +36,7 @@
             android:layout_weight="2"
             android:fontFamily="@font/industrial_light"
             android:gravity="center"
-            android:text="TextView"
+            android:text="@string/text_view"
             android:textColor="@color/black"
             android:textSize="18sp" />
 
@@ -48,8 +48,8 @@
             android:layout_margin="5dp"
             android:layout_marginBottom="-2dp"
             android:fontFamily="@font/industrial_light"
-            android:gravity="right"
-            android:text="TextView"
+            android:gravity="end"
+            android:text="@string/text_view"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -61,7 +61,7 @@
             android:layout_marginTop="5dp"
             android:layout_marginBottom="-2dp"
             android:fontFamily="@font/industrial_light"
-            android:text=":"
+            android:text="@string/dos_puntos"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -74,8 +74,8 @@
             android:layout_margin="5dp"
             android:layout_marginBottom="-2dp"
             android:fontFamily="@font/industrial_light"
-            android:gravity="left"
-            android:text="TextView"
+            android:gravity="start"
+            android:text="@string/text_view"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -90,7 +90,7 @@
             android:layout_weight="2"
             android:fontFamily="@font/industrial_light"
             android:gravity="center"
-            android:text="TextView"
+            android:text="@string/text_view"
             android:textColor="@color/black"
             android:textSize="18sp" />
     </LinearLayout>

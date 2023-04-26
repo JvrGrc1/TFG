@@ -15,7 +15,7 @@
         android:layout_marginTop="60dp"
         android:layout_marginEnd="30dp"
         android:fontFamily="@font/favter1"
-        android:text="Queremos conocer más sobre ti."
+        android:text="@string/conocerte"
         android:textColor="@color/azul_oscuro_80"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:fontFamily="@font/thinoobold"
-            android:hint="Nombre"
+            android:hint="@string/nombre"
             android:inputType="textPersonName"
             android:padding="10dp"
             android:textColorHint="@color/azul_oscuro_80"
@@ -53,7 +53,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:fontFamily="@font/thinoobold"
-            android:hint="1º Apellido"
+            android:hint="@string/apelldo1"
             android:inputType="textPersonName"
             android:padding="10dp"
             android:textColorHint="@color/azul_oscuro_80"
@@ -69,7 +69,7 @@
         android:layout_weight="1"
         android:ems="10"
         android:fontFamily="@font/thinoobold"
-        android:hint="2º Apellido (opcional)"
+        android:hint="@string/apellido2_opc"
         android:inputType="textPersonName"
         android:padding="10dp"
         android:textColorHint="@color/azul_oscuro_80"
@@ -103,7 +103,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/thinoobold"
-                android:text="Administrador"
+                android:text="@string/admin"
                 android:textSize="18sp" />
 
             <RadioButton
@@ -111,7 +111,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/thinoobold"
-                android:text="Entrenador"
+                android:text="@string/entrenador"
                 android:textSize="18sp" />
 
             <RadioButton
@@ -119,7 +119,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/thinoobold"
-                android:text="Jugador"
+                android:text="@string/jugador"
                 android:textSize="18sp" />
         </RadioGroup>
 
@@ -133,7 +133,7 @@
         android:layout_marginTop="30dp"
         android:layout_weight="1"
         android:fontFamily="@font/favter1"
-        android:text="Rol:"
+        android:text="@string/rol"
         android:textColor="@color/azul_oscuro_80"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -146,7 +146,7 @@
         android:layout_marginStart="45dp"
         android:layout_marginEnd="45dp"
         android:orientation="horizontal"
-        android:visibility="invisible"
+        android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/telefonoDetallesUser"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -159,7 +159,7 @@
             android:layout_weight="1"
             android:fontFamily="@font/thinoobold"
             android:gravity="center"
-            android:text="Codigo:"
+            android:text="@string/codigo"
             android:textColor="@color/azul_oscuro_80"
             android:textSize="22sp" />
 
@@ -185,7 +185,7 @@
         android:layout_marginTop="125dp"
         android:ems="10"
         android:fontFamily="@font/thinoobold"
-        android:hint="Telefono (opcional)"
+        android:hint="@string/telefono_opc"
         android:inputType="textPersonName"
         android:textColorHint="@color/azul_oscuro_80"
         android:textSize="20sp"
@@ -203,7 +203,7 @@
         android:fontFamily="@font/industrial_light"
         android:gravity="center"
         android:padding="10dp"
-        android:text="Continuar"
+        android:text="@string/continuar"
         android:textSize="22sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -217,7 +217,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="40dp"
         android:fontFamily="@font/thinoobold"
-        android:text="Ej: 628519047"
+        android:text="@string/telefono_ejemplo"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/telefonoDetallesUser" />

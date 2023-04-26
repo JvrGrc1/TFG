@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="35dp"
         android:fontFamily="@font/favter1"
-        android:text="Registrar partido"
+        android:text="@string/registrar_partido"
         android:textColor="@color/azul_oscuro"
         android:textStyle="italic"
         app:layout_constraintEnd_toEndOf="parent"
@@ -27,7 +27,7 @@
         android:layout_marginStart="2dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="2dp"
-        android:background="	#B5B2B2"
+        android:background="@color/gris_oscurito"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewTitulo" />
@@ -51,7 +51,7 @@
             android:background="@drawable/fondo_spinner"
             android:gravity="center"
             android:padding="5dp"
-            android:popupBackground="#f2f2fc"
+            android:popupBackground="@color/gris_casi_blanco"
             android:textAlignment="center" />
 
         <Spinner
@@ -65,7 +65,7 @@
             android:background="@drawable/fondo_spinner"
             android:gravity="center"
             android:padding="5dp"
-            android:popupBackground="#f2f2fc"
+            android:popupBackground="@color/gris_casi_blanco"
             android:textAlignment="center" />
 
         <Spinner
@@ -79,7 +79,7 @@
             android:background="@drawable/fondo_spinner"
             android:gravity="center"
             android:padding="5dp"
-            android:popupBackground="#f2f2fc"
+            android:popupBackground="@color/gris_casi_blanco"
             android:textAlignment="center" />
     </LinearLayout>
 
@@ -104,11 +104,11 @@
             android:ems="10"
             android:fontFamily="@font/thinoobold"
             android:gravity="center"
-            android:hint="Local"
+            android:hint="@string/local"
             android:inputType="textPersonName"
             android:maxWidth="96dp"
             android:padding="10dp"
-            android:textColorHint="#000000"
+            android:textColorHint="@color/black"
             android:textSize="28sp" />
 
         <TextView
@@ -118,8 +118,8 @@
             android:layout_margin="10dp"
             android:fontFamily="@font/thinoobold"
             android:gravity="center"
-            android:text="VS"
-            android:textColor="#000000"
+            android:text="@string/versus"
+            android:textColor="@color/black"
             android:textSize="30sp" />
 
         <EditText
@@ -130,11 +130,11 @@
             android:ems="10"
             android:fontFamily="@font/thinoobold"
             android:gravity="center"
-            android:hint="Visitante"
+            android:hint="@string/visitante"
             android:inputType="textPersonName"
             android:maxWidth="96dp"
             android:padding="10dp"
-            android:textColorHint="#000000"
+            android:textColorHint="@color/black"
             android:textSize="28sp" />
     </LinearLayout>
 
@@ -160,10 +160,10 @@
             android:ems="10"
             android:fontFamily="@font/thinoobold"
             android:gravity="center"
-            android:hint="GolesLocal"
+            android:hint="@string/goles_local"
             android:inputType="number"
-            android:textColor="#000000"
-            android:textColorHint="#000000"
+            android:textColor="@color/black"
+            android:textColorHint="@color/black"
             android:textSize="20sp" />
 
         <TextView
@@ -173,9 +173,9 @@
             android:layout_weight="1"
             android:fontFamily="@font/thinoobold"
             android:gravity="center"
-            android:text=":"
-            android:textColor="#000000"
-            android:textColorHint="#000000"
+            android:text="@string/dos_puntos"
+            android:textColor="@color/black"
+            android:textColorHint="@color/black"
             android:textSize="30sp"
             android:textStyle="bold" />
 
@@ -189,10 +189,10 @@
             android:ems="10"
             android:fontFamily="@font/thinoobold"
             android:gravity="center"
-            android:hint="GolesVisitante"
+            android:hint="@string/goles_visitante"
             android:inputType="number"
-            android:textColor="#000000"
-            android:textColorHint="#000000"
+            android:textColor="@color/black"
+            android:textColorHint="@color/black"
             android:textSize="20sp" />
     </LinearLayout>
 
@@ -218,10 +218,10 @@
             android:ems="10"
             android:fontFamily="@font/thinoobold"
             android:gravity="center"
-            android:hint="Fecha"
+            android:hint="@string/fecha"
             android:inputType="text"
             android:padding="10dp"
-            android:textColorHint="#000000"
+            android:textColorHint="@color/black"
             android:textSize="24sp" />
 
         <EditText
@@ -234,10 +234,10 @@
             android:ems="10"
             android:fontFamily="@font/thinoobold"
             android:gravity="center"
-            android:hint="Hora"
+            android:hint="@string/hora"
             android:inputType="text"
             android:padding="10dp"
-            android:textColorHint="#000000"
+            android:textColorHint="@color/black"
             android:textSize="24sp" />
     </LinearLayout>
 
@@ -249,7 +249,7 @@
         android:layout_marginBottom="22dp"
         android:clickable="true"
         android:visibility="invisible"
-        app:backgroundTint="#f2f2fc"
+        app:backgroundTint="@color/gris_casi_blanco"
         app:elevation="2dp"
         app:fabCustomSize="50dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -263,7 +263,7 @@
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="20dp"
         android:clickable="true"
-        app:backgroundTint="#f2f2fc"
+        app:backgroundTint="@color/gris_casi_blanco"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/agregar" />
@@ -277,10 +277,10 @@
         android:ems="10"
         android:fontFamily="@font/thinoobold"
         android:gravity="center"
-        android:hint="Pabellón"
+        android:hint="@string/pabellon"
         android:inputType="text"
         android:padding="10dp"
-        android:textColorHint="#000000"
+        android:textColorHint="@color/black"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

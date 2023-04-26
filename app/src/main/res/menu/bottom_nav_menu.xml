@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:title="Estadísticas"
+    <item android:title="@string/estadisticas"
         android:id="@+id/estadisticas"/>
-    <item android:title="Partidos"
+    <item android:title="@string/partidos"
         android:icon="@drawable/partidos"
         android:id="@+id/partidos"/>
-    <item android:title="Tienda"
+    <item android:title="@string/tienda"
         android:id="@+id/tienda"/>
 </menu>
