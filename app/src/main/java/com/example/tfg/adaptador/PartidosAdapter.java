@@ -1,6 +1,7 @@
 package com.example.tfg.adaptador;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -109,6 +110,12 @@ public class PartidosAdapter extends RecyclerView.Adapter<PartidosAdapter.Partid
             visitante = itemView.findViewById(R.id.visitante);
             golesLocal = itemView.findViewById(R.id.golesLocal);
             golesVisitante = itemView.findViewById(R.id.golesVisitante);
+
+            if (Integer.parseInt(golesLocal.getText().toString()) > Integer.parseInt(golesVisitante.getText().toString())){
+                local.setTypeface(Typeface.DEFAULT_BOLD);
+            }else{
+                visitante.setTypeface(Typeface.DEFAULT_BOLD);
+            }
         }
     }
 }
