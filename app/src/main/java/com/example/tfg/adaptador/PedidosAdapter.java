@@ -61,6 +61,25 @@ public class PedidosAdapter extends RecyclerView.Adapter<PedidosAdapter.PedidosV
         } else{
             holder.talla.setVisibility(View.INVISIBLE);
         }
+        holder.mas.setOnClickListener(view -> {
+            if (Integer.parseInt(holder.cantidad.getText().toString()) == 9){
+                Toast.makeText(view.getContext(), "No puedes añadir más de 9 unidades por prenda.", Toast.LENGTH_SHORT).show();
+            }else {
+                int cantidadNueva = (Integer.parseInt(holder.cantidad.getText().toString()) + 1);
+                holder.cantidad.setText(cantidadNueva + "");
+                pedido.setCantidad(Long.parseLong(holder.cantidad.getText().toString()));
+            }
+        });
+
+        holder.menos.setOnClickListener(view -> {
+            if (Integer.parseInt(holder.cantidad.getText().toString()) == 1){
+                Toast.makeText(view.getContext(), "Si quiere eliminar este producto de su compra pulse el icono de la papelera.", Toast.LENGTH_SHORT).show();
+            }else {
+                int cantidadNueva = (Integer.parseInt(holder.cantidad.getText().toString()) - 1);
+                holder.cantidad.setText(cantidadNueva + "");
+                pedido.setCantidad(Long.parseLong(holder.cantidad.getText().toString()));
+            }
+        });
     }
 
     @Override
