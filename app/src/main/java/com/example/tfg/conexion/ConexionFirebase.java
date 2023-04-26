@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.example.tfg.Login;
 import com.example.tfg.RegistrarPartido;
 import com.example.tfg.entidad.Partido;
 import com.example.tfg.entidad.Pedido;
@@ -331,7 +332,11 @@ public class ConexionFirebase {
         return db.collection("temporadas").document(anios).collection(division).document(id);
     }
 
-    public void signIn(){}
+    public void signIn(String correo, String psswrd, Login login){
+        auth.signInWithEmailAndPassword(correo, psswrd).addOnCompleteListener(task -> {
+            login.iniciarMainActivity(task);
+        });
+    }
     public void signOut(){auth.signOut();}
 
     public void rellenarSpinnerTemporadas(Context context, Spinner temporadas, Spinner division, Spinner jornada){
