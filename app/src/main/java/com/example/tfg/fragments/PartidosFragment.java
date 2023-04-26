@@ -250,6 +250,7 @@ public class PartidosFragment extends Fragment {
             }
             ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, lista);
             temporadas.setAdapter(adapter);
+            temporadas.setSelection(lista.size() - 1);
             equipos.setEnabled(false);
             jornadas.setEnabled(false);
         });

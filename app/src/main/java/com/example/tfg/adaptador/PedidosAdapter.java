@@ -68,6 +68,7 @@ public class PedidosAdapter extends RecyclerView.Adapter<PedidosAdapter.PedidosV
                 int cantidadNueva = (Integer.parseInt(holder.cantidad.getText().toString()) + 1);
                 holder.cantidad.setText(cantidadNueva + "");
                 pedido.setCantidad(Long.parseLong(holder.cantidad.getText().toString()));
+                holder.precio.setText(String.format("%.2f€",pedido.getPrecioUnidad()*pedido.getCantidad()));
             }
         });
 
@@ -78,6 +79,7 @@ public class PedidosAdapter extends RecyclerView.Adapter<PedidosAdapter.PedidosV
                 int cantidadNueva = (Integer.parseInt(holder.cantidad.getText().toString()) - 1);
                 holder.cantidad.setText(cantidadNueva + "");
                 pedido.setCantidad(Long.parseLong(holder.cantidad.getText().toString()));
+                holder.precio.setText(String.format("%.2f€",pedido.getPrecioUnidad()*pedido.getCantidad()));
             }
         });
     }

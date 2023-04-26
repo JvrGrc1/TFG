@@ -14,18 +14,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.tfg.conexion.ConexionFirebase;
 import com.example.tfg.entidad.Partido;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -71,7 +64,6 @@ public class RegistrarPartido extends AppCompatActivity {
         jornada.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                //actualizarDatos();
                 actualizarDatos2();
             }
 
@@ -137,24 +129,6 @@ public class RegistrarPartido extends AppCompatActivity {
         datos.put("visitante", visitante.getText().toString());
         return datos;
     }
-
-    /*private void rellenarAnios() {
-        db.collection("temporadas").get().addOnCompleteListener(task -> {
-            List<String> listaAnios = new ArrayList<>();
-            listaAnios.add("");
-            if (task.isSuccessful()){
-                for (QueryDocumentSnapshot document : task.getResult()){
-                    listaAnios.add(document.getId());
-                }
-            }else{
-                Toast.makeText(getApplicationContext(), "El año " + anios.getSelectedItem().toString() + " no existe.", Toast.LENGTH_SHORT).show();
-            }
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item, listaAnios);
-            anios.setAdapter(adapter);
-            division.setEnabled(false);
-            jornada.setEnabled(false);
-        });
-    }*/
     private void rellenarDivisiones() {
         anios.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -189,19 +163,6 @@ public class RegistrarPartido extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (!division.getSelectedItem().equals("") && !division.getSelectedItem().equals("TODOS")){
                     conexion.rellenarJornadas(RegistrarPartido.this, anios, division, jornada);
-                    /*db.collection("temporadas").document(anios.getSelectedItem().toString()).collection(division.getSelectedItem().toString()).get().addOnCompleteListener(task -> {
-                        List<Integer> listaJornadas = new ArrayList<>();
-                        if (task.isSuccessful()){
-                            int numDocs = 1;
-                            for (QueryDocumentSnapshot document : task.getResult()){
-                                listaJornadas.add(numDocs++);
-                            }
-                            jornada.setAdapter(new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item, listaJornadas));
-                            jornada.setEnabled(true);
-                        }else{
-                            Toast.makeText(getApplicationContext(), "El año " + anios.getSelectedItem().toString() + " no existe.", Toast.LENGTH_SHORT).show();
-                        }
-                    });*/
                 }else{
                     jornada.setSelection(0);
                     jornada.setEnabled(false);
@@ -232,28 +193,6 @@ public class RegistrarPartido extends AppCompatActivity {
             });
         }
     }
-    /*private void actualizarDatos() {
-        if (jornada.isEnabled()) {
-            db.collection("temporadas").document(anios.getSelectedItem().toString()).collection(division.getSelectedItem().toString()).get().addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        if (Integer.parseInt(document.get("jornada").toString()) == (Integer.parseInt(jornada.getSelectedItem().toString()))) {
-                            id = document.getId();
-                            local.setText(document.get("local").toString());
-                            visitante.setText(document.get("visitante").toString());
-                            gL.setText(document.get("golesLocal").toString());
-                            gV.setText(document.get("golesVisitante").toString());
-                            fecha.setText(document.get("fecha").toString());
-                            hora.setText(document.get("hora").toString());
-                            pabellon.setText(document.get("pabellón").toString());
-                        }
-                    }
-                } else {
-                    Toast.makeText(RegistrarPartido.this, "Error al conseguir los documentos.", Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-    }*/
     private boolean todoRelleno(){
         return !local.getText().toString().isEmpty() && !visitante.getText().toString().isEmpty() && !gV.getText().toString().isEmpty() && !gL.getText().toString().isEmpty() && !hora.getText().toString().isEmpty() && !fecha.getText().toString().isEmpty() && !pabellon.getText().toString().isEmpty() && getFecha() != null && getFecha() != null;
     }

@@ -185,55 +185,10 @@ public class MainActivity extends AppCompatActivity {
             registroUser.setVisible(true);
             usuario.setVisible(false);
             registroPartido.setVisible(false);
-            //imagenRandom(imagen);
             conexion.cargarImagen(MainActivity.this, imagen, abrir, null);
         }else{
             comprobarExiste(user.getEmail(), nombreUsuario, posicion, imagen);
         }
-    }
-
-    private void imagenRandom(ImageView imagen) {
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        String foto = randomFoto();
-        StorageReference gsReference = storage.getReferenceFromUrl("gs://balonmano-f213a.appspot.com/imagenes-default/" + foto);
-        final long MEGABYTES =  5 * 1024 * 1024;    //Sirve para establecer un limite de tamaño a la imagen y si se pasa no se descargara completamente.
-        gsReference.getBytes(MEGABYTES).addOnSuccessListener(bytes -> {
-            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);              //Decodifica los bytes de la img descargada en un Bitmap
-            Bitmap bitmap1 = Bitmap.createScaledBitmap(bitmap,200,200,true);    //Redimensionar el Bitmap anteriro a una imagen 200*200
-            imagen.setImageBitmap(bitmap1);
-            abrir.setImageBitmap(bitmap1);
-        }).addOnFailureListener(exception -> Toast.makeText(MainActivity.this, "Error al descargar la imagen", Toast.LENGTH_SHORT).show());
-
-    }
-    private void imagenPerfil(ImageView imagen, String url){
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference gsReference = storage.getReferenceFromUrl(url);
-        final long ONE_MEGABYTE = 5 * 1024 * 1024;
-        gsReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(bytes -> {
-            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-            Bitmap bitmap1 = Bitmap.createScaledBitmap(bitmap,200,200,true);
-            imagen.setImageBitmap(bitmap1);
-            abrir.setImageBitmap(bitmap1);
-        }).addOnFailureListener(exception -> Toast.makeText(MainActivity.this, "Error al descargar la imagen de perfil", Toast.LENGTH_SHORT).show());
-    }
-
-    private String randomFoto(){
-        int numero = (int) (Math.random() * 6) + 1;
-        switch (numero) {
-            case 1:
-                return "corriendo.png";
-            case 2:
-                return "culturismo.png";
-            case 3:
-                return "futbol-americano.png";
-            case 4:
-                return "futbol.png";
-            case 5:
-                return "surf.png";
-            case 6:
-                return "voleibol.png";
-        }
-        return "corriendo.png";
     }
 
     @SuppressLint("RestrictedApi")
