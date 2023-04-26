@@ -31,7 +31,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/thinoobold"
                 android:text="TextView"
-                android:textColor="#000000"
+                android:textColor="@color/black"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -42,7 +42,7 @@
                 android:layout_marginTop="10dp"
                 android:fontFamily="@font/thinoobold"
                 android:text="TextView"
-                android:textColor="#000000"
+                android:textColor="@color/black"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -85,7 +85,7 @@
                     android:fontFamily="@font/thinoobold"
                     android:gravity="center"
                     android:text="9"
-                    android:textColor="#000000"
+                    android:textColor="@color/black"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 

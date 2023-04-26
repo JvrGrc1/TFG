@@ -104,7 +104,7 @@
         android:fontFamily="@font/favter1"
         android:gravity="center"
         android:text="Inicio\nde sesión"
-        android:textColor="#CC000180"
+        android:textColor="@color/azul_oscuro_80"
         android:textSize="22sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

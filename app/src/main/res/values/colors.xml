@@ -10,14 +10,21 @@
 
     <!-- Colores del escudo -->
     <color name="azul_oscuro">#000180</color>
+    <color name="azul_oscuro_80">#CC000180</color>
+    <color name="azul_oscuro_56">#90000180</color>
+    <color name="azul_oscuro_38">#60000180</color>
+    <color name="morado_claro">#c0c0dd</color>
     <color name="morado_muy_claro">#d5d5f5</color>
-    <color name="azul_casi_blanco">#DFDFFF</color>
+    <color name="morado_casi_blanco">#E5DFFF</color>
 
 
     <!-- Colores mios -->
     <color name="rojo_oscuro">#970000</color>
     <color name="verde_oscuro">#328107</color>
-    <color name="gris">#f2f2fc</color>
+    <color name="gris_casi_blanco">#f2f2fc</color>
     <color name="blanco_mas_oscurito">#F0F0F0</color>
+    <color name="casi_blanco">#F6F6F6</color>
     <color name="gris_oscurito">#B5B2B2</color>
+    <color name="gris_oscuro">#838383</color>
+    <color name="transparente">#1AFFFFFF</color>
 </resources>

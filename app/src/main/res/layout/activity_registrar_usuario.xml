@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF"
+    android:background="@color/white"
     tools:context=".RegistrarUsuario">
 
     <Button
@@ -70,7 +70,7 @@
         android:fontFamily="@font/favter1"
         android:gravity="center"
         android:text="Registro de\nusuario"
-        android:textColor="#CC000180"
+        android:textColor="@color/azul_oscuro_80"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -113,7 +113,7 @@
         android:fontFamily="@font/industrial_light"
         android:gravity="center"
         android:text="Si ya tienes cuenta.\n INICIA SESIÓN AQUÍ"
-        android:textColor="#000000"
+        android:textColor="@color/black"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"

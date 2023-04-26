@@ -4,18 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
-    android:backgroundTint="#ccccf4"
+    android:background="@color/white"
     tools:context=".RegistrarPartido">
 
     <TextView
         android:id="@+id/textViewTitulo"
-        android:layout_width="wrap_content"
+        android:layout_width="280dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="35dp"
         android:fontFamily="@font/favter1"
         android:text="Registrar partido"
-        android:textColor="#000180"
+        android:textColor="@color/azul_oscuro"
         android:textStyle="italic"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

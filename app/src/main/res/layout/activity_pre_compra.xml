@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".PreCompra">
 
     <TextView
@@ -13,7 +14,7 @@
         android:layout_marginTop="40dp"
         android:fontFamily="@font/favter1"
         android:text="Revisa tu pedido"
-        android:textColor="#CC000180"
+        android:textColor="@color/azul_oscuro_80"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -25,7 +26,7 @@
         android:layout_marginStart="2dp"
         android:layout_marginTop="5dp"
         android:layout_marginEnd="2dp"
-        android:background="#B5B2B2"
+        android:background="@color/gris_oscurito"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView8" />

@@ -5,14 +5,14 @@
     android:id="@+id/l"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#1AFFFFFF"
+    android:background="@color/transparente"
     tools:context=".detalles.DetallesJornada">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/card_view"
         android:layout_width="350dp"
         android:layout_height="500dp"
-        app:cardBackgroundColor="#F6F6F6"
+        app:cardBackgroundColor="@color/casi_blanco"
         app:cardCornerRadius="6dp"
         app:cardElevation="6dp"
         app:cardPreventCornerOverlap="false"
@@ -33,7 +33,7 @@
                 android:layout_gravity="center"
                 android:layout_margin="10dp"
                 android:text="TextView"
-                android:textColor="#000000"
+                android:textColor="@color/black"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
