@@ -55,11 +55,9 @@ public class MainActivity extends AppCompatActivity {
     private ImageView abrir;
     private List<Partido> j = new ArrayList<>();
     private List<Prenda> prendas = new ArrayList<>();
-    private ConexionFirebase conexion = new ConexionFirebase();
+    private final ConexionFirebase conexion = new ConexionFirebase();
     private DrawerLayout drawerLayout;
     private MenuItem cerrar, registroUser, usuario, registroPartido;
-
-    FirebaseAuth auth = FirebaseAuth.getInstance();
 
 
     @Override
@@ -136,7 +134,8 @@ public class MainActivity extends AppCompatActivity {
         lateral.setNavigationItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.registrarPartido:
-                    if (auth.getCurrentUser() != null){
+                    String user = conexion.obtenerUser();
+                    if (user != null){
                     Intent intentRegistrar = new Intent(this, RegistrarPartido.class);
                     startActivity(intentRegistrar);
                     drawerLayout.closeDrawer(GravityCompat.START);
@@ -160,7 +159,7 @@ public class MainActivity extends AppCompatActivity {
                     drawerLayout.closeDrawer(GravityCompat.START);
                     break;
                 case R.id.cerrar:
-                    auth.signOut();
+                    conexion.signOut();
                     intentMainActivity();
                 case R.id.consultaEquipo:
                     break;

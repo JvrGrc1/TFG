@@ -56,7 +56,11 @@ public class PedidosAdapter extends RecyclerView.Adapter<PedidosAdapter.PedidosV
         holder.nombre.setText(pedido.getPrenda());
         holder.cantidad.setText(String.format("%d", pedido.getCantidad()));
         holder.precio.setText(String.format("%.2f€", pedido.getPrecioUnidad()*pedido.getCantidad()));
-
+        if (pedido.getTalla() != null){
+            holder.talla.setText(String.format("Talla: %s", pedido.getTalla().toUpperCase()));
+        } else{
+            holder.talla.setVisibility(View.INVISIBLE);
+        }
     }
 
     @Override
@@ -67,7 +71,7 @@ public class PedidosAdapter extends RecyclerView.Adapter<PedidosAdapter.PedidosV
     public static class PedidosViewHolder extends RecyclerView.ViewHolder{
 
         ImageView imagen;
-        TextView cantidad, nombre, precio;
+        TextView cantidad, nombre, precio, talla;
         Button mas, menos, trash;
         ConexionFirebase conexion = new ConexionFirebase();
         PedidosAdapter adapter;
@@ -75,11 +79,12 @@ public class PedidosAdapter extends RecyclerView.Adapter<PedidosAdapter.PedidosV
 
         public PedidosViewHolder(@NonNull View itemView, PedidosAdapter adapter1) {
             super(itemView);
-            this.adapter = adapter1;
+            adapter = adapter1;
             imagen = itemView.findViewById(R.id.imagenPrendaPedido);
             cantidad = itemView.findViewById(R.id.cantidadPrendaPedido);
             nombre = itemView.findViewById(R.id.nombrePrendaPedido);
             precio = itemView.findViewById(R.id.precioPrendaPedido);
+            talla = itemView.findViewById(R.id.tallaPrendaPedido);
             mas = itemView.findViewById(R.id.buttonMasPrendaPedido);
             menos = itemView.findViewById(R.id.buttonMenosprendaPedido);
             trash = itemView.findViewById(R.id.buttonBasuraPrendaPedido);
@@ -87,7 +92,7 @@ public class PedidosAdapter extends RecyclerView.Adapter<PedidosAdapter.PedidosV
             trash.setOnClickListener(view -> {
                 new AlertDialog.Builder(view.getContext())
                         .setPositiveButton("Confirmar", (dialogInterface, i) -> {
-                            conexion.borrarPedido(view.getContext(), adapter1.getDatos().get(getAdapterPosition()));
+                            conexion.borrarPedido(view.getContext(), adapter.getDatos().get(getAdapterPosition()));
                             adapter.borrarItem(getAdapterPosition());
                             Toast.makeText(view.getContext(), "Prenda de ropa eleminada de la lista.", Toast.LENGTH_SHORT).show();
                         })

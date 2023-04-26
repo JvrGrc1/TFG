@@ -1,17 +1,17 @@
 package com.example.tfg.conexion;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
-import com.example.tfg.PreCompra;
-import com.example.tfg.R;
+import com.example.tfg.RegistrarPartido;
 import com.example.tfg.entidad.Partido;
 import com.example.tfg.entidad.Pedido;
 import com.example.tfg.entidad.Prenda;
@@ -26,12 +26,13 @@ import com.google.firebase.auth.SignInMethodQueryResult;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -41,7 +42,6 @@ public class ConexionFirebase {
     private final FirebaseStorage storage = FirebaseStorage.getInstance();
     private final FirebaseAuth auth = FirebaseAuth.getInstance();
     private final FirebaseUser user = auth.getCurrentUser();
-    private static final int CACHE_SIZE = 100 * 1024 * 1024;
 
     public Task<List<Partido>> obtenerPartidos() {
         TaskCompletionSource<List<Partido>> taskCompletionSource = new TaskCompletionSource<>();
@@ -116,12 +116,56 @@ public class ConexionFirebase {
         return taskCompletionSource.getTask();
     }
 
+    public String obtenerUser(){
+        return auth.getCurrentUser().getEmail();
+        /*FirebaseUser user = auth.getCurrentUser();
+        if (user == null){
+            return null;
+        }else{
+            return user.getEmail();
+        }*/
+    }
+
     public void subirPedido(Context contexto, Map<String, Object> pedido) {
-        db.collection("pedidos").add(pedido).addOnCompleteListener(task -> {
-            if (task.isSuccessful()){
-                Toast.makeText(contexto, "Se ha añadido el pedido correctamente.", Toast.LENGTH_SHORT).show();
-            }else{
-                Toast.makeText(contexto, "No se ha podido añadir el pedido. Intentelo de nuevo.", Toast.LENGTH_SHORT).show();
+        Task<List<Pedido>> pedidos = obtenerPedidos(user.getEmail());
+        pedidos.addOnCompleteListener(new OnCompleteListener<List<Pedido>>() {
+            @Override
+            public void onComplete(@NonNull Task<List<Pedido>> task) {
+                if (task.isSuccessful()){
+                    List<Pedido> pedidos1 = task.getResult();
+                    if (pedidos1.isEmpty()){
+                        db.collection("pedidos").add(pedido).addOnCompleteListener(task1 -> {
+                            if (task1.isSuccessful()){
+                                Toast.makeText(contexto, "Se ha añadido el pedido correctamente.", Toast.LENGTH_SHORT).show();
+                            }else{
+                                Toast.makeText(contexto, "No se ha podido añadir el pedido. Intentelo de nuevo.", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }else{
+                        boolean repetido = false;
+                        long cantidad = 0;
+                        for (Pedido p : pedidos1){
+                            if (!p.isPagado() && p.getPrenda().equals(pedido.get("prenda")) && p.getTalla().equals(pedido.get("talla"))){
+                                repetido = true;
+                                cantidad = p.getCantidad();
+                                borrarPedido(contexto, p);
+                            }
+                        }
+                        if (repetido){
+                            cantidad = cantidad + (long )pedido.get("cantidad");
+                            pedido.put("cantidad", cantidad);
+                        }
+                        db.collection("pedidos").add(pedido).addOnCompleteListener(task1 -> {
+                            if (task1.isSuccessful()){
+                                Toast.makeText(contexto, "Se ha añadido el pedido correctamente.", Toast.LENGTH_SHORT).show();
+                            }else{
+                                Toast.makeText(contexto, "No se ha podido añadir el pedido. Intentelo de nuevo.", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                }else{
+                    Toast.makeText(contexto, "Error al obtener los pedidos del usuario.", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -140,6 +184,25 @@ public class ConexionFirebase {
             holder.setImageBitmap(bitmap1);
             if (img != null){img.setImageBitmap(bitmap1);}
         }).addOnFailureListener(exception -> Toast.makeText(contexto, "Error al descargar la imagen de la prenda", Toast.LENGTH_SHORT).show());
+    }
+
+    private String randomFoto(){
+        int numero = (int) (Math.random() * 6) + 1;
+        switch (numero) {
+            case 1:
+                return "corriendo.png";
+            case 2:
+                return "culturismo.png";
+            case 3:
+                return "futbol-americano.png";
+            case 4:
+                return "futbol.png";
+            case 5:
+                return "surf.png";
+            case 6:
+                return "voleibol.png";
+        }
+        return "corriendo.png";
     }
 
     public void imagenPedido(Context contexto, ImageView holder, String nombrePrenda){
@@ -191,6 +254,7 @@ public class ConexionFirebase {
                 List<DocumentSnapshot> documents = snapsot.getDocuments();
                 for (DocumentSnapshot ds : documents){
                     Pedido pedido = new Pedido(ds.getString("prenda"), ds.getString("talla"), ds.getLong("cantidad"), ds.getLong("precioUnidad"));
+                    //Los pedidos no los coge como iguales aunque tengan los mismos valores ¿¿??
                     if (pedido.equals(nombreprenda)){
                         db.collection("pedidos").document(ds.getId()).delete().addOnCompleteListener(task1 -> {
                             if (task1.isSuccessful()){
@@ -199,6 +263,8 @@ public class ConexionFirebase {
                                 Toast.makeText(contexto, "Error al borrar el pedido", Toast.LENGTH_SHORT).show();
                             }
                         });
+                    }else{
+                        Toast.makeText(contexto, "Error, pedidos no iguales", Toast.LENGTH_SHORT).show();
                     }
                 }
             }else{
@@ -241,24 +307,6 @@ public class ConexionFirebase {
         });
         return taskCompletionSource.getTask();
     }
-    private String randomFoto(){
-        int numero = (int) (Math.random() * 6) + 1;
-        switch (numero) {
-            case 1:
-                return "corriendo.png";
-            case 2:
-                return "culturismo.png";
-            case 3:
-                return "futbol-americano.png";
-            case 4:
-                return "futbol.png";
-            case 5:
-                return "surf.png";
-            case 6:
-                return "voleibol.png";
-        }
-        return "corriendo.png";
-    }
 
     public void comprobarAdmin(FloatingActionButton floating, Context contexto){
         if (user != null) {
@@ -281,5 +329,85 @@ public class ConexionFirebase {
     }
     public DocumentReference getDocumento(String anios, String division, String id){
         return db.collection("temporadas").document(anios).collection(division).document(id);
+    }
+
+    public void signIn(){}
+    public void signOut(){auth.signOut();}
+
+    public void rellenarSpinnerTemporadas(Context context, Spinner temporadas, Spinner division, Spinner jornada){
+        db.collection("temporadas").get().addOnCompleteListener(task -> {
+            List<String> listaAnios = new ArrayList<>();
+            listaAnios.add("");
+            if (task.isSuccessful()){
+                for (QueryDocumentSnapshot document : task.getResult()){
+                    listaAnios.add(document.getId());
+                }
+            }else{
+                Toast.makeText(context, "El año " + temporadas.getSelectedItem().toString() + " no existe.", Toast.LENGTH_SHORT).show();
+            }
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, listaAnios);
+            temporadas.setAdapter(adapter);
+            division.setEnabled(false);
+            jornada.setEnabled(false);
+        });
+    }
+
+    public void rellenarJornadas(Context context, Spinner temporadas, Spinner division, Spinner jornada){
+        db.collection("temporadas").document(temporadas.getSelectedItem().toString()).collection(division.getSelectedItem().toString()).get().addOnCompleteListener(task -> {
+            List<Integer> listaJornadas = new ArrayList<>();
+            if (task.isSuccessful()){
+                int numDocs = 1;
+                for (QueryDocumentSnapshot document : task.getResult()){
+                    listaJornadas.add(numDocs++);
+                }
+                jornada.setAdapter(new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, listaJornadas));
+                jornada.setEnabled(true);
+            }else{
+                Toast.makeText(context, "El año " + temporadas.getSelectedItem().toString() + " no existe.", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public Task<Map<String, Object>> actualizarDatos(Spinner temporadas, Spinner division, Spinner jornada){
+        TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
+        db.collection("temporadas").document(temporadas.getSelectedItem().toString()).collection(division.getSelectedItem().toString()).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                for (QueryDocumentSnapshot document : task.getResult()) {
+                    Map<String, Object> mapa = new HashMap<>();
+                    if (Integer.parseInt(document.get("jornada").toString()) == (Integer.parseInt(jornada.getSelectedItem().toString()))) {
+                        mapa.put("id",document.getId());
+                        mapa.put("local", document.get("local").toString());
+                        mapa.put("visitante", document.get("visitante").toString());
+                        mapa.put("golesLocal", document.get("golesLocal").toString());
+                        mapa.put("golesVisitante", document.get("golesVisitante").toString());
+                        mapa.put("fecha", document.get("fecha").toString());
+                        mapa.put("hora", document.get("hora").toString());
+                        mapa.put("pabellon", document.get("pabellón").toString());
+                        taskCompletionSource.setResult(mapa);
+                    }
+                }
+            } else {
+                taskCompletionSource.setException(Objects.requireNonNull(task.getException()));
+            }
+        });
+        return taskCompletionSource.getTask();
+        /*
+        TaskCompletionSource<List<Prenda>> taskCompletionSource = new TaskCompletionSource<>();
+        db.collection("prendas").get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()){
+                QuerySnapshot document  = task.getResult();
+                List<DocumentSnapshot> documents = document.getDocuments();
+                List<Prenda> prendas = new ArrayList<>();
+                for (DocumentSnapshot snapsot : documents){
+                    Prenda prenda = new Prenda(snapsot.getString("nombre"), (List<String>) snapsot.get("tallas"), snapsot.getDouble("precio"), snapsot.getString("imagen"));
+                    prendas.add(prenda);
+                }
+                taskCompletionSource.setResult(prendas);
+            }else{
+                taskCompletionSource.setException(Objects.requireNonNull(task.getException()));
+            }
+        });
+        return taskCompletionSource.getTask();
+         */
     }
 }

@@ -40,7 +40,6 @@ public class DetallesPrenda extends AppCompatActivity {
     private Spinner cantidad;
     private ImageView imagen;
     private final ConexionFirebase conexion = new ConexionFirebase();
-    private final FirebaseAuth auth = FirebaseAuth.getInstance();
 
     @SuppressLint("DefaultLocale")
     @Override
@@ -124,7 +123,7 @@ public class DetallesPrenda extends AppCompatActivity {
         aniadir.setOnClickListener(view -> {
             if (pedido.getTalla() == null || !pedido.getTalla().equals("-1")){
                 Map<String, Object> map = new HashMap<>();
-                map.put("comprador", auth.getCurrentUser().getEmail());
+                map.put("comprador", conexion.obtenerUser());
                 map.put("prenda", pedido.getPrenda());
                 map.put("talla", pedido.getTalla());
                 map.put("cantidad", pedido.getCantidad());

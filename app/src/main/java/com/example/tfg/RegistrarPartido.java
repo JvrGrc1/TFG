@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.tfg.conexion.ConexionFirebase;
 import com.example.tfg.entidad.Partido;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -34,7 +35,6 @@ public class RegistrarPartido extends AppCompatActivity {
     private Spinner anios, division, jornada;
     private EditText fecha, hora, local, visitante, gL, gV, pabellon;
     private FloatingActionButton agregar, editar;
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private ConexionFirebase conexion = new ConexionFirebase();
     private String id;
 
@@ -63,14 +63,16 @@ public class RegistrarPartido extends AppCompatActivity {
         pabellon.setEnabled(false);
         fecha.setEnabled(false);
 
-        rellenarAnios();
+        //rellenarAnios();
+        conexion.rellenarSpinnerTemporadas(RegistrarPartido.this, anios, division, jornada);
         rellenarDivisiones();
         rellenarJornadas();
 
         jornada.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                actualizarDatos();
+                //actualizarDatos();
+                actualizarDatos2();
             }
 
             @Override
@@ -136,7 +138,7 @@ public class RegistrarPartido extends AppCompatActivity {
         return datos;
     }
 
-    private void rellenarAnios() {
+    /*private void rellenarAnios() {
         db.collection("temporadas").get().addOnCompleteListener(task -> {
             List<String> listaAnios = new ArrayList<>();
             listaAnios.add("");
@@ -152,7 +154,7 @@ public class RegistrarPartido extends AppCompatActivity {
             division.setEnabled(false);
             jornada.setEnabled(false);
         });
-    }
+    }*/
     private void rellenarDivisiones() {
         anios.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -186,7 +188,8 @@ public class RegistrarPartido extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (!division.getSelectedItem().equals("") && !division.getSelectedItem().equals("TODOS")){
-                    db.collection("temporadas").document(anios.getSelectedItem().toString()).collection(division.getSelectedItem().toString()).get().addOnCompleteListener(task -> {
+                    conexion.rellenarJornadas(RegistrarPartido.this, anios, division, jornada);
+                    /*db.collection("temporadas").document(anios.getSelectedItem().toString()).collection(division.getSelectedItem().toString()).get().addOnCompleteListener(task -> {
                         List<Integer> listaJornadas = new ArrayList<>();
                         if (task.isSuccessful()){
                             int numDocs = 1;
@@ -198,7 +201,7 @@ public class RegistrarPartido extends AppCompatActivity {
                         }else{
                             Toast.makeText(getApplicationContext(), "El año " + anios.getSelectedItem().toString() + " no existe.", Toast.LENGTH_SHORT).show();
                         }
-                    });
+                    });*/
                 }else{
                     jornada.setSelection(0);
                     jornada.setEnabled(false);
@@ -209,7 +212,27 @@ public class RegistrarPartido extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> parent) {}
         });
     }
-    private void actualizarDatos() {
+    private void actualizarDatos2(){
+        if (jornada.isEnabled()){
+            Task<Map<String, Object>> mapa = conexion.actualizarDatos(anios, division, jornada);
+            mapa.addOnCompleteListener(task -> {
+                if (task.isSuccessful()){
+                    Map<String, Object> datos = task.getResult();
+                    id = (String) datos.get("id");
+                    local.setText((String) datos.get("local"));
+                    visitante.setText((String) datos.get("visitante"));
+                    gL.setText((String) datos.get("golesLocal"));
+                    gV.setText((String) datos.get("golesVisitante"));
+                    fecha.setText((String) datos.get("fecha"));
+                    hora.setText((String) datos.get("hora"));
+                    pabellon.setText((String) datos.get("pabellon"));
+                }else{
+                    Toast.makeText(RegistrarPartido.this, "Error al actualizar datos.", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+    /*private void actualizarDatos() {
         if (jornada.isEnabled()) {
             db.collection("temporadas").document(anios.getSelectedItem().toString()).collection(division.getSelectedItem().toString()).get().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
@@ -230,7 +253,7 @@ public class RegistrarPartido extends AppCompatActivity {
                 }
             });
         }
-    }
+    }*/
     private boolean todoRelleno(){
         return !local.getText().toString().isEmpty() && !visitante.getText().toString().isEmpty() && !gV.getText().toString().isEmpty() && !gL.getText().toString().isEmpty() && !hora.getText().toString().isEmpty() && !fecha.getText().toString().isEmpty() && !pabellon.getText().toString().isEmpty() && getFecha() != null && getFecha() != null;
     }
