@@ -86,7 +86,7 @@ public class PartidosAdapter extends RecyclerView.Adapter<PartidosAdapter.Partid
     private static void setCoronas(@NonNull PartidosViewHolder holder, Partido partido) {
         if (Integer.parseInt(partido.getGolesLocal().toString()) > Integer.parseInt(partido.getGolesVisitante().toString())){
             holder.coronaLocal.setVisibility(View.VISIBLE);
-        } else {
+        } else if (Integer.parseInt(partido.getGolesLocal().toString()) < Integer.parseInt(partido.getGolesVisitante().toString())){
             holder.coronaVisitante.setVisibility(View.VISIBLE);
         }
     }
