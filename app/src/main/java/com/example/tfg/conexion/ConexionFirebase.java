@@ -86,7 +86,7 @@ public class ConexionFirebase {
                 List<DocumentSnapshot> documents = document.getDocuments();
                 List<Prenda> prendas = new ArrayList<>();
                 for (DocumentSnapshot snapsot : documents){
-                    Prenda prenda = new Prenda(snapsot.getString("nombre"), (List<String>) snapsot.get("tallas"), snapsot.getDouble("precio"), snapsot.getString("imagen"));
+                    Prenda prenda = new Prenda(snapsot.getString("nombre"), (List<String>) snapsot.get("tallas"), snapsot.getDouble("precio"), (List<String>) snapsot.get("imagen"));
                     prendas.add(prenda);
                 }
                 taskCompletionSource.setResult(prendas);

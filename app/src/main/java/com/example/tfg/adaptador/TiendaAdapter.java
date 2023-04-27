@@ -43,7 +43,7 @@ public class TiendaAdapter extends RecyclerView.Adapter<TiendaAdapter.TiendaView
 
         holder.nombre.setText(prenda.getNombre());
         holder.precio.setText(String.format("%.2f€", prenda.getPrecio()));
-        conexion.cargarImagen(contexto,holder.imagen, null, prenda.getImagen());
+        conexion.cargarImagen(contexto,holder.imagen, null, prenda.getImagen().get(0));
 
     }
 
