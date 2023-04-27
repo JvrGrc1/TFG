@@ -12,8 +12,9 @@
     <string name="xs">XS</string>
     <string name="conocerte">Queremos conocer más sobre ti</string>
     <string name="nombre">Nombre</string>
-    <string name="apelldo1">1º Apellido</string>
+    <string name="apellido1">1º Apellido</string>
     <string name="apellido2_opc">2º Apellido (opcional)</string>
+    <string name="apellido2">2º Apellido</string>
     <string name="admin">Administrador</string>
     <string name="entrenador">Entrenador</string>
     <string name="jugador">Jugador</string>

@@ -1,6 +1,7 @@
 package com.example.tfg.detalles;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -10,6 +11,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -36,6 +38,7 @@ public class DetallesUsuario extends AppCompatActivity {
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final FirebaseAuth user = FirebaseAuth.getInstance();
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,7 +77,6 @@ public class DetallesUsuario extends AppCompatActivity {
         });
 
         continuar.setOnClickListener(view -> {
-            Toast.makeText(this, "Hola", Toast.LENGTH_SHORT).show();
             if (correcto(nombre.getText().toString(), nombre) && correcto(apellido1.getText().toString(), apellido1) && comprobarRadioButton()){
                 user.createUserWithEmailAndPassword(correo, psswrd).addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -134,16 +136,20 @@ public class DetallesUsuario extends AppCompatActivity {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     private void agregarUser(String correo, String nombre, String apellido1, String rol){
         Map<String, Object> usuario = new HashMap<>();
         usuario.put("correo", correo);
         usuario.put("nombre", nombre);
         usuario.put("apellido1", apellido1);
         usuario.put("rol", rol);
+        usuario.put("apellido2", null);
+        usuario.put("tlf", null);
+        usuario.put("direccion", null);
         if (!apellido2.getText().toString().isEmpty() && correcto(apellido2.getText().toString(), apellido2)){
-            usuario.put("apellido2", apellido2.getText().toString());
+            usuario.replace("apellido2", apellido2.getText().toString());
         }else if (tlfCorrecto(tlf.getText().toString())){
-            usuario.put("telefono", tlf.getText().toString());
+            usuario.replace("tlf", tlf.getText().toString());
         }
         db.collection("usuarios").add(usuario).addOnSuccessListener(documentReference -> {
             Toast.makeText(this, "Usuario agregado correctamente.", Toast.LENGTH_SHORT).show();
