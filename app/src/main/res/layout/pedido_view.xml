@@ -29,7 +29,7 @@
                 android:id="@+id/nombrePrendaPedido"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/thinoothin"
+                android:fontFamily="@font/thinoobold"
                 android:text="@string/text_view"
                 android:textColor="@color/black"
                 android:textSize="18sp" />
@@ -39,7 +39,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:fontFamily="@font/thinoothin"
+                android:fontFamily="@font/thinoobold"
                 android:text="@string/text_view"
                 android:textColor="@color/black"
                 android:textSize="16sp" />
@@ -102,7 +102,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:layout_marginTop="5dp"
-                android:fontFamily="@font/thinoothin"
+                android:fontFamily="@font/thinoobold"
                 android:gravity="end"
                 android:text="@string/text_view"
                 android:textColor="@color/black"

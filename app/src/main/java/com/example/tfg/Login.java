@@ -43,9 +43,7 @@ public class Login extends AppCompatActivity {
 
         login.setOnClickListener(view -> {
             if (correoValido(correo.getText().toString()) && psswrdValida(psswrd.getText().toString())) {
-                user.signInWithEmailAndPassword(correo.getText().toString(), psswrd.getText().toString()).addOnCompleteListener(task -> {
-                    iniciarMainActivity(task);
-                });
+                conexion.signIn(correo.getText().toString(), psswrd.getText().toString(), this);
             }
         });
 
@@ -67,7 +65,7 @@ public class Login extends AppCompatActivity {
         });
     }
 
-    private void iniciarMainActivity(Task<AuthResult> task) {
+    public void iniciarMainActivity(Task<AuthResult> task) {
         if (task.isSuccessful()) {
             Task<List<Partido>> partidos = conexion.obtenerPartidos();
             partidos.addOnCompleteListener(task1 -> {

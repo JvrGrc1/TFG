@@ -3,6 +3,7 @@ package com.example.tfg.conexion;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -11,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.example.tfg.Login;
 import com.example.tfg.RegistrarPartido;
 import com.example.tfg.entidad.Partido;
 import com.example.tfg.entidad.Pedido;
@@ -118,12 +120,6 @@ public class ConexionFirebase {
 
     public String obtenerUser(){
         return auth.getCurrentUser().getEmail();
-        /*FirebaseUser user = auth.getCurrentUser();
-        if (user == null){
-            return null;
-        }else{
-            return user.getEmail();
-        }*/
     }
 
     public void subirPedido(Context contexto, Map<String, Object> pedido) {
@@ -145,7 +141,7 @@ public class ConexionFirebase {
                         boolean repetido = false;
                         long cantidad = 0;
                         for (Pedido p : pedidos1){
-                            if (!p.isPagado() && p.getPrenda().equals(pedido.get("prenda")) && p.getTalla().equals(pedido.get("talla"))){
+                            if (!p.isPagado() && p.getPrenda().equals(pedido.get("prenda")) && comprobarTallas(p.getTalla(), (String) pedido.get("talla"))){
                                 repetido = true;
                                 cantidad = p.getCantidad();
                                 borrarPedido(contexto, p);
@@ -168,6 +164,13 @@ public class ConexionFirebase {
                 }
             }
         });
+    }
+    private boolean comprobarTallas(String p, String pedido){
+        if (p == null && pedido == null){return true;}
+        else if (p == null && pedido != null){return false;}
+        else if (p != null && pedido == null){return false;}
+        else if (p.equals(pedido)){return true;}
+        else {return false;}
     }
 
     public void cargarImagen(Context contexto, ImageView holder, ImageView img, String url){
@@ -247,24 +250,25 @@ public class ConexionFirebase {
         return taskCompletionSource.getTask();
     }
 
-    public void borrarPedido(Context contexto, Pedido nombreprenda){
+    public void borrarPedido(Context contexto, Pedido prenda){
         db.collection("pedidos").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()){
                 QuerySnapshot snapsot = task.getResult();
                 List<DocumentSnapshot> documents = snapsot.getDocuments();
                 for (DocumentSnapshot ds : documents){
-                    Pedido pedido = new Pedido(ds.getString("prenda"), ds.getString("talla"), ds.getLong("cantidad"), ds.getLong("precioUnidad"));
-                    //Los pedidos no los coge como iguales aunque tengan los mismos valores ¿¿??
-                    if (pedido.equals(nombreprenda)){
-                        db.collection("pedidos").document(ds.getId()).delete().addOnCompleteListener(task1 -> {
-                            if (task1.isSuccessful()){
-                                Toast.makeText(contexto, "Borrado con éxito.", Toast.LENGTH_SHORT).show();
-                            }else{
-                                Toast.makeText(contexto, "Error al borrar el pedido", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                    }else{
-                        Toast.makeText(contexto, "Error, pedidos no iguales", Toast.LENGTH_SHORT).show();
+                    if (ds.getString("comprador").equals(obtenerUser()) && ds.getBoolean("pagado").equals(false)) {
+                        Pedido pedido = new Pedido(ds.getString("prenda"), ds.getString("talla"), ds.getLong("cantidad"), ds.getLong("precioUnidad"));
+
+                        if (pedido.getPrenda().equals(prenda.getPrenda()) && pedido.getCantidad().equals(prenda.getCantidad()) && comprobarTallas(pedido.getTalla(), prenda.getTalla()) && (pedido.getPrecioUnidad() == prenda.getPrecioUnidad())) {
+
+                            db.collection("pedidos").document(ds.getId()).delete().addOnCompleteListener(task1 -> {
+                                if (!task1.isSuccessful()) {
+                                    Toast.makeText(contexto, "Error al borrar el pedido", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        } else {
+                            Log.d("error", "Error, pedidos no iguales");
+                        }
                     }
                 }
             }else{
@@ -331,7 +335,11 @@ public class ConexionFirebase {
         return db.collection("temporadas").document(anios).collection(division).document(id);
     }
 
-    public void signIn(){}
+    public void signIn(String correo, String psswrd, Login login){
+        auth.signInWithEmailAndPassword(correo, psswrd).addOnCompleteListener(task -> {
+            login.iniciarMainActivity(task);
+        });
+    }
     public void signOut(){auth.signOut();}
 
     public void rellenarSpinnerTemporadas(Context context, Spinner temporadas, Spinner division, Spinner jornada){
