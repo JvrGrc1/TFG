@@ -30,7 +30,9 @@ public class JornadasAdapter extends RecyclerView.Adapter<JornadasAdapter.Jornad
         //Quiero rellenar una lista de Jornadas pasandole una lista de Partidos.
         //Cada Jornada consta de: nº de jornada y lista de Partidos
         //Tengo que separar por jornadas los Partidos y con cada lista crear una Jornada que añado a la lista de Jornadas
-        setJornadas(partidos);
+        if (!partidos.isEmpty()) {
+            setJornadas(partidos);
+        }
     }
 
     private void setJornadas(List<Partido> partidos) {
