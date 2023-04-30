@@ -28,6 +28,7 @@ import com.example.tfg.conexion.ConexionFirebase;
 import com.example.tfg.databinding.ActivityMainBinding;
 import com.example.tfg.entidad.Partido;
 import com.example.tfg.entidad.Prenda;
+import com.example.tfg.entidad.Usuario;
 import com.example.tfg.fragments.EstadisticasFragment;
 import com.example.tfg.fragments.PartidosFragment;
 import com.example.tfg.fragments.TiendaFragment;
@@ -150,8 +151,17 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case R.id.user:
                     Intent intentPerfilUsuario = new Intent(this, PerfilUsuario.class);
-                    startActivity(intentPerfilUsuario);
-                    drawerLayout.closeDrawer(GravityCompat.START);
+                    Task<Usuario> taskUser = conexion.datosUsuario(conexion.obtenerUser());
+                    taskUser.addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            Usuario usuario = task.getResult();
+                            intentPerfilUsuario.putExtra("usuario", (Serializable) usuario);
+                            startActivity(intentPerfilUsuario);
+                            drawerLayout.closeDrawer(GravityCompat.START);
+                        }else{
+                            Toast.makeText(this, "Error al obtener el usuario", Toast.LENGTH_SHORT).show();
+                        }
+                    });
                     break;
                 case R.id.registrarse:
                     Intent intentSignIn = new Intent(this, RegistrarUsuario.class);

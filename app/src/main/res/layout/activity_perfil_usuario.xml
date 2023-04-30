@@ -34,17 +34,17 @@
         app:layout_constraintTop_toBottomOf="@+id/textView13" />
 
     <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/imagenMiUsuario"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
         android:layout_marginTop="30dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/divider5"
-        tools:srcCompat="@tools:sample/avatars" />
+        tools:srcCompat="@drawable/ic_launcher_foreground" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayout"
+        android:id="@+id/textInputLayoutNombreMiUsuario"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
@@ -57,50 +57,51 @@
         app:boxCornerRadiusBottomStart="8dp"
         app:boxCornerRadiusTopEnd="8dp"
         app:boxCornerRadiusTopStart="8dp"
+        app:boxStrokeColor="@color/azul_oscuro"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView3">
+        app:layout_constraintTop_toBottomOf="@+id/imagenMiUsuario">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/nombreMiUsuario"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/thinoobold"
             android:gravity="center" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayout2"
-        android:layout_width="170dp"
+        android:id="@+id/textInputLayoutApellido1MiUsuario"
+        android:layout_width="160dp"
         android:layout_height="wrap_content"
 
         android:layout_marginStart="30dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="11dp"
+        android:layout_marginTop="20dp"
         android:hint="@string/apellido1"
         app:boxBackgroundMode="outline"
         app:boxCornerRadiusBottomEnd="8dp"
         app:boxCornerRadiusBottomStart="8dp"
         app:boxCornerRadiusTopEnd="8dp"
         app:boxCornerRadiusTopStart="8dp"
-        app:layout_constraintEnd_toStartOf="@+id/textInputLayout3"
+        app:boxStrokeColor="@color/azul_oscuro"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayout">
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayoutNombreMiUsuario">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/apellido1MiUsuario"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center" />
+            android:fontFamily="@font/thinoobold" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayout3"
-        android:layout_width="170dp"
+        android:id="@+id/textInputLayoutApellido2MiUsuario"
+        android:layout_width="160dp"
 
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="30dp"
         android:hint="@string/apellido2"
         app:boxBackgroundMode="outline"
@@ -108,14 +109,52 @@
         app:boxCornerRadiusBottomStart="8dp"
         app:boxCornerRadiusTopEnd="8dp"
         app:boxCornerRadiusTopStart="8dp"
+        app:boxStrokeColor="@color/azul_oscuro"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayout">
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayoutNombreMiUsuario">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/apellido2MiUsuario"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center" />
+            android:fontFamily="@font/thinoobold" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayoutTelefonoMiUsuario"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="30dp"
+        android:hint="@string/telefono"
+        app:boxStrokeColor="@color/azul_oscuro"
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayoutApellido1MiUsuario">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/telefonoMiUsuario"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/thinoobold" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayoutDireccionMiusuario"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="30dp"
+        android:hint="@string/direccion"
+        app:boxStrokeColor="@color/azul_oscuro"
+        app:layout_constraintTop_toBottomOf="@id/textInputLayoutTelefonoMiUsuario">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/direccionMiUsuario"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/thinoobold" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -123,10 +162,11 @@
         android:id="@+id/rolMiUsuario"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="TextView"
+        android:layout_marginTop="15dp"
+        android:text="@string/text_view"
+        android:textColor="@color/gris_oscurito"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView3" />
+        app:layout_constraintTop_toBottomOf="@+id/imagenMiUsuario" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

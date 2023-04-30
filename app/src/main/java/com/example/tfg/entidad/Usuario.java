@@ -3,12 +3,14 @@ package com.example.tfg.entidad;
 
 import androidx.annotation.NonNull;
 
-public class Usuario {
+import java.io.Serializable;
+
+public class Usuario implements Serializable {
 
     private String correo, nombre, apellido1, apellido2, rol, imagen, tlf, direccion;
+    public Usuario(){
 
-
-    //FOTO DE PERFIL NO SE SI IRIA AQUI Y FALTARIAN DATOS BASICOS: EDAD, DIRECCION, ETC
+    }
 
     public Usuario(String correo, String nombre, String apellido1, String rol) {
         this.correo = correo;

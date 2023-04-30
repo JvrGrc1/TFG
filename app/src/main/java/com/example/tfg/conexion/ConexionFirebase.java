@@ -17,6 +17,7 @@ import com.example.tfg.RegistrarPartido;
 import com.example.tfg.entidad.Partido;
 import com.example.tfg.entidad.Pedido;
 import com.example.tfg.entidad.Prenda;
+import com.example.tfg.entidad.Usuario;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
@@ -111,6 +112,33 @@ public class ConexionFirebase {
                     }
                 }
                 taskCompletionSource.setResult(pedidos);
+            }else{
+                taskCompletionSource.setException(Objects.requireNonNull(task.getException()));
+            }
+        });
+        return taskCompletionSource.getTask();
+    }
+
+    public Task<Usuario> datosUsuario(String email){
+        TaskCompletionSource<Usuario> taskCompletionSource = new TaskCompletionSource<>();
+        db.collection("usuarios").get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()){
+                QuerySnapshot document = task.getResult();
+                List<DocumentSnapshot> documents = document.getDocuments();
+                Usuario user = new Usuario();
+                for (DocumentSnapshot ds : documents){
+                    if (ds.getString("correo").equals(email)){
+                        user.setNombre(ds.getString("nombre"));
+                        user.setApellido1(ds.getString("apellido1"));
+                        user.setApellido2(ds.getString("apellido2"));
+                        user.setImagen(ds.getString("imagen"));
+                        user.setDireccion(ds.getString("direccion"));
+                        user.setRol(ds.getString("rol"));
+                        user.setTlf(ds.getString("tlf"));
+                        user.setDireccion(ds.getString("direccion"));
+                    }
+                }
+                taskCompletionSource.setResult(user);
             }else{
                 taskCompletionSource.setException(Objects.requireNonNull(task.getException()));
             }

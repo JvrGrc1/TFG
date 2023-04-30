@@ -55,4 +55,6 @@
     <string name="consultar_equipo">Consultar Equipo</string>
     <string name="ajustes">Ajustes</string>
     <string name="cerrar_sesion">Cerrar Sesión</string>
+    <string name="telefono">Teléfono</string>
+    <string name="direccion">Dirección</string>
 </resources>
