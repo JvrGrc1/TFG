@@ -43,7 +43,7 @@
     <string name="registrarse">Registrarse</string>
     <string name="titulo_registro_user">Registro de\nusuario</string>
     <string name="advertencia_contraseña">La contraseña debe contener min. 6 caracteres.</string>
-    <string name="ya_tiene_cuenta">Si ya tienes cuenta.\n INICIA SESIÓN AQUÍ</string>
+    <string name="ya_tiene_cuenta">INICIA SESIÓN AQUÍ</string>
     <string name="from">From</string>
     <string name="posicion">Posición</string>
     <string name="ejemplo_cantidad">9</string>

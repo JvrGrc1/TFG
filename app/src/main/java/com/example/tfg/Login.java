@@ -15,6 +15,8 @@ import com.example.tfg.conexion.ConexionFirebase;
 import com.example.tfg.entidad.Partido;
 import com.example.tfg.entidad.Prenda;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -23,12 +25,10 @@ import java.util.List;
 
 public class Login extends AppCompatActivity {
 
-    private Button login, ver;
-    private EditText correo, psswrd;
+    private Button login;
+    private TextInputEditText correo, psswrd;
     private TextView nueva;
-    private final FirebaseAuth user = FirebaseAuth.getInstance();
     private final ConexionFirebase conexion = new ConexionFirebase();
-    private boolean isPsswrdVisible = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +39,6 @@ public class Login extends AppCompatActivity {
         correo = findViewById(R.id.correoUser);
         psswrd = findViewById(R.id.contrasenaUser);
         nueva = findViewById(R.id.nuevaCuenta);
-        ver = findViewById(R.id.buttonVer2);
 
         login.setOnClickListener(view -> {
             if (correoValido(correo.getText().toString()) && psswrdValida(psswrd.getText().toString())) {
@@ -47,22 +46,7 @@ public class Login extends AppCompatActivity {
             }
         });
 
-        nueva.setOnClickListener(view -> {
-            Intent intent = new Intent(this, RegistrarUsuario.class);
-            startActivity(intent);
-        });
-
-        ver.setOnClickListener(v -> {
-            if (isPsswrdVisible) {
-                psswrd.setTransformationMethod(PasswordTransformationMethod.getInstance());
-                ver.setBackgroundResource(R.drawable.ojo_abierto);
-                isPsswrdVisible = false;
-            }else {
-                psswrd.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
-                ver.setBackgroundResource(R.drawable.ojo_cerrado);
-                isPsswrdVisible = true;
-            }
-        });
+        nueva.setOnClickListener(view -> finish());
     }
 
     public void iniciarMainActivity(Task<AuthResult> task) {

@@ -20,6 +20,8 @@ import com.example.tfg.R;
 import com.example.tfg.conexion.ConexionFirebase;
 import com.example.tfg.entidad.Partido;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -33,7 +35,8 @@ public class DetallesUsuario extends AppCompatActivity {
     private RadioGroup radioGroup;
     private RadioButton radioButton;
     private LinearLayout linearLayoutCodigo;
-    private EditText codigo, nombre, apellido1, apellido2, tlf;
+    private TextInputEditText nombre, apellido1, apellido2, tlf, codigo;
+    private TextInputLayout codigo2;
     private Button continuar;
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final FirebaseAuth user = FirebaseAuth.getInstance();
@@ -47,6 +50,7 @@ public class DetallesUsuario extends AppCompatActivity {
         radioGroup = findViewById(R.id.radio_group);
         linearLayoutCodigo = findViewById(R.id.linearLayoutCodigo);
         codigo = findViewById(R.id.codigoRol);
+        codigo2 = findViewById(R.id.codigoRol2);
         continuar = findViewById(R.id.continuarButton);
         nombre = findViewById(R.id.nombreDetallesUser);
         apellido1 = findViewById(R.id.apellido1DetallesUser);
@@ -61,11 +65,13 @@ public class DetallesUsuario extends AppCompatActivity {
             switch (radioButton.getId()){
                 case R.id.adminOption:
                     linearLayoutCodigo.setVisibility(View.VISIBLE);
-                    codigo.setHint("Administrador");
+                    codigo.setText("");
+                    codigo2.setHint("Administrador");
                     break;
                 case R.id.entrenadorOption:
                     linearLayoutCodigo.setVisibility(View.VISIBLE);
-                    codigo.setHint("Entrenador");
+                    codigo.setText("");
+                    codigo2.setHint("Entrenador");
                     break;
                 case R.id.jugadorOption:
                     linearLayoutCodigo.setVisibility(View.INVISIBLE);

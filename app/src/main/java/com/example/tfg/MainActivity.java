@@ -212,7 +212,7 @@ public class MainActivity extends AppCompatActivity {
                         nombre.setText(String.format("%s %s", ds.getString("nombre"), ds.getString("apellido1")));
                         posicion.setVisibility(View.VISIBLE);
                         posicion.setText(ds.getString("rol"));
-                        if (ds.getString("imagen") != null) {
+                        if (ds.getString("imagen") != null && !ds.getString("imagen").isEmpty()) {
                             conexion.cargarImagen(MainActivity.this, imagen, abrir, ds.getString("imagen"));
                         }
                         if (ds.getString("rol").equals("Jugador")){

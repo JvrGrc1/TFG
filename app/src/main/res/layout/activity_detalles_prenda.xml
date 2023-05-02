@@ -29,11 +29,13 @@
 
             <Button
                 android:id="@+id/buttonAniadirPrenda"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="60dp"
+                android:layout_marginEnd="60dp"
                 android:layout_marginBottom="10dp"
                 android:background="@drawable/fondo_spinner"
-                android:fontFamily="@font/thinoobold"
+                android:fontFamily="@font/industrial_light"
                 android:padding="10dp"
                 android:text="@string/aniadir_carrito"
                 android:textColor="@color/black"
@@ -49,10 +51,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="25dp"
                 android:layout_marginBottom="20dp"
-                android:fontFamily="@font/thinoobold"
+                android:fontFamily="@font/industrial_light"
                 android:text="@string/ejemplo_precio"
                 android:textColor="@color/black"
-                android:textSize="16sp"
+                android:textSize="18sp"
                 app:layout_constraintBottom_toTopOf="@+id/buttonAniadirPrenda"
                 app:layout_constraintEnd_toEndOf="parent" />
 
@@ -102,7 +104,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="35dp"
-                android:fontFamily="@font/thinoobold"
+                android:fontFamily="@font/industrial_light"
                 android:text="@string/talla"
                 android:textColor="@color/black"
                 android:textSize="20sp"
@@ -116,7 +118,7 @@
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="40dp"
-                android:fontFamily="@font/thinoobold"
+                android:fontFamily="@font/industrial_light"
                 android:gravity="center"
                 android:text="@string/ejemplo_prenda"
                 android:textColor="@color/black"
@@ -148,7 +150,6 @@
                 android:layout_marginBottom="20dp"
                 app:layout_constraintBottom_toTopOf="@+id/buttonAniadirPrenda"
                 app:layout_constraintEnd_toStartOf="@+id/precioDetallesPrenda"
-                app:layout_constraintHorizontal_bias="0.165"
                 app:layout_constraintStart_toStartOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
