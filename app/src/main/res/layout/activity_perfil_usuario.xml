@@ -167,6 +167,7 @@
             android:layout_height="wrap_content"
             android:hint="@string/direccion"
             app:boxStrokeColor="@color/azul_oscuro"
+            android:layout_marginEnd="5dp"
             android:layout_weight="1">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -184,6 +185,7 @@
             android:layout_weight="2"
             android:hint="@string/piso"
             app:helperText="@string/ejemplo_piso"
+            android:layout_marginStart="5dp"
             app:boxStrokeColor="@color/azul_oscuro">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -213,6 +215,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:hint="@string/ciudad_provincia"
+            android:layout_marginEnd="5dp"
             app:helperText="@string/ejemplo_ciudad_provincia"
             app:boxStrokeColor="@color/azul_oscuro">
 
@@ -230,7 +233,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="2"
             android:hint="@string/portal"
-            app:boxStrokeColor="@color/azul_oscuro">
+            app:boxStrokeColor="@color/azul_oscuro"
+            android:layout_marginStart="5dp">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/portalMiUsuario"
@@ -249,11 +253,12 @@
         android:layout_marginTop="20dp"
         android:layout_marginStart="0dp"
         android:layout_marginEnd="0dp"
-        android:visibility="invisible"
         app:layout_constraintTop_toBottomOf="@id/linearLayoutProvinciaMiUsuario"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:text="@string/confirmar_cambios"
+        android:textStyle="bold"
+        android:background="@color/morado_casi_blanco"
         android:fontFamily="@font/thinoobold">
 
     </Button>

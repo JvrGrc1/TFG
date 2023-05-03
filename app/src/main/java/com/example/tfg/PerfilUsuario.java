@@ -23,16 +23,6 @@ public class PerfilUsuario extends AppCompatActivity {
     private ImageView imagen;
     private ConexionFirebase conexion = new ConexionFirebase();
     private Button confirmar;
-    private final TextWatcher textWatcher = new TextWatcher() {
-        @Override
-        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
-        @Override
-        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            comprobarCambios();
-        }
-        @Override
-        public void afterTextChanged(Editable editable) {}
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,23 +51,7 @@ public class PerfilUsuario extends AppCompatActivity {
         else if (usuario.getDireccion() != null){ponerDireccion(usuario.getDireccion());}
         else if (usuario.getTlf() != null) { tlf.setText(usuario.getTlf());}
 
-
-        nombre.addTextChangedListener(textWatcher);
-        apellido1.addTextChangedListener(textWatcher);
-        apellido2.addTextChangedListener(textWatcher);
-        tlf.addTextChangedListener(textWatcher);
-        direccion.addTextChangedListener(textWatcher);
-        piso.addTextChangedListener(textWatcher);
-        portal.addTextChangedListener(textWatcher);
-        ciudad.addTextChangedListener(textWatcher);
-    }
-
-    private void comprobarCambios(){
-        if (comprobarNombre() && comprobarApellidos() && tlfCorrecto() && comprobarDireccion()){
-            confirmar.setVisibility(View.VISIBLE);
-        }else{
-            confirmar.setVisibility(View.INVISIBLE);
-        }
+        confirmar.setOnClickListener(v -> Toast.makeText(this, "Pulsado.", Toast.LENGTH_SHORT).show());
     }
 
     private boolean comprobarNombre() {
