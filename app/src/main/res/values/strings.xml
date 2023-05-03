@@ -57,4 +57,10 @@
     <string name="cerrar_sesion">Cerrar Sesión</string>
     <string name="telefono">Teléfono</string>
     <string name="direccion">Dirección</string>
+    <string name="ciudad_provincia">Ciudad, Provincia</string>
+    <string name="ejemplo_ciudad_provincia">Ej: Leganés, Madrid</string>
+    <string name="portal">Portal</string>
+    <string name="piso">Piso</string>
+    <string name="ejemplo_piso">Ej: 1ºC</string>
+    <string name="confirmar_cambios">Confirmar cambios</string>
 </resources>

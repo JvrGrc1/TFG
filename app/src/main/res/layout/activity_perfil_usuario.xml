@@ -43,6 +43,17 @@
         app:layout_constraintTop_toBottomOf="@+id/divider5"
         tools:srcCompat="@drawable/ic_launcher_foreground" />
 
+    <TextView
+        android:id="@+id/rolMiUsuario"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="@string/text_view"
+        android:textColor="@color/gris_oscurito"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imagenMiUsuario" />
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayoutNombreMiUsuario"
         android:layout_width="match_parent"
@@ -139,34 +150,112 @@
             android:fontFamily="@font/thinoobold" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayoutDireccionMiusuario"
+    <LinearLayout
+        android:id="@+id/linearLayoutDireccionMiUsuario"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="30dp"
-        android:hint="@string/direccion"
-        app:boxStrokeColor="@color/azul_oscuro"
-        app:layout_constraintTop_toBottomOf="@id/textInputLayoutTelefonoMiUsuario">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/direccionMiUsuario"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fontFamily="@font/thinoobold" />
-
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <TextView
-        android:id="@+id/rolMiUsuario"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:text="@string/text_view"
-        android:textColor="@color/gris_oscurito"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textInputLayoutTelefonoMiUsuario"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imagenMiUsuario" />
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayoutDireccionMiusuario"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/direccion"
+            app:boxStrokeColor="@color/azul_oscuro"
+            android:layout_weight="1">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/direccionMiUsuario"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fontFamily="@font/thinoobold" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayoutPisoMiUsuario"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:hint="@string/piso"
+            app:helperText="@string/ejemplo_piso"
+            app:boxStrokeColor="@color/azul_oscuro">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/pisoMiUsuario"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fontFamily="@font/thinoobold"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayoutProvinciaMiUsuario"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        app:layout_constraintTop_toBottomOf="@id/linearLayoutDireccionMiUsuario"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayoutprovinciaMiUsuario"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="@string/ciudad_provincia"
+            app:helperText="@string/ejemplo_ciudad_provincia"
+            app:boxStrokeColor="@color/azul_oscuro">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/provinciaMiUsuario"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fontFamily="@font/thinoobold"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayoutPortalMiUsuario"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:hint="@string/portal"
+            app:boxStrokeColor="@color/azul_oscuro">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/portalMiUsuario"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fontFamily="@font/thinoobold" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/botonConfirmarCambios"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginEnd="0dp"
+        android:visibility="invisible"
+        app:layout_constraintTop_toBottomOf="@id/linearLayoutProvinciaMiUsuario"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="@string/confirmar_cambios"
+        android:fontFamily="@font/thinoobold">
+
+    </Button>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
