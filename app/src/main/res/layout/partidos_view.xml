@@ -23,7 +23,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_height="wrap_content"
         android:layout_weight="2">
 
         <ImageView
@@ -38,7 +38,7 @@
         <TextView
             android:id="@+id/local"
             android:layout_width="100dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="5dp"
             android:layout_weight="2"
@@ -51,7 +51,7 @@
         <TextView
             android:id="@+id/golesLocal"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="5dp"
             android:fontFamily="@font/industrial_light"
@@ -75,7 +75,7 @@
         <TextView
             android:id="@+id/golesVisitante"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="5dp"
             android:fontFamily="@font/industrial_light"
@@ -88,7 +88,7 @@
         <TextView
             android:id="@+id/visitante"
             android:layout_width="100dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="5dp"
             android:layout_weight="2"

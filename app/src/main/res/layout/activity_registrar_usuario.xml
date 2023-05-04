@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context=".RegistrarUsuario"
-    android:theme="@style/Theme.Material3.Light">
+    android:theme="@style/Theme.Material3.Light"
+    tools:context=".RegistrarUsuario">
 
     <Button
         android:id="@+id/registroButton"
@@ -54,9 +54,9 @@
         android:id="@+id/contrasenaUser1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="60dp"
         android:layout_marginTop="40dp"
         android:layout_marginEnd="60dp"
-        android:layout_marginStart="60dp"
         android:hint="@string/contraseña"
         app:boxBackgroundColor="@color/morado_muy_claro"
         app:boxStrokeColor="@color/morado_casi_blanco"
@@ -71,9 +71,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fontFamily="@font/industrial_light"
+            android:inputType="textPassword"
             android:textSize="20sp"
-            android:textStyle="bold"
-            android:inputType="textPassword"/>
+            android:textStyle="bold" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
@@ -114,13 +114,13 @@
         android:id="@+id/iniciarSesion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:fontFamily="@font/industrial_light"
         android:gravity="center"
         android:text="@string/ya_tiene_cuenta"
         android:textColor="@color/black"
-        android:textSize="18sp"
+        android:textSize="16sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/registroButton" />

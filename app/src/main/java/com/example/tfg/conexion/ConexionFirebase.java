@@ -106,7 +106,7 @@ public class ConexionFirebase {
                 List<DocumentSnapshot> documents = document.getDocuments();
                 List<Pedido> pedidos = new ArrayList<>();
                 for (DocumentSnapshot ds : documents){
-                    if (ds.getString("comprador").equals(usuario) && ds.getBoolean("pagado").equals(Boolean.FALSE)){
+                    if (Objects.equals(ds.getString("comprador"), usuario) && Objects.equals(ds.getBoolean("pagado"), Boolean.FALSE)){
                         Pedido pedido = new Pedido(ds.getString("prenda"), ds.getString("talla"), ds.getLong("cantidad"), ds.getLong("precioUnidad"));
                         pedidos.add(pedido);
                     }
@@ -127,15 +127,15 @@ public class ConexionFirebase {
                 List<DocumentSnapshot> documents = document.getDocuments();
                 Usuario user = new Usuario();
                 for (DocumentSnapshot ds : documents){
-                    if (ds.getString("correo").equals(email)){
+                    if (Objects.equals(ds.getString("correo"), email)){
                         user.setNombre(ds.getString("nombre"));
+                        user.setCorreo(ds.getString("correo"));
                         user.setApellido1(ds.getString("apellido1"));
                         user.setApellido2(ds.getString("apellido2"));
                         user.setImagen(ds.getString("imagen"));
                         user.setDireccion(ds.getString("direccion"));
                         user.setRol(ds.getString("rol"));
                         user.setTlf(ds.getString("tlf"));
-                        user.setDireccion(ds.getString("direccion"));
                     }
                 }
                 taskCompletionSource.setResult(user);
