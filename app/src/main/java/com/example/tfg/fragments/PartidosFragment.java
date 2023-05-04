@@ -27,6 +27,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -42,6 +43,7 @@ public class PartidosFragment extends Fragment {
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private Spinner temporadas, equipos, jornadas;
     private ConexionFirebase conexion = new ConexionFirebase();
+    private List<Partido> jugadores = new ArrayList<>();
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private String mParam1;
@@ -78,12 +80,16 @@ public class PartidosFragment extends Fragment {
         temporadas = root.findViewById(R.id.spinnerTemporada);
         equipos = root.findViewById(R.id.spinnerDivisionPartidos);
 
+        rellenarTemporadas();
+        rellenarEquipos();
+        rellenarJornadas();
+
         recycler = root.findViewById(R.id.recycler);
         recycler.setLayoutManager(new LinearLayoutManager(root.getContext()));
 
         Bundle args = getArguments();
         if (args != null && args.containsKey("lista")){
-            List<Partido> jugadores = (List<Partido>) args.getSerializable("lista");
+            jugadores = listaSegunSpinner((List<Partido>) args.getSerializable("lista"));
             adapter = new JornadasAdapter(getContext(), jugadores);
             recycler.setAdapter(adapter);
         }
@@ -106,6 +112,9 @@ public class PartidosFragment extends Fragment {
 
         buscar.setOnClickListener(v -> {
             if (temporadas.getVisibility() == View.VISIBLE) {
+                adapter = new JornadasAdapter(getContext(), listaSegunSpinner(jugadores));
+                recycler.setAdapter(adapter);
+                recycler.notifyAll();
                 buscar.setImageResource(R.drawable.menu_icon);
                 temporadas.setVisibility(View.INVISIBLE);
                 jornadas.setVisibility(View.INVISIBLE);
@@ -118,66 +127,48 @@ public class PartidosFragment extends Fragment {
             }
         });
 
-        List<String> listaEquipos = new ArrayList<>();
-        listaEquipos.add("");
-        listaEquipos.add("TODOS");
-        listaEquipos.add("1NM");
-        listaEquipos.add("DHPF");
-        listaEquipos.add("1NF");
-        listaEquipos.add("2NM");
-        listaEquipos.add("1TM");
-
-        rellenarTemporadas();
-        rellenarEquipos();
-        rellenarJornadas();
-
-        jornadas.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                //actualizarDatos();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-                /*Si no se ha seleccionado nada se muestra toda la temporada*/
-            }
-        });
-
         return root;
     }
 
-    private void actualizarDatos() {
-        List<Partido> partidos = new ArrayList<>();
-        if (!jornadas.getSelectedItem().toString().equals("TODAS")) {
-            db.collection("temporadas").document(temporadas.getSelectedItem().toString()).collection(equipos.getSelectedItem().toString()).get().addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        if (Integer.parseInt(document.get("jornada").toString()) == (Integer.parseInt(jornadas.getSelectedItem().toString()))) {
-                            Partido partido = new Partido(document.getString("division"), document.getString("local"), document.getString("visitante"), document.getLong("golesLocal"), document.getLong("golesVisitante"), document.getString("fecha"), document.getString("pabellon"), document.getString("hora"), document.getLong("jornada"));
-                            partidos.add(partido);
-                            adapter = new JornadasAdapter(getContext(), partidos);
-                            recycler.setAdapter(adapter);
-                        }
+    private List<Partido> listaSegunSpinner(List<Partido> completa){
+        List<Partido> listaFinal = new ArrayList<>();
+        String temp = temporadas.getSelectedItem().toString();
+        String eq = null;
+        String jorn = null;
+        if (equipos.isEnabled()){
+            eq = equipos.getSelectedItem().toString();
+        } else if (jornadas.isEnabled()){
+            jorn = equipos.getSelectedItem().toString();
+        }
+
+        for (Partido p : completa){
+            if (compararRequisitos(p, temp, eq, jorn)){
+                 listaFinal.add(p);
+            }
+        }
+
+        return listaFinal;
+    }
+
+    private boolean compararRequisitos(Partido partido, String temporada, String equipo, String jornada){
+        String[] partesTemporada = temporada.split(" ");
+        String anio = String.valueOf(partido.getFecha().toString().charAt(2) + partido.getFecha().toString().charAt(3));
+        if (anio.equals(partesTemporada[0]) || anio.equals(partesTemporada[1])){            //Comprobamos que el año del partido es el que queremos.
+            if (equipo.equals("TODOS")){
+                return true;                                                                //Si elige "TODOS" retornamos True para q la list se llene con todos los partidos de ese año.
+            }else{                                                                          //Si no:
+                if (equipo.equals(partido.getDivision())){                                  //Comprobamos que la division del partido es la que queremos.
+                    if (jornada.equals("TODAS")) {
+                        return true;                                   //Si elige "TODAS" retornamos True para que la list se llene con todas las jornadas disputadas por el equipo ese año.
+                    }else{                                                                  //Si no:
+                        return jornada.equals(String.valueOf(partido.getJornada()));        //Comprobamos que la jornada del partido es la que queremos  y retornamos true o False.
                     }
-                } else {
-                    Toast.makeText(getContext(), "Error al conseguir los documentos.", Toast.LENGTH_SHORT).show();
+                }else{
+                    return false;                                                           //Si la division no es la misma: False.
                 }
-            });
-        }else if (jornadas.getSelectedItem().toString().equals("TODAS")){
-            db.collection("temporadas").document(temporadas.getSelectedItem().toString()).collection(equipos.getSelectedItem().toString()).get().addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        Partido partido = new Partido(document.getString("division"), document.getString("local"), document.getString("visitante"), document.getLong("golesLocal"), document.getLong("golesVisitante"), document.getString("fecha"), document.getString("pabellon"), document.getString("hora"), document.getLong("jornada"));
-                        partidos.add(partido);
-                        adapter = new JornadasAdapter(getContext(), partidos);
-                        recycler.setAdapter(adapter);
-                    }
-                } else {
-                    Toast.makeText(getContext(), "Error al conseguir los documentos.", Toast.LENGTH_SHORT).show();
-                }
-            });
-        } else if (jornadas.getSelectedItem().toString().equals("")) {
-            //No se que hacer en este caso.
+            }
+        }else {
+            return false;                                                                   //Si el año no es el mismo: False.
         }
     }
 
@@ -283,9 +274,7 @@ public class PartidosFragment extends Fragment {
                 }
             }
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
+            public void onNothingSelected(AdapterView<?> parent) {}
         });
     }
 }
