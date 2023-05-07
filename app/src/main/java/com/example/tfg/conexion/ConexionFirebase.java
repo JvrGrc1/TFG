@@ -175,7 +175,7 @@ public class ConexionFirebase {
 
     public void cargarImagen(Context contexto, ImageView holder, ImageView img, String url){
         StorageReference gsReference;
-        if (url == null){
+        if (url == null || url.isEmpty()){
             gsReference = storage.getReferenceFromUrl("gs://balonmano-f213a.appspot.com/imagenes-default/" + randomFoto());
         }else{
             gsReference = storage.getReferenceFromUrl(url);

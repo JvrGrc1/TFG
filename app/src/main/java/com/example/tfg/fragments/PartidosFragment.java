@@ -27,14 +27,8 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.List;
-
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link PartidosFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class PartidosFragment extends Fragment {
 
     private ImageButton buscar;
@@ -42,7 +36,7 @@ public class PartidosFragment extends Fragment {
     private JornadasAdapter adapter;
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private Spinner temporadas, equipos, jornadas;
-    private ConexionFirebase conexion = new ConexionFirebase();
+    private final ConexionFirebase conexion = new ConexionFirebase();
     private List<Partido> jugadores = new ArrayList<>();
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -89,7 +83,8 @@ public class PartidosFragment extends Fragment {
 
         Bundle args = getArguments();
         if (args != null && args.containsKey("lista")){
-            jugadores = listaSegunSpinner((List<Partido>) args.getSerializable("lista"));
+            //jugadores = listaSegunSpinner((List<Partido>) args.getSerializable("lista"));
+            jugadores = ((List<Partido>) args.getSerializable("lista"));
             adapter = new JornadasAdapter(getContext(), jugadores);
             recycler.setAdapter(adapter);
         }
@@ -101,7 +96,7 @@ public class PartidosFragment extends Fragment {
                 intent.putExtra("partidos", (Serializable) adapter.getDatos().get(posicion).getPartidos());
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
-                getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                requireActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             }
 
             @Override
@@ -112,13 +107,17 @@ public class PartidosFragment extends Fragment {
 
         buscar.setOnClickListener(v -> {
             if (temporadas.getVisibility() == View.VISIBLE) {
-                adapter = new JornadasAdapter(getContext(), listaSegunSpinner(jugadores));
-                recycler.setAdapter(adapter);
-                recycler.notifyAll();
-                buscar.setImageResource(R.drawable.menu_icon);
-                temporadas.setVisibility(View.INVISIBLE);
-                jornadas.setVisibility(View.INVISIBLE);
-                equipos.setVisibility(View.INVISIBLE);
+                conexion.obtenerPartidos().addOnCompleteListener(task -> {
+                    if (task.isSuccessful()){
+                        jugadores = task.getResult();
+                        adapter = new JornadasAdapter(getContext(), listaSegunSpinner(jugadores));
+                        recycler.setAdapter(adapter);
+                        buscar.setImageResource(R.drawable.menu_icon);
+                        temporadas.setVisibility(View.INVISIBLE);
+                        jornadas.setVisibility(View.INVISIBLE);
+                        equipos.setVisibility(View.INVISIBLE);
+                    }
+                });
             }else{
                 buscar.setImageResource(R.drawable.buscar);
                 temporadas.setVisibility(View.VISIBLE);
@@ -131,45 +130,58 @@ public class PartidosFragment extends Fragment {
     }
 
     private List<Partido> listaSegunSpinner(List<Partido> completa){
-        List<Partido> listaFinal = new ArrayList<>();
-        String temp = temporadas.getSelectedItem().toString();
-        String eq = null;
-        String jorn = null;
-        if (equipos.isEnabled()){
-            eq = equipos.getSelectedItem().toString();
-        } else if (jornadas.isEnabled()){
-            jorn = equipos.getSelectedItem().toString();
-        }
-
-        for (Partido p : completa){
-            if (compararRequisitos(p, temp, eq, jorn)){
-                 listaFinal.add(p);
+        List<Partido> listaFinal;
+        String temporada = temporadas.getSelectedItem().toString();
+        if (temporada.equals("TODAS")){
+            listaFinal = completa;
+        }else {
+            String equipo = equipos.getSelectedItem().toString();
+            if (equipo.equals("TODOS")) {
+                listaFinal = listaSegunTemporada(temporada, completa);
+            } else {
+                String jornada = jornadas.getSelectedItem().toString();
+                listaFinal = listaSegunEquipo(listaSegunTemporada(temporada, completa), equipo, jornada);
             }
         }
-
         return listaFinal;
     }
 
-    private boolean compararRequisitos(Partido partido, String temporada, String equipo, String jornada){
-        String[] partesTemporada = temporada.split(" ");
-        String anio = String.valueOf(partido.getFecha().toString().charAt(2) + partido.getFecha().toString().charAt(3));
-        if (anio.equals(partesTemporada[0]) || anio.equals(partesTemporada[1])){            //Comprobamos que el año del partido es el que queremos.
-            if (equipo.equals("TODOS")){
-                return true;                                                                //Si elige "TODOS" retornamos True para q la list se llene con todos los partidos de ese año.
-            }else{                                                                          //Si no:
-                if (equipo.equals(partido.getDivision())){                                  //Comprobamos que la division del partido es la que queremos.
-                    if (jornada.equals("TODAS")) {
-                        return true;                                   //Si elige "TODAS" retornamos True para que la list se llene con todas las jornadas disputadas por el equipo ese año.
-                    }else{                                                                  //Si no:
-                        return jornada.equals(String.valueOf(partido.getJornada()));        //Comprobamos que la jornada del partido es la que queremos  y retornamos true o False.
-                    }
-                }else{
-                    return false;                                                           //Si la division no es la misma: False.
+    private List<Partido> listaSegunTemporada(String temporada, List<Partido> completa){
+        List<Partido> lista = new ArrayList<>();
+        Calendar cal = Calendar.getInstance();
+        String[]partesTemp = temporada.split("-");
+        for (Partido p : completa){
+            String[] partesFecha = p.getFecha().toString().split(" ");
+            String anio = partesFecha[5].charAt(2) + "" + partesFecha[5].charAt(3);
+            cal.setTime(p.getFecha());
+            if (anio.equals(partesTemp[0]) && cal.get(Calendar.MONTH) + 1 > 8 || anio.equals(partesTemp[1]) && cal.get(Calendar.MONTH) + 1 < 8){
+                lista.add(p);
+            }
+        }
+        return lista;
+    }
+
+    private List<Partido> listaSegunEquipo(List<Partido> temporada, String equipo, String jornada){
+        List<Partido> lista = new ArrayList<>();
+        if (!jornada.equals("TODAS")) {
+            Long jorn = Long.parseLong(jornada);
+            int t = 1;
+            int a = 1;
+            for (Partido partido : temporada) {
+                System.out.println(t++);
+                if (partido.getJornada().equals(jorn) && partido.getDivision().equals(equipo)) {
+                    lista.add(partido);
                 }
             }
-        }else {
-            return false;                                                                   //Si el año no es el mismo: False.
+        }else{
+            for (Partido p : temporada){
+                if (p.getDivision().equals(equipo)){
+                    lista.add(p);
+                }
+            }
         }
+        System.out.println(lista);
+        return lista;
     }
 
     private void rellenarJornadas() {
@@ -232,6 +244,7 @@ public class PartidosFragment extends Fragment {
     private void rellenarTemporadas() {
         db.collection("temporadas").get().addOnCompleteListener(task -> {
             List<String> lista = new ArrayList<>();
+            lista.add("TODAS");
             if (task.isSuccessful()){
                 for (QueryDocumentSnapshot document : task.getResult()){
                     lista.add(document.getId());
@@ -241,7 +254,7 @@ public class PartidosFragment extends Fragment {
             }
             ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, lista);
             temporadas.setAdapter(adapter);
-            temporadas.setSelection(lista.size() - 1);
+            temporadas.setSelection(0);
             equipos.setEnabled(false);
             jornadas.setEnabled(false);
         });
@@ -251,7 +264,7 @@ public class PartidosFragment extends Fragment {
         temporadas.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (!temporadas.getSelectedItem().equals("")){
+                if (!temporadas.getSelectedItem().equals("") && !temporadas.getSelectedItem().equals("TODAS")){
                     Task<List<String>> listEquiposConexion = conexion.equiposFromTemporada(temporadas.getSelectedItem().toString());
                     listEquiposConexion.addOnCompleteListener(task1 -> {
                         if (task1.isSuccessful()){
