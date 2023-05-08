@@ -4,15 +4,10 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,8 +35,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -136,13 +129,9 @@ public class MainActivity extends AppCompatActivity {
             switch (item.getItemId()) {
                 case R.id.registrarPartido:
                     String user = conexion.obtenerUser();
-                    if (user != null){
                     Intent intentRegistrar = new Intent(this, RegistrarPartido.class);
                     startActivity(intentRegistrar);
                     drawerLayout.closeDrawer(GravityCompat.START);
-                    }else{
-                        Toast.makeText(this, "Solo los entrenadores y administradores pueden usar esta función", Toast.LENGTH_SHORT).show();
-                    }
                     break;
                 case R.id.ajustes:
                     Intent intentAjustes = new Intent(this, Ajustes.class);

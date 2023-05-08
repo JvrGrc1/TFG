@@ -27,13 +27,8 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
-
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link PartidosFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class PartidosFragment extends Fragment {
 
     private ImageButton buscar;
@@ -41,7 +36,8 @@ public class PartidosFragment extends Fragment {
     private JornadasAdapter adapter;
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private Spinner temporadas, equipos, jornadas;
-    private ConexionFirebase conexion = new ConexionFirebase();
+    private final ConexionFirebase conexion = new ConexionFirebase();
+    private List<Partido> jugadores = new ArrayList<>();
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private String mParam1;
@@ -78,12 +74,17 @@ public class PartidosFragment extends Fragment {
         temporadas = root.findViewById(R.id.spinnerTemporada);
         equipos = root.findViewById(R.id.spinnerDivisionPartidos);
 
+        rellenarTemporadas();
+        rellenarEquipos();
+        rellenarJornadas();
+
         recycler = root.findViewById(R.id.recycler);
         recycler.setLayoutManager(new LinearLayoutManager(root.getContext()));
 
         Bundle args = getArguments();
         if (args != null && args.containsKey("lista")){
-            List<Partido> jugadores = (List<Partido>) args.getSerializable("lista");
+            //jugadores = listaSegunSpinner((List<Partido>) args.getSerializable("lista"));
+            jugadores = ((List<Partido>) args.getSerializable("lista"));
             adapter = new JornadasAdapter(getContext(), jugadores);
             recycler.setAdapter(adapter);
         }
@@ -95,7 +96,7 @@ public class PartidosFragment extends Fragment {
                 intent.putExtra("partidos", (Serializable) adapter.getDatos().get(posicion).getPartidos());
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
-                getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                requireActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             }
 
             @Override
@@ -106,10 +107,17 @@ public class PartidosFragment extends Fragment {
 
         buscar.setOnClickListener(v -> {
             if (temporadas.getVisibility() == View.VISIBLE) {
-                buscar.setImageResource(R.drawable.menu_icon);
-                temporadas.setVisibility(View.INVISIBLE);
-                jornadas.setVisibility(View.INVISIBLE);
-                equipos.setVisibility(View.INVISIBLE);
+                conexion.obtenerPartidos().addOnCompleteListener(task -> {
+                    if (task.isSuccessful()){
+                        jugadores = task.getResult();
+                        adapter = new JornadasAdapter(getContext(), listaSegunSpinner(jugadores));
+                        recycler.setAdapter(adapter);
+                        buscar.setImageResource(R.drawable.menu_icon);
+                        temporadas.setVisibility(View.INVISIBLE);
+                        jornadas.setVisibility(View.INVISIBLE);
+                        equipos.setVisibility(View.INVISIBLE);
+                    }
+                });
             }else{
                 buscar.setImageResource(R.drawable.buscar);
                 temporadas.setVisibility(View.VISIBLE);
@@ -118,67 +126,62 @@ public class PartidosFragment extends Fragment {
             }
         });
 
-        List<String> listaEquipos = new ArrayList<>();
-        listaEquipos.add("");
-        listaEquipos.add("TODOS");
-        listaEquipos.add("1NM");
-        listaEquipos.add("DHPF");
-        listaEquipos.add("1NF");
-        listaEquipos.add("2NM");
-        listaEquipos.add("1TM");
-
-        rellenarTemporadas();
-        rellenarEquipos();
-        rellenarJornadas();
-
-        jornadas.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                //actualizarDatos();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-                /*Si no se ha seleccionado nada se muestra toda la temporada*/
-            }
-        });
-
         return root;
     }
 
-    private void actualizarDatos() {
-        List<Partido> partidos = new ArrayList<>();
-        if (!jornadas.getSelectedItem().toString().equals("TODAS")) {
-            db.collection("temporadas").document(temporadas.getSelectedItem().toString()).collection(equipos.getSelectedItem().toString()).get().addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        if (Integer.parseInt(document.get("jornada").toString()) == (Integer.parseInt(jornadas.getSelectedItem().toString()))) {
-                            Partido partido = new Partido(document.getString("division"), document.getString("local"), document.getString("visitante"), document.getLong("golesLocal"), document.getLong("golesVisitante"), document.getString("fecha"), document.getString("pabellon"), document.getString("hora"), document.getLong("jornada"));
-                            partidos.add(partido);
-                            adapter = new JornadasAdapter(getContext(), partidos);
-                            recycler.setAdapter(adapter);
-                        }
-                    }
-                } else {
-                    Toast.makeText(getContext(), "Error al conseguir los documentos.", Toast.LENGTH_SHORT).show();
-                }
-            });
-        }else if (jornadas.getSelectedItem().toString().equals("TODAS")){
-            db.collection("temporadas").document(temporadas.getSelectedItem().toString()).collection(equipos.getSelectedItem().toString()).get().addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        Partido partido = new Partido(document.getString("division"), document.getString("local"), document.getString("visitante"), document.getLong("golesLocal"), document.getLong("golesVisitante"), document.getString("fecha"), document.getString("pabellon"), document.getString("hora"), document.getLong("jornada"));
-                        partidos.add(partido);
-                        adapter = new JornadasAdapter(getContext(), partidos);
-                        recycler.setAdapter(adapter);
-                    }
-                } else {
-                    Toast.makeText(getContext(), "Error al conseguir los documentos.", Toast.LENGTH_SHORT).show();
-                }
-            });
-        } else if (jornadas.getSelectedItem().toString().equals("")) {
-            //No se que hacer en este caso.
+    private List<Partido> listaSegunSpinner(List<Partido> completa){
+        List<Partido> listaFinal;
+        String temporada = temporadas.getSelectedItem().toString();
+        if (temporada.equals("TODAS")){
+            listaFinal = completa;
+        }else {
+            String equipo = equipos.getSelectedItem().toString();
+            if (equipo.equals("TODOS")) {
+                listaFinal = listaSegunTemporada(temporada, completa);
+            } else {
+                String jornada = jornadas.getSelectedItem().toString();
+                listaFinal = listaSegunEquipo(listaSegunTemporada(temporada, completa), equipo, jornada);
+            }
         }
+        return listaFinal;
+    }
+
+    private List<Partido> listaSegunTemporada(String temporada, List<Partido> completa){
+        List<Partido> lista = new ArrayList<>();
+        Calendar cal = Calendar.getInstance();
+        String[]partesTemp = temporada.split("-");
+        for (Partido p : completa){
+            String[] partesFecha = p.getFecha().toString().split(" ");
+            String anio = partesFecha[5].charAt(2) + "" + partesFecha[5].charAt(3);
+            cal.setTime(p.getFecha());
+            if (anio.equals(partesTemp[0]) && cal.get(Calendar.MONTH) + 1 > 8 || anio.equals(partesTemp[1]) && cal.get(Calendar.MONTH) + 1 < 8){
+                lista.add(p);
+            }
+        }
+        return lista;
+    }
+
+    private List<Partido> listaSegunEquipo(List<Partido> temporada, String equipo, String jornada){
+        List<Partido> lista = new ArrayList<>();
+        if (!jornada.equals("TODAS")) {
+            Long jorn = Long.parseLong(jornada);
+            int t = 1;
+            int a = 1;
+            for (Partido partido : temporada) {
+                System.out.println(t++);
+                if (partido.getJornada().equals(jorn) && partido.getDivision().equals(equipo)) {
+                    lista.add(partido);
+                }
+            }
+        }else{
+            for (Partido p : temporada){
+                if (p.getDivision().equals(equipo)){
+                    lista.add(p);
+                }
+            }
+        }
+        System.out.println(lista);
+        return lista;
     }
 
     private void rellenarJornadas() {
@@ -241,6 +244,7 @@ public class PartidosFragment extends Fragment {
     private void rellenarTemporadas() {
         db.collection("temporadas").get().addOnCompleteListener(task -> {
             List<String> lista = new ArrayList<>();
+            lista.add("TODAS");
             if (task.isSuccessful()){
                 for (QueryDocumentSnapshot document : task.getResult()){
                     lista.add(document.getId());
@@ -250,7 +254,7 @@ public class PartidosFragment extends Fragment {
             }
             ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, lista);
             temporadas.setAdapter(adapter);
-            temporadas.setSelection(lista.size() - 1);
+            temporadas.setSelection(0);
             equipos.setEnabled(false);
             jornadas.setEnabled(false);
         });
@@ -260,7 +264,7 @@ public class PartidosFragment extends Fragment {
         temporadas.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (!temporadas.getSelectedItem().equals("")){
+                if (!temporadas.getSelectedItem().equals("") && !temporadas.getSelectedItem().equals("TODAS")){
                     Task<List<String>> listEquiposConexion = conexion.equiposFromTemporada(temporadas.getSelectedItem().toString());
                     listEquiposConexion.addOnCompleteListener(task1 -> {
                         if (task1.isSuccessful()){
@@ -283,9 +287,7 @@ public class PartidosFragment extends Fragment {
                 }
             }
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
+            public void onNothingSelected(AdapterView<?> parent) {}
         });
     }
 }
