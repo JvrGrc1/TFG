@@ -23,6 +23,17 @@ public class Usuario implements Serializable {
         this.direccion = null;
     }
 
+    public Usuario(String correo, String nombre, String apellido1, String apellido2, String rol, String imagen, String tlf, String direccion) {
+        this.correo = correo;
+        this.nombre = nombre;
+        this.apellido1 = apellido1;
+        this.rol = rol;
+        this.imagen = imagen;
+        this.apellido2 = apellido2;
+        this.tlf = tlf;
+        this.direccion = direccion;
+    }
+
     public String getCorreo() {return correo;}
     public void setCorreo(String correo) {this.correo = correo;}
 

@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -12,12 +14,12 @@
         android:id="@+id/textView13"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
         android:layout_marginTop="35dp"
         android:fontFamily="@font/favter1"
         android:text="@string/usuario"
         android:textColor="@color/azul_oscuro"
         android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -35,8 +37,8 @@
 
     <ImageView
         android:id="@+id/imagenMiUsuario"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_marginTop="30dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -59,7 +61,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="30dp"
         android:hint="@string/nombre"
         app:boxBackgroundMode="outline"
@@ -71,7 +73,7 @@
         app:boxStrokeColor="@color/azul_oscuro"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imagenMiUsuario">
+        app:layout_constraintTop_toBottomOf="@id/rolMiUsuario">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/nombreMiUsuario"
@@ -133,6 +135,33 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayoutCorreoMiUsuario"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="30dp"
+        android:hint="@string/correo_user"
+        app:boxBackgroundMode="outline"
+
+        app:boxCornerRadiusBottomEnd="8dp"
+        app:boxCornerRadiusBottomStart="8dp"
+        app:boxCornerRadiusTopEnd="8dp"
+        app:boxCornerRadiusTopStart="8dp"
+        app:boxStrokeColor="@color/azul_oscuro"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textInputLayoutApellido2MiUsuario">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/correoMiUsuario"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/thinoobold" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayoutTelefonoMiUsuario"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -141,7 +170,9 @@
         android:layout_marginEnd="30dp"
         android:hint="@string/telefono"
         app:boxStrokeColor="@color/azul_oscuro"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayoutApellido1MiUsuario">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayoutCorreoMiUsuario">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/telefonoMiUsuario"
@@ -157,18 +188,18 @@
         android:layout_marginStart="30dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="30dp"
-        app:layout_constraintTop_toBottomOf="@id/textInputLayoutTelefonoMiUsuario"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/textInputLayoutTelefonoMiUsuario">
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayoutDireccionMiusuario"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/direccion"
-            app:boxStrokeColor="@color/azul_oscuro"
             android:layout_marginEnd="5dp"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:hint="@string/direccion"
+            app:boxStrokeColor="@color/azul_oscuro">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/direccionMiUsuario"
@@ -182,17 +213,17 @@
             android:id="@+id/textInputLayoutPisoMiUsuario"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
             android:layout_weight="2"
             android:hint="@string/piso"
-            app:helperText="@string/ejemplo_piso"
-            android:layout_marginStart="5dp"
-            app:boxStrokeColor="@color/azul_oscuro">
+            app:boxStrokeColor="@color/azul_oscuro"
+            app:helperText="@string/ejemplo_piso">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/pisoMiUsuario"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:fontFamily="@font/thinoobold"/>
+                android:fontFamily="@font/thinoobold" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -202,28 +233,28 @@
         android:id="@+id/linearLayoutProvinciaMiUsuario"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:layout_marginStart="30dp"
+        android:layout_marginTop="5dp"
         android:layout_marginEnd="30dp"
-        app:layout_constraintTop_toBottomOf="@id/linearLayoutDireccionMiUsuario"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/linearLayoutDireccionMiUsuario">
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayoutprovinciaMiUsuario"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
             android:layout_weight="1"
             android:hint="@string/ciudad_provincia"
-            android:layout_marginEnd="5dp"
-            app:helperText="@string/ejemplo_ciudad_provincia"
-            app:boxStrokeColor="@color/azul_oscuro">
+            app:boxStrokeColor="@color/azul_oscuro"
+            app:helperText="@string/ejemplo_ciudad_provincia">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/provinciaMiUsuario"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:fontFamily="@font/thinoobold"/>
+                android:fontFamily="@font/thinoobold" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -231,10 +262,10 @@
             android:id="@+id/textInputLayoutPortalMiUsuario"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
             android:layout_weight="2"
             android:hint="@string/portal"
-            app:boxStrokeColor="@color/azul_oscuro"
-            android:layout_marginStart="5dp">
+            app:boxStrokeColor="@color/azul_oscuro">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/portalMiUsuario"
@@ -246,21 +277,15 @@
 
     </LinearLayout>
 
-    <Button
-        android:id="@+id/botonConfirmarCambios"
-        android:layout_width="200dp"
+    <ImageButton
+        android:id="@+id/buttonGuardar"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginStart="0dp"
-        android:layout_marginEnd="0dp"
-        app:layout_constraintTop_toBottomOf="@id/linearLayoutProvinciaMiUsuario"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="30dp"
+        android:background="@color/white"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
-        android:text="@string/confirmar_cambios"
-        android:textStyle="bold"
-        android:background="@color/morado_casi_blanco"
-        android:fontFamily="@font/thinoobold">
-
-    </Button>
-
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/tick" />
 </androidx.constraintlayout.widget.ConstraintLayout>
