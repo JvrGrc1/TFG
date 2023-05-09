@@ -3,6 +3,7 @@ package com.example.tfg;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -56,20 +57,7 @@ public class PerfilUsuario extends AppCompatActivity {
         if (usuario.getApellido2() != null && !usuario.getApellido2().isEmpty()) {apellido2.setText(usuario.getApellido2());}
         if (usuario.getTlf() != null && !usuario.getTlf().isEmpty()) {tlf.setText(usuario.getTlf());}
 
-        guardar.setOnClickListener(v -> {
-            if (comprobarNombre() & comprobarApellidos() & comprobarDireccion() & tlfCorrecto()){
-                new MaterialAlertDialogBuilder(this)
-                        .setTitle("Guardar cambios")
-                        .setMessage("¿Seguro que quieres guardar los cambios realizados en los datos del usuario?")
-                        .setPositiveButton("Aceptar", (dialogInterface, i) -> {
-                            Toast.makeText(this, "Cambios aceptados.", Toast.LENGTH_SHORT).show();
-                        })
-                        .setNegativeButton("Cancelar", (dialogInterface, i) -> {
-                            finish();
-                        })
-                        .show();
-            }
-        });
+        guardar.setOnClickListener(v -> Toast.makeText(this, "Hola", Toast.LENGTH_SHORT).show());
 
         textChangedListener();
 

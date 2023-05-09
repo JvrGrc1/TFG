@@ -112,17 +112,6 @@ public class PartidosFragment extends Fragment {
                 temporadas.setVisibility(View.INVISIBLE);
                 jornadas.setVisibility(View.INVISIBLE);
                 equipos.setVisibility(View.INVISIBLE);
-                /*conexion.obtenerPartidos().addOnCompleteListener(task -> {
-                    if (task.isSuccessful()){
-                        jugadores = task.getResult();
-                        adapter = new JornadasAdapter(getContext(), listaSegunSpinner(jugadores));
-                        recycler.setAdapter(adapter);
-                        buscar.setImageResource(R.drawable.menu_icon);
-                        temporadas.setVisibility(View.INVISIBLE);
-                        jornadas.setVisibility(View.INVISIBLE);
-                        equipos.setVisibility(View.INVISIBLE);
-                    }
-                });*/
             }else{
                 buscar.setImageResource(R.drawable.buscar);
                 temporadas.setVisibility(View.VISIBLE);

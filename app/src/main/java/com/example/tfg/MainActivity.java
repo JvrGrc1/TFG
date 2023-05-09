@@ -266,28 +266,6 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         finishAffinity();
-        /*Task<List<Partido>> partidos = conexion.obtenerPartidos();
-        partidos.addOnCompleteListener(task1 -> {
-            if (task1.isSuccessful()) {
-                List<Partido> partidos1 = task1.getResult();
-                Task<List<Prenda>> prendas = conexion.obtenerTienda();
-                prendas.addOnCompleteListener(task2 -> {
-                    if (task2.isSuccessful()){
-                        List<Prenda> prendas1 = task2.getResult();
-                        Intent intent = new Intent(this, MainActivity.class);
-                        intent.putExtra("lista", (Serializable) partidos1);
-                        intent.putExtra("ropa", (Serializable) prendas1);
-                        startActivity(intent);
-                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                        finishAffinity();
-                    }else{
-                        Toast.makeText(this, "Error obteniendo las prendas", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            } else {
-                Toast.makeText(this, "Error obteniendo partidos", Toast.LENGTH_SHORT).show();
-            }
-        });*/
     }
 
     @Override
