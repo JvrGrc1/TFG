@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.example.tfg.conexion.ConexionFirebase;
 import com.example.tfg.entidad.Usuario;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -25,16 +26,6 @@ public class PerfilUsuario extends AppCompatActivity {
     private ImageView imagen;
     private ConexionFirebase conexion = new ConexionFirebase();
     private ImageButton guardar;
-    private TextWatcher watcher = new TextWatcher() {
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-            guardar.setVisibility(View.VISIBLE);
-        }
-        @Override
-        public void afterTextChanged(Editable s) {}
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +58,16 @@ public class PerfilUsuario extends AppCompatActivity {
 
         guardar.setOnClickListener(v -> {
             if (comprobarNombre() & comprobarApellidos() & comprobarDireccion() & tlfCorrecto()){
-                Toast.makeText(this, "Alll Goooooooodd!", Toast.LENGTH_SHORT).show();
+                new MaterialAlertDialogBuilder(this)
+                        .setTitle("Guardar cambios")
+                        .setMessage("¿Seguro que quieres guardar los cambios realizados en los datos del usuario?")
+                        .setPositiveButton("Aceptar", (dialogInterface, i) -> {
+                            Toast.makeText(this, "Cambios aceptados.", Toast.LENGTH_SHORT).show();
+                        })
+                        .setNegativeButton("Cancelar", (dialogInterface, i) -> {
+                            finish();
+                        })
+                        .show();
             }
         });
 

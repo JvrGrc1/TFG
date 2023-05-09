@@ -193,6 +193,7 @@ public class ConexionFirebase {
             }
         });
     }
+
     private boolean comprobarTallas(String p, String pedido){
         if (p == null && pedido == null){return true;}
         else if (p == null && pedido != null){return false;}
@@ -368,6 +369,7 @@ public class ConexionFirebase {
             login.iniciarMainActivity(task);
         });
     }
+
     public void signOut(){auth.signOut();}
 
     public void rellenarSpinnerTemporadas(Context context, Spinner temporadas, Spinner division, Spinner jornada){
@@ -427,23 +429,5 @@ public class ConexionFirebase {
             }
         });
         return taskCompletionSource.getTask();
-        /*
-        TaskCompletionSource<List<Prenda>> taskCompletionSource = new TaskCompletionSource<>();
-        db.collection("prendas").get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()){
-                QuerySnapshot document  = task.getResult();
-                List<DocumentSnapshot> documents = document.getDocuments();
-                List<Prenda> prendas = new ArrayList<>();
-                for (DocumentSnapshot snapsot : documents){
-                    Prenda prenda = new Prenda(snapsot.getString("nombre"), (List<String>) snapsot.get("tallas"), snapsot.getDouble("precio"), snapsot.getString("imagen"));
-                    prendas.add(prenda);
-                }
-                taskCompletionSource.setResult(prendas);
-            }else{
-                taskCompletionSource.setException(Objects.requireNonNull(task.getException()));
-            }
-        });
-        return taskCompletionSource.getTask();
-         */
     }
 }

@@ -260,7 +260,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void intentMainActivity(){
-        Task<List<Partido>> partidos = conexion.obtenerPartidos();
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra("lista", (Serializable) j);
+        intent.putExtra("ropa", (Serializable) prendas);
+        startActivity(intent);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        finishAffinity();
+        /*Task<List<Partido>> partidos = conexion.obtenerPartidos();
         partidos.addOnCompleteListener(task1 -> {
             if (task1.isSuccessful()) {
                 List<Partido> partidos1 = task1.getResult();
@@ -281,7 +287,7 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 Toast.makeText(this, "Error obteniendo partidos", Toast.LENGTH_SHORT).show();
             }
-        });
+        });*/
     }
 
     @Override
