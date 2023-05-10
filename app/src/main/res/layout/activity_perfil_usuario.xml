@@ -296,6 +296,7 @@
                         android:id="@+id/portalMiUsuario"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:inputType="number"
                         android:fontFamily="@font/thinoobold" />
 
                 </com.google.android.material.textfield.TextInputLayout>

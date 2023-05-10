@@ -57,7 +57,11 @@ public class PerfilUsuario extends AppCompatActivity {
         if (usuario.getApellido2() != null && !usuario.getApellido2().isEmpty()) {apellido2.setText(usuario.getApellido2());}
         if (usuario.getTlf() != null && !usuario.getTlf().isEmpty()) {tlf.setText(usuario.getTlf());}
 
-        guardar.setOnClickListener(v -> Toast.makeText(this, "Hola", Toast.LENGTH_SHORT).show());
+        guardar.setOnClickListener(v -> {
+            if(comprobarNombre() & comprobarApellidos() & tlfCorrecto() & comprobarDireccion() & correoCorrecto()){
+                Toast.makeText(this, "Todo bien", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         textChangedListener();
 
@@ -99,26 +103,24 @@ public class PerfilUsuario extends AppCompatActivity {
 
         if (direccion1.isEmpty() & piso1.isEmpty() & portal1.isEmpty() & ciudad1.isEmpty()){
             return true;
-        }else if (direccion1.startsWith(" ") || direccion1.endsWith(" ")){
-            direccion.setError("No puede comenzar ni acabar con espacios.");
+        }else {
+            if (direccion1.startsWith(" ") || direccion1.endsWith(" ")) {
+                direccion.setError("No puede comenzar ni acabar con espacios.");
+            } else if (direccion1.matches("[^\\d]*")) {
+                direccion.setError("No puede contener números.");
+            }
+            if (!piso1.matches("^\\d+º[A-Z]$")) {
+                piso.setError("El valor introducido no es válido.");
+            }
+            if (!portal1.matches("[^\\d]*")) {
+                portal.setError("El campo solo puede contener números.");
+            }
+            if (ciudad1.matches("[^\\d]*")) {
+                ciudad.setError("No puede contener números.");
+            } else if (!ciudad1.matches("^[a-zA-Z\\s]+,[a-zA-Z\\s]+$")) {
+                ciudad.setError("El valor introducido no es válido.");
+            }
             return false;
-        } else if (direccion1.matches("[^\\d]*")){
-            direccion.setError("No puede contener números.");
-            return false;
-        } else if (!piso1.matches("^\\d+º[A-Z]$")){
-            piso.setError("El valor introducido no es válido.");
-            return false;
-        } else if (!portal1.matches("[^\\d]*")){
-            portal.setError("El campo solo puede contener números.");
-            return false;
-        } else if (ciudad1.matches("[^\\d]*")){
-            ciudad.setError("No puede contener números.");
-            return false;
-        } else if (!ciudad1.matches("^[a-zA-Z\\s]+,[a-zA-Z\\s]+$")){
-            ciudad.setError("El valor introducido no es válido.");
-            return false;
-        }else{
-            return true;
         }
     }
 
@@ -130,6 +132,11 @@ public class PerfilUsuario extends AppCompatActivity {
             tlf.setError("El valor introducido no es válido.");
             return false;
         }
+    }
+
+    private boolean correoCorrecto(){
+        String email = correo.getText().toString();
+        return email.matches("^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$");
     }
 
     private void ponerDireccion(String direccion1){
