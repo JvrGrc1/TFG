@@ -83,8 +83,9 @@ public class TiendaFragment extends Fragment {
                 if (user != null) {
                     Intent intent = new Intent(v.getContext(), DetallesPrenda.class);
                     intent.putExtra("prenda", adapter.getDatos().get(posicion));
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
-                    getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                    requireActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 }else{
                     Toast.makeText(getContext(), "Debes estar registrado para realizar una compra.", Toast.LENGTH_SHORT).show();
                 }

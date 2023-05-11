@@ -99,9 +99,7 @@ public class PartidosFragment extends Fragment {
             }
 
             @Override
-            public void onLongItemClick(View v, int posicion) {
-                Toast.makeText(getContext(), "Adios", Toast.LENGTH_SHORT).show();
-            }
+            public void onLongItemClick(View v, int posicion) {}
         }));
 
         buscar.setOnClickListener(v -> {

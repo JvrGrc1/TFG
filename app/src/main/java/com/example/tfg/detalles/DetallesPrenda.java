@@ -24,7 +24,6 @@ import com.example.tfg.R;
 import com.example.tfg.conexion.ConexionFirebase;
 import com.example.tfg.entidad.Pedido;
 import com.example.tfg.entidad.Prenda;
-import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -49,7 +48,7 @@ public class DetallesPrenda extends AppCompatActivity {
 
         getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-        constrain = findViewById(R.id.constrain);
+        constrain = findViewById(R.id.constrainDetallesJornadas);
         constrain2 = findViewById(R.id.constrain2);
         nombrePrenda = findViewById(R.id.nombreDetallesPrenda);
         precioPrenda = findViewById(R.id.precioDetallesPrenda);
