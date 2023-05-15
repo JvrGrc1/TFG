@@ -22,7 +22,7 @@ import com.google.android.material.textfield.TextInputLayout;
 public class PerfilUsuario extends AppCompatActivity {
 
     private Usuario usuario;
-    private TextInputEditText nombre, apellido1, apellido2, correo, tlf, direccion, portal, piso, ciudad;
+    private TextInputEditText nombre, apellido1, apellido2, correo, tlf, direccion, portal, piso, ciudad, provincia;
     private TextView rol;
     private ImageView imagen;
     private ConexionFirebase conexion = new ConexionFirebase();
@@ -40,7 +40,8 @@ public class PerfilUsuario extends AppCompatActivity {
         apellido2 = findViewById(R.id.apellido2MiUsuario);
         tlf = findViewById(R.id.telefonoMiUsuario);
         direccion = findViewById(R.id.direccionMiUsuario);
-        ciudad = findViewById(R.id.provinciaMiUsuario);
+        provincia = findViewById(R.id.provinciaMiUsuario);
+        ciudad = findViewById(R.id.ciudadMiUsuario);
         piso = findViewById(R.id.pisoMiUsuario);
         portal = findViewById(R.id.portalMiUsuario);
         correo = findViewById(R.id.correoMiUsuario);
@@ -98,27 +99,31 @@ public class PerfilUsuario extends AppCompatActivity {
     private boolean comprobarDireccion(){
         String direccion1 = direccion.getText().toString();
         String piso1 = piso.getText().toString();
-        String portal1 = portal.getText().toString();
         String ciudad1 = ciudad.getText().toString();
+        String provincia1 = provincia.getText().toString();
+        String portal1 = portal.getText().toString();
 
-        if (direccion1.isEmpty() & piso1.isEmpty() & portal1.isEmpty() & ciudad1.isEmpty()){
+        if (direccion1.isEmpty() & piso1.isEmpty() & portal1.isEmpty() & ciudad1.isEmpty() & provincia1.isEmpty()){
             return true;
         }else {
             if (direccion1.startsWith(" ") || direccion1.endsWith(" ")) {
                 direccion.setError("No puede comenzar ni acabar con espacios.");
-            } else if (direccion1.matches("[^\\d]*")) {
+            } else if (direccion1.contains("^[\\d]*")) {
                 direccion.setError("No puede contener números.");
             }
-            if (!piso1.matches("^\\d+º[A-Z]$")) {
+            if (piso1.matches("^\\d+º[a-z]$")){
+                piso.setText(piso1.toUpperCase());
+            }else if (!piso1.matches("^\\d+º[A-Z]$")) {
                 piso.setError("El valor introducido no es válido.");
             }
-            if (!portal1.matches("[^\\d]*")) {
-                portal.setError("El campo solo puede contener números.");
+            if (!portal1.matches("^[0-9]*$")){
+                portal.setError("Este campo solo puede contener números");
             }
-            if (ciudad1.matches("[^\\d]*")) {
+            if (ciudad1.contains("[^\\d]*")) {
                 ciudad.setError("No puede contener números.");
-            } else if (!ciudad1.matches("^[a-zA-Z\\s]+,[a-zA-Z\\s]+$")) {
-                ciudad.setError("El valor introducido no es válido.");
+            }
+            if (provincia1.contains("[^\\d]*")){
+                provincia.setError("No puede contener números.");
             }
             return false;
         }
@@ -144,11 +149,12 @@ public class PerfilUsuario extends AppCompatActivity {
         direccion.setText(partes[0].trim());
         portal.setText(partes[1].trim());
         piso.setText(partes[2].trim());
-        ciudad.setText(String.format("%s,%s", partes[3].trim(), partes[4].trim()));
+        provincia.setText(partes[3].trim());
+        ciudad.setText(partes[4].trim());
     }
 
     private String obtenerDireccion(){
-        return String.format("%s,%s,%s,%s", direccion.getText().toString(), portal.getText().toString(), piso.getText().toString(), ciudad.getText().toString());
+        return String.format("%s,%s,%s,%s,%s", direccion.getText().toString(), portal.getText().toString(), piso.getText().toString(), ciudad.getText().toString(), provincia.getText().toString());
     }
 
     public void addTextChangedListener(TextInputEditText editText, String usuario) {
