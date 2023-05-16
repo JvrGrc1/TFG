@@ -148,10 +148,11 @@ public class DetallesUsuario extends AppCompatActivity {
         usuario.put("correo", correo);
         usuario.put("nombre", nombre);
         usuario.put("apellido1", apellido1);
+        usuario.put("imagen", "gs://balonmano-f213a.appspot.com/perfilUsuario/default.png");
         usuario.put("rol", rol);
-        usuario.put("apellido2", null);
-        usuario.put("tlf", null);
-        usuario.put("direccion", null);
+        usuario.put("apellido2", "");
+        usuario.put("tlf", "");
+        usuario.put("direccion", "");
         if (!apellido2.getText().toString().isEmpty() && correcto(apellido2.getText().toString(), apellido2)){
             usuario.replace("apellido2", apellido2.getText().toString());
         }else if (tlfCorrecto(tlf.getText().toString())){

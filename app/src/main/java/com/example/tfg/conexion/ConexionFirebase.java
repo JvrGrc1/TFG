@@ -13,7 +13,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.example.tfg.Login;
-import com.example.tfg.RegistrarPartido;
+import com.example.tfg.PerfilUsuario;
 import com.example.tfg.entidad.Partido;
 import com.example.tfg.entidad.Pedido;
 import com.example.tfg.entidad.Prenda;
@@ -429,5 +429,34 @@ public class ConexionFirebase {
             }
         });
         return taskCompletionSource.getTask();
+    }
+
+    public void modificarUser(Usuario usuario, PerfilUsuario perfilUsuario) {
+        String correo = obtenerUser();
+        Map<String, Object> user = new HashMap<>();
+        user.put("nombre", usuario.getNombre());
+        user.put("apellido1", usuario.getApellido1());
+        user.put("apellido2", usuario.getApellido2());
+        user.put("tlf", usuario.getTlf());
+        user.put("correo", usuario.getCorreo());
+        user.put("imagen", usuario.getImagen());
+        user.put("rol", usuario.getRol());
+        user.put("direccion", usuario.getDireccion());
+        db.collection("usuarios").get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()){
+                for (QueryDocumentSnapshot documents : task.getResult()){
+                    if (documents.getString("correo").equals(correo)){
+                        db.collection("usuarios").document(documents.getId()).update(user).addOnCompleteListener(task1 -> {
+                            if (task1.isSuccessful()){
+                                Toast.makeText(perfilUsuario,"Modificado correctamente", Toast.LENGTH_SHORT).show();
+                            }else{
+                                Toast.makeText(perfilUsuario,"Algo ha ido mal.", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                        break;
+                    }
+                }
+            }
+        });
     }
 }

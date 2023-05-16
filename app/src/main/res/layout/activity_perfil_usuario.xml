@@ -335,6 +335,17 @@
 
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
+
+            <ImageButton
+                android:id="@+id/buttonEditarImagenUser"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="-22dp"
+                android:layout_marginEnd="-30dp"
+                android:background="@color/transparente"
+                app:layout_constraintEnd_toEndOf="@+id/imagenMiUsuario"
+                app:layout_constraintTop_toBottomOf="@+id/imagenMiUsuario"
+                app:srcCompat="@drawable/lapiz" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

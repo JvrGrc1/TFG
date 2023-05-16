@@ -157,10 +157,7 @@ public class PartidosFragment extends Fragment {
         List<Partido> lista = new ArrayList<>();
         if (!jornada.equals("TODAS")) {
             Long jorn = Long.parseLong(jornada);
-            int t = 1;
-            int a = 1;
             for (Partido partido : temporada) {
-                System.out.println(t++);
                 if (partido.getJornada().equals(jorn) && partido.getDivision().equals(equipo)) {
                     lista.add(partido);
                 }
@@ -172,7 +169,6 @@ public class PartidosFragment extends Fragment {
                 }
             }
         }
-        System.out.println(lista);
         return lista;
     }
 
