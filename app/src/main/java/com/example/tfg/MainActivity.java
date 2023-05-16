@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
         if (!intent.hasExtra("lista")) {
             iniciarPartidos();
         } else {
-            j = (List<Partido>) intent.getSerializableExtra("lista°");
+            j = (List<Partido>) intent.getSerializableExtra("lista");
             prendas = (List<Prenda>) intent.getSerializableExtra("ropa");
             iniciarPrendas();
             iniciarPartidos();
