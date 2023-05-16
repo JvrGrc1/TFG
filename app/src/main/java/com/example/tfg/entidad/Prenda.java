@@ -34,6 +34,6 @@ public class Prenda implements Serializable {
     @NonNull
     @Override
     public String toString() {
-            return String.format("Prenda: %s, %f. Tallas: %s", getNombre(), getPrecio(), getTallas());
+            return String.format("Prenda: %s, %f. Tallas: %s, Img: %s", getNombre(), getPrecio(), getTallas(), getImagen());
     }
 }

@@ -239,7 +239,8 @@ public class ConexionFirebase {
                 String url = null;
                 for (DocumentSnapshot ds : documents){
                     if (ds.getString("nombre").matches(nombrePrenda)){
-                        url = ds.getString("imagen");
+                        List<String> lista = (List<String>) ds.get("imagen");
+                        url = lista.get(0);
                     }
                 }
                 taskCompletionSource.setResult(url);

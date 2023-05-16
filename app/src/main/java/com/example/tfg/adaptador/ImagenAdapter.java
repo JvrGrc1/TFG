@@ -10,12 +10,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.tfg.R;
+import com.example.tfg.conexion.ConexionFirebase;
 
 import java.util.List;
 
 public class ImagenAdapter extends RecyclerView.Adapter<ImagenAdapter.ImageViewHolder> {
 
     private List<String> imageUrlList;
+    private ConexionFirebase conexion = new ConexionFirebase();
 
     public ImagenAdapter(List<String> imageUrlList) {
         this.imageUrlList = imageUrlList;
@@ -31,7 +33,7 @@ public class ImagenAdapter extends RecyclerView.Adapter<ImagenAdapter.ImageViewH
     @Override
     public void onBindViewHolder(@NonNull ImageViewHolder holder, int position) {
         String imageUrl = imageUrlList.get(position);
-        Glide.with(holder.itemView.getContext()).load(imageUrl).into(holder.imageView);
+        conexion.cargarImagen(holder.itemView.getContext(), holder.imageView, null,imageUrl);
     }
 
     @Override
