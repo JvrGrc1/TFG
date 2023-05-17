@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -16,6 +17,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.Editable;
@@ -34,6 +36,8 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+
+import java.io.IOException;
 
 public class PerfilUsuario extends AppCompatActivity {
 
@@ -88,15 +92,27 @@ public class PerfilUsuario extends AppCompatActivity {
         });
 
         edit.setOnClickListener(v -> {
-            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-                startActivityForResult(takePictureIntent, 1);
-            }
+            Intent intentFoto = new Intent(PerfilUsuario.this, ActivityResultContracts.TakePicture.class);
+            launchSomeActivity.launch(intentFoto);
+
         });
 
         textChangedListener();
 
     }
+    private ActivityResultLauncher<Intent> launchSomeActivity = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        Intent data = result.getData();
+                        conexion.cargarImagen(PerfilUsuario.this, imagen, null, data.getDataString());
+                    } else {
+                        Toast.makeText(PerfilUsuario.this, "Error al obtener la imagen.", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
 
     private boolean comprobarNombreyApellidos(){
         String nombre1 = nombre.getText().toString();
