@@ -212,9 +212,8 @@ public class ConexionFirebase {
         final long ONE_MEGABYTE = 5 * 1024 * 1024;
         gsReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(bytes -> {
             Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-            Bitmap bitmap1 = Bitmap.createScaledBitmap(bitmap, 500, 500, true);
-            holder.setImageBitmap(bitmap1);
-            if (img != null){img.setImageBitmap(bitmap1);}
+            holder.setImageBitmap(bitmap);
+            if (img != null){img.setImageBitmap(bitmap);}
         }).addOnFailureListener(exception -> Toast.makeText(contexto, "Error al descargar la imagen de la prenda", Toast.LENGTH_SHORT).show());
     }
 

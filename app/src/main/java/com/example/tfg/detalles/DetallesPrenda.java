@@ -50,7 +50,7 @@ public class DetallesPrenda extends AppCompatActivity {
 
         getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-        constrain = findViewById(R.id.constrainDetallesJornadas);
+        constrain = findViewById(R.id.constrain);
         constrain2 = findViewById(R.id.constrain2);
         nombrePrenda = findViewById(R.id.nombreDetallesPrenda);
         precioPrenda = findViewById(R.id.precioDetallesPrenda);

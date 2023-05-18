@@ -4,6 +4,7 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -11,12 +12,14 @@ import androidx.core.content.ContextCompat;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -32,11 +35,19 @@ import android.widget.Toast;
 import com.example.tfg.conexion.ConexionFirebase;
 import com.example.tfg.detalles.DetallesUsuario;
 import com.example.tfg.entidad.Usuario;
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 public class PerfilUsuario extends AppCompatActivity {
@@ -47,6 +58,7 @@ public class PerfilUsuario extends AppCompatActivity {
     private ImageView imagen;
     private ImageButton edit;
     private ConexionFirebase conexion = new ConexionFirebase();
+    private StorageReference storageref = FirebaseStorage.getInstance().getReference();
     private ImageButton guardar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +86,6 @@ public class PerfilUsuario extends AppCompatActivity {
         apellido1.setText(usuario.getApellido1());
         correo.setText(usuario.getCorreo());
         rol.setText(usuario.getRol());
-        System.out.println(usuario.getDireccion());
         if (usuario.getImagen() != null && !usuario.getImagen().isEmpty()){conexion.cargarImagen(this, imagen, null, usuario.getImagen());}
         if (usuario.getDireccion() != null && !usuario.getDireccion().isEmpty()) {ponerDireccion(usuario.getDireccion());}
         if (usuario.getApellido2() != null && !usuario.getApellido2().isEmpty()) {apellido2.setText(usuario.getApellido2());}
@@ -92,27 +103,42 @@ public class PerfilUsuario extends AppCompatActivity {
         });
 
         edit.setOnClickListener(v -> {
-            Intent intentFoto = new Intent(PerfilUsuario.this, ActivityResultContracts.TakePicture.class);
-            launchSomeActivity.launch(intentFoto);
-
+            Intent elegirImagen = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            galleryActivityResultLauncher.launch(elegirImagen);
         });
 
         textChangedListener();
 
     }
-    private ActivityResultLauncher<Intent> launchSomeActivity = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            new ActivityResultCallback<ActivityResult>() {
-                @Override
-                public void onActivityResult(ActivityResult result) {
-                    if (result.getResultCode() == Activity.RESULT_OK) {
-                        Intent data = result.getData();
-                        conexion.cargarImagen(PerfilUsuario.this, imagen, null, data.getDataString());
-                    } else {
-                        Toast.makeText(PerfilUsuario.this, "Error al obtener la imagen.", Toast.LENGTH_SHORT).show();
-                    }
+
+    ActivityResultLauncher<Intent> galleryActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    Uri imagenUri = result.getData().getData();
+                    subirImagen(imagenUri);
                 }
             });
+
+    private void subirImagen(Uri imagenUri){
+        String[] partes = conexion.obtenerUser().split("@");
+        StorageReference ref = storageref.child("perfilUsuario/" + partes[0] + ".jpg");
+        UploadTask uploadTask = ref.putFile(imagenUri);
+        uploadTask.continueWithTask(contTask -> {
+            if (!contTask.isSuccessful()) {
+                Toast.makeText(PerfilUsuario.this, "Error al subir la imagen.", Toast.LENGTH_SHORT).show();
+            }
+            return ref.getDownloadUrl();
+        }).addOnCompleteListener(completeTask -> {
+            if (completeTask.isSuccessful()) {
+                Uri downloadUri = completeTask.getResult();
+                String urlFoto = downloadUri.toString();
+                conexion.cargarImagen(PerfilUsuario.this, imagen, null, urlFoto);
+                usuario.setImagen(urlFoto);
+            } else {
+                Toast.makeText(PerfilUsuario.this, "Error al poner la imagen.", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
     private boolean comprobarNombreyApellidos(){
         String nombre1 = nombre.getText().toString();
