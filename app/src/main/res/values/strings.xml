@@ -2,7 +2,7 @@
     <string name="app_name">CB Leganés</string>
     <string name="text_view">TextView</string>
     <string name="ejemplo_prenda">1ª Equipación 22/23</string>
-    <string name="aniadir_carrito">Añadir al carrito</string>
+    <string name="aniadir_cesta">Añadir a la cesta</string>
     <string name="ejemplo_precio">Desde: 20€</string>
     <string name="talla">Talla:</string>
     <string name="xl">XL</string>

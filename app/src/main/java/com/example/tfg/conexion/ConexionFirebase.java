@@ -267,8 +267,6 @@ public class ConexionFirebase {
                                     Toast.makeText(contexto, "Error al borrar el pedido", Toast.LENGTH_SHORT).show();
                                 }
                             });
-                        } else {
-                            Log.d("error", "Error, pedidos no iguales");
                         }
                     }
                 }
