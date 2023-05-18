@@ -10,9 +10,9 @@ public class Prenda implements Serializable {
     private String nombre;
     private List<String> tallas;
     private double precio;
-    private String imagen;
+    private List<String> imagen;
 
-    public Prenda(String nombre, List<String> tallas, double precio, String urlImagen){
+    public Prenda(String nombre, List<String> tallas, double precio, List<String> urlImagen){
         this.nombre = nombre;
         this.tallas = tallas;
         this.precio = precio;
@@ -28,12 +28,12 @@ public class Prenda implements Serializable {
     public double getPrecio() {return precio;}
     public void setPrecio(double precio) {this.precio = precio;}
 
-    public String getImagen() {return imagen;}
-    public void setImagen(String imagen) {this.imagen = imagen;}
+    public List<String> getImagen() {return imagen;}
+    public void setImagen(List<String> imagen) {this.imagen = imagen;}
 
     @NonNull
     @Override
     public String toString() {
-            return String.format("Prenda: %s, %f. Tallas: %s", getNombre(), getPrecio(), getTallas());
+            return String.format("Prenda: %s, %f. Tallas: %s, Img: %s", getNombre(), getPrecio(), getTallas(), getImagen());
     }
 }
