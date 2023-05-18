@@ -2,6 +2,7 @@ package com.example.tfg.detalles;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.annotation.SuppressLint;
 import android.graphics.Color;
@@ -21,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.tfg.R;
+import com.example.tfg.adaptador.ImagenAdapter;
 import com.example.tfg.conexion.ConexionFirebase;
 import com.example.tfg.entidad.Pedido;
 import com.example.tfg.entidad.Prenda;
@@ -37,7 +39,7 @@ public class DetallesPrenda extends AppCompatActivity {
     private RadioGroup grupo;
     private RadioButton radioButton;
     private Spinner cantidad;
-    private ImageView imagen;
+    private ViewPager2 imagen;
     private final ConexionFirebase conexion = new ConexionFirebase();
 
     @SuppressLint("DefaultLocale")
@@ -55,7 +57,7 @@ public class DetallesPrenda extends AppCompatActivity {
         aniadir = findViewById(R.id.buttonAniadirPrenda);
         grupo = findViewById(R.id.radioGroupTallas);
         cantidad = findViewById(R.id.cantidadSpinner);
-        imagen = findViewById(R.id.imagenDetallesPrenda);
+        imagen = findViewById(R.id.viewpagerImagenes);
         tallas = findViewById(R.id.textViewTalla);
 
         Prenda prenda = (Prenda) getIntent().getSerializableExtra("prenda");
@@ -70,7 +72,9 @@ public class DetallesPrenda extends AppCompatActivity {
         }
 
         pedido.setPrenda(prenda.getNombre());
-        conexion.cargarImagen(this, imagen, null, prenda.getImagen());
+        ImagenAdapter adapterImg = new ImagenAdapter(prenda.getImagen());
+        imagen.setAdapter(adapterImg);
+        imagen.setOrientation(ViewPager2.ORIENTATION_HORIZONTAL);
 
         nombrePrenda.setText(prenda.getNombre());
         precioPrenda.setText(String.format("Desde: %.2f€", prenda.getPrecio()));

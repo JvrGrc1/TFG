@@ -87,7 +87,7 @@ public class ConexionFirebase {
                 List<DocumentSnapshot> documents = document.getDocuments();
                 List<Prenda> prendas = new ArrayList<>();
                 for (DocumentSnapshot snapsot : documents){
-                    Prenda prenda = new Prenda(snapsot.getString("nombre"), (List<String>) snapsot.get("tallas"), snapsot.getDouble("precio"), snapsot.getString("imagen"));
+                    Prenda prenda = new Prenda(snapsot.getString("nombre"), (List<String>) snapsot.get("tallas"), snapsot.getDouble("precio"), (List<String>) snapsot.get("imagen"));
                     prendas.add(prenda);
                 }
                 taskCompletionSource.setResult(prendas);
@@ -268,7 +268,8 @@ public class ConexionFirebase {
                 String url = null;
                 for (DocumentSnapshot ds : documents){
                     if (ds.getString("nombre").matches(nombrePrenda)){
-                        url = ds.getString("imagen");
+                        List<String> lista = (List<String>) ds.get("imagen");
+                        url = lista.get(0);
                     }
                 }
                 taskCompletionSource.setResult(url);
@@ -295,8 +296,6 @@ public class ConexionFirebase {
                                     Toast.makeText(contexto, "Error al borrar el pedido", Toast.LENGTH_SHORT).show();
                                 }
                             });
-                        } else {
-                            Log.d("error", "Error, pedidos no iguales");
                         }
                     }
                 }
