@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 
@@ -30,5 +31,10 @@ public class PreCompra extends AppCompatActivity {
         recycler.setLayoutManager(new LinearLayoutManager(this));
         PedidosAdapter adapter = new PedidosAdapter(this, pedidos);
         recycler.setAdapter(adapter);
+
+        confirmar.setOnClickListener(v -> {
+            Intent intent = new Intent(this, MetodoDePago.class);
+            startActivity(intent);
+        });
     }
 }

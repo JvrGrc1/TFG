@@ -28,7 +28,7 @@
     <string name="nueva_cuenta">Pulsa para crear una nueva cuenta</string>
     <string name="titulo_inicio">Inicio\nde sesión</string>
     <string name="revisa_pedido">Revisa tu pedido</string>
-    <string name="confirmar_pedido">Confirmar pedido</string>
+    <string name="realizar_pedido">Realizar pedido</string>
     <string name="registrar_partido">Registrar partido</string>
     <string name="local">Local</string>
     <string name="versus">VS</string>
@@ -54,4 +54,5 @@
     <string name="consultar_equipo">Consultar Equipo</string>
     <string name="ajustes">Ajustes</string>
     <string name="cerrar_sesion">Cerrar Sesión</string>
+    <string name="elige_pago">Elige forma de pago</string>
 </resources>
