@@ -85,8 +85,6 @@ public class MainActivity extends AppCompatActivity {
         bottomNav.setSelectedItemId(R.id.partidos);
         bottomNav.setSelected(true);
 
-        //Establece el fragment Partidos para que sea el primero en aparecer
-
         AnimatorSet animSet = new AnimatorSet();
         animSet.playTogether(
                 ObjectAnimator.ofFloat(bottomNav, "scaleY", 1f, 0.90f, 1f),

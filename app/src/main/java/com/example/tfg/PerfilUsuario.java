@@ -1,31 +1,24 @@
 package com.example.tfg;
 
+import static androidx.core.content.ContentProviderCompat.requireContext;
+
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
+
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.ContentValues;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.PointerIcon;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -33,22 +26,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.tfg.conexion.ConexionFirebase;
-import com.example.tfg.detalles.DetallesUsuario;
 import com.example.tfg.entidad.Usuario;
-import com.google.android.gms.tasks.Continuation;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 
 public class PerfilUsuario extends AppCompatActivity {
 
@@ -58,8 +40,9 @@ public class PerfilUsuario extends AppCompatActivity {
     private ImageView imagen;
     private ImageButton edit;
     private ConexionFirebase conexion = new ConexionFirebase();
-    private StorageReference storageref = FirebaseStorage.getInstance().getReference();
+    private StorageReference storageRef = FirebaseStorage.getInstance().getReference();
     private ImageButton guardar;
+    private Uri cam_uri;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,25 +86,40 @@ public class PerfilUsuario extends AppCompatActivity {
         });
 
         edit.setOnClickListener(v -> {
-            Intent elegirImagen = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-            galleryActivityResultLauncher.launch(elegirImagen);
+            String[] opciones = {"Tomar foto", "Elegir de la galeria"};
+            AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                    .setTitle("Title")
+                    .setItems(opciones, (dialog, which) -> {
+                        if (which == 0){
+                            //Intent para abrir la camara.
+                        }else if (which == 1){
+                            Intent elegirImagen = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                            elegirDeGaleria.launch(elegirImagen);
+                        }else{
+                            Toast.makeText(getApplicationContext(), "¿Como has pulsado el " + which + "?. No existe esa opción...", Toast.LENGTH_LONG).show();
+                        }
+                    })
+                    .setNegativeButton("Cancelar", (dialog, which) -> dialog.cancel());
+            builder.show();
         });
 
         textChangedListener();
-
     }
 
-    ActivityResultLauncher<Intent> galleryActivityResultLauncher = registerForActivityResult(
+
+
+    private ActivityResultLauncher<Intent> elegirDeGaleria = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), result -> {
                 if (result.getResultCode() == Activity.RESULT_OK) {
                     Uri imagenUri = result.getData().getData();
                     subirImagen(imagenUri);
                 }
-            });
+            }
+    );
 
     private void subirImagen(Uri imagenUri){
         String[] partes = conexion.obtenerUser().split("@");
-        StorageReference ref = storageref.child("perfilUsuario/" + partes[0] + ".jpg");
+        StorageReference ref = storageRef.child("perfilUsuario/" + partes[0] + ".jpg");
         UploadTask uploadTask = ref.putFile(imagenUri);
         uploadTask.continueWithTask(contTask -> {
             if (!contTask.isSuccessful()) {
