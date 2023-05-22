@@ -11,7 +11,7 @@
         android:id="@+id/textViewTitulo"
         android:layout_width="280dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="35dp"
+        android:layout_marginTop="20dp"
         android:fontFamily="@font/favter1"
         android:text="@string/registrar_partido"
         android:textColor="@color/azul_oscuro"
@@ -36,7 +36,7 @@
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:orientation="horizontal"
         app:layout_constraintTop_toBottomOf="@+id/divider2">
 
@@ -88,7 +88,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="40dp"
         android:layout_marginEnd="30dp"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"

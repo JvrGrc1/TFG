@@ -94,7 +94,11 @@ public class DetallesUsuario extends AppCompatActivity {
                     }
                 });
             }else{
-                Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show();
+                if (radioGroup.getCheckedRadioButtonId() == -1) {
+                    Toast.makeText(this, "Elige un Rol", Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(this, "Faltan campos", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -110,6 +114,8 @@ public class DetallesUsuario extends AppCompatActivity {
             text.setError("El nombre solo puede contener: letras, espacios, guiones y apóstrofes.");
             return false;
         }else{
+            String resultado = string.toUpperCase().charAt(0) + string.substring(1).toLowerCase();
+            text.setText(resultado);
             return true;
         }
     }
@@ -120,10 +126,10 @@ public class DetallesUsuario extends AppCompatActivity {
         } else if (radioGroup.getCheckedRadioButtonId() != R.id.jugadorOption && codigo.getText().toString().isEmpty()) {
             codigo.setError("El campo no puede estar vacío.");
             return false;
-        } else if (radioGroup.getCheckedRadioButtonId() == R.id.adminOption && !codigo.getText().toString().equals("admin123")) {
-                codigo.setError("El codigo es incorrecto.");
-                return false;
-        }else{
+        } else if (radioGroup.getCheckedRadioButtonId() == R.id.adminOption && !codigo.getText().toString().equals("admin123") || radioGroup.getCheckedRadioButtonId() == R.id.entrenadorOption && !codigo.getText().toString().equals("entrenador123")) {
+            codigo.setError("El codigo es incorrecto.");
+            return false;
+        } else{
             return true;
         }
     }
