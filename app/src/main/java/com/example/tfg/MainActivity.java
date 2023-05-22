@@ -133,6 +133,8 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case R.id.ajustes:
                     Intent intentAjustes = new Intent(this, Ajustes.class);
+                    intentAjustes.putExtra("lista", (Serializable) j);
+                    intentAjustes.putExtra("ropa", (Serializable) prendas);
                     startActivity(intentAjustes);
                     drawerLayout.closeDrawer(GravityCompat.START);
                     break;

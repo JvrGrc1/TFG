@@ -1,6 +1,7 @@
 package com.example.tfg.conexion;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
@@ -12,8 +13,11 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.example.tfg.Ajustes;
 import com.example.tfg.Login;
+import com.example.tfg.MainActivity;
 import com.example.tfg.PerfilUsuario;
+import com.example.tfg.R;
 import com.example.tfg.entidad.Partido;
 import com.example.tfg.entidad.Pedido;
 import com.example.tfg.entidad.Prenda;
@@ -34,6 +38,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -369,6 +374,36 @@ public class ConexionFirebase {
     }
 
     public void signOut(){auth.signOut();}
+    public Task<Boolean> borrarCuenta(String correo, Context context){
+        TaskCompletionSource<Boolean> taskCompletionSource = new TaskCompletionSource<>();
+        user.delete().addOnCompleteListener(task -> {
+            if (task.isSuccessful()){
+                db.collection("usuarios")
+                        .whereEqualTo("correo", correo)
+                        .get()
+                        .addOnCompleteListener(task1 -> {
+                            if (task1.isSuccessful()) {
+                                for (QueryDocumentSnapshot document : task1.getResult()) {
+                                    db.collection("usuarios").document(document.getId()).delete()
+                                            .addOnSuccessListener(aVoid -> {
+                                                taskCompletionSource.setResult(true);
+                                            })
+                                            .addOnFailureListener(e -> {
+                                                Toast.makeText(context, "Error al eliminar el documento", Toast.LENGTH_SHORT).show();
+                                            });
+                                }
+                            } else {
+                                taskCompletionSource.setResult(false);
+                                Toast.makeText(context, "Error al borrar documentos", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+            }else{
+                taskCompletionSource.setResult(false);
+                Toast.makeText(context, "Error al borrar la cuenta", Toast.LENGTH_SHORT).show();
+            }
+        });
+        return taskCompletionSource.getTask();
+    }
 
     public void rellenarSpinnerTemporadas(Context context, Spinner temporadas, Spinner division, Spinner jornada){
         db.collection("temporadas").get().addOnCompleteListener(task -> {
