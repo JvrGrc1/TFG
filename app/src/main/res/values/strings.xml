@@ -65,4 +65,9 @@
     <string name="ejemplo_piso">Ej: 1ºC</string>
     <string name="confirmar_cambios">Confirmar cambios</string>
     <string name="elige_pago">Elige forma de pago</string>
+    <string name="cancelar">Cancelar</string>
+    <string name="aniadir_direccion">Añadir otra dirección</string>
+    <string name="pagar">Pagar</string>
+    <string name="total">Total:</string>
+    <string name="ejPrecio">30€</string>
 </resources>

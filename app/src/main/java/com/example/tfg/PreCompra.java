@@ -6,17 +6,24 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.tfg.adaptador.PedidosAdapter;
+import com.example.tfg.conexion.ConexionFirebase;
 import com.example.tfg.entidad.Pedido;
+import com.example.tfg.entidad.Usuario;
+import com.google.android.gms.tasks.Task;
 
+import java.io.Serializable;
 import java.util.List;
 
 public class PreCompra extends AppCompatActivity {
 
     private RecyclerView recycler;
     private Button confirmar;
+    private ConexionFirebase conexion = new ConexionFirebase();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,8 +40,17 @@ public class PreCompra extends AppCompatActivity {
         recycler.setAdapter(adapter);
 
         confirmar.setOnClickListener(v -> {
-            Intent intent = new Intent(this, MetodoDePago.class);
-            startActivity(intent);
+            Task<Usuario> user = conexion.datosUsuario(conexion.obtenerUser());
+            user.addOnCompleteListener(task -> {
+                if (task.isSuccessful()){
+                    Intent intent = new Intent(this, MetodoDePago.class);
+                    intent.putExtra("pedido",(Serializable) pedidos);
+                    intent.putExtra("user", task.getResult());
+                    startActivity(intent);
+                }else{
+                    Toast.makeText(this, "Error al obtener el usuario.", Toast.LENGTH_SHORT).show();
+                }
+            });
         });
     }
 }

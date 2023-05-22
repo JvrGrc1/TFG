@@ -55,7 +55,7 @@ public class PedidosAdapter extends RecyclerView.Adapter<PedidosAdapter.PedidosV
         conexion.imagenPedido(context,holder.imagen, pedido.getPrenda());
         holder.nombre.setText(pedido.getPrenda());
         holder.cantidad.setText(String.format("%d", pedido.getCantidad()));
-        holder.precio.setText(String.format("%.2f€", pedido.getPrecioUnidad()*pedido.getCantidad()));
+        holder.precio.setText(String.format("Total: %.2f€", pedido.getPrecioUnidad()*pedido.getCantidad()));
         if (pedido.getTalla() != null){
             holder.talla.setText(String.format("Talla: %s", pedido.getTalla().toUpperCase()));
         } else{
