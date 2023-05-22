@@ -254,7 +254,7 @@
         app:fabCustomSize="50dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/buttonAgregar"
-        app:srcCompat="@drawable/editar" />
+        app:srcCompat="@drawable/lapiz" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/buttonAgregar"

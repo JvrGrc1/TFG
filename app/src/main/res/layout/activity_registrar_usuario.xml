@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
+    android:theme="@style/Theme.Material3.Light"
     tools:context=".RegistrarUsuario">
 
     <Button
@@ -22,45 +23,58 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/psswrdRegistroUser" />
+        app:layout_constraintTop_toBottomOf="@+id/contrasenaUser1" />
 
-    <EditText
-        android:id="@+id/psswrdRegistroUser"
-        android:layout_width="250dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="40dp"
-        android:background="@drawable/fondo_registros"
-        android:ems="10"
-        android:fontFamily="@font/industrial_light"
-        android:hint="@string/contraseña"
-        android:inputType="textPassword"
-        android:maxLength="20"
-        android:paddingStart="15dp"
-        android:paddingEnd="15dp"
-        android:textSize="22sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/correoUserRegistro" />
-
-    <EditText
-        android:id="@+id/correoUserRegistro"
-        android:layout_width="250dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="30dp"
-        android:background="@drawable/fondo_registros"
-        android:ems="10"
-        android:fontFamily="@font/industrial_light"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/correoUser1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="60dp"
+        android:layout_marginEnd="60dp"
         android:hint="@string/correo_user"
-        android:inputType="textPersonName"
-        android:maxLength="20"
-        android:paddingStart="15dp"
-        android:paddingEnd="15dp"
-        android:textSize="22sp"
-        android:textStyle="bold"
+        app:boxBackgroundColor="@color/morado_muy_claro"
+        app:boxStrokeColor="@color/morado_casi_blanco"
+        app:endIconMode="clear_text"
+        app:hintTextColor="@color/gris_oscuro"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageViewRegistroLogo" />
+        app:layout_constraintTop_toBottomOf="@+id/imageViewRegistroLogo">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/correoUser"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/industrial_light"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/contrasenaUser1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="60dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="60dp"
+        android:hint="@string/contraseña"
+        app:boxBackgroundColor="@color/morado_muy_claro"
+        app:boxStrokeColor="@color/morado_casi_blanco"
+        app:endIconMode="password_toggle"
+        app:hintTextColor="@color/gris_oscuro"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/correoUser1">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/contrasenaUser"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/industrial_light"
+            android:inputType="textPassword"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
         android:id="@+id/textViewRegistro"
@@ -85,16 +99,6 @@
         app:layout_constraintTop_toBottomOf="@+id/textViewRegistro"
         app:srcCompat="@drawable/logo" />
 
-    <Button
-        android:id="@+id/buttonVer"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="50dp"
-        android:background="@drawable/ojo_abierto"
-        app:layout_constraintStart_toEndOf="@+id/psswrdRegistroUser"
-        app:layout_constraintTop_toBottomOf="@+id/correoUserRegistro" />
-
     <TextView
         android:id="@+id/textView6"
         android:layout_width="wrap_content"
@@ -104,7 +108,7 @@
         android:text="@string/advertencia_contraseña"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/psswrdRegistroUser" />
+        app:layout_constraintTop_toBottomOf="@+id/contrasenaUser1" />
 
     <TextView
         android:id="@+id/iniciarSesion"
@@ -114,7 +118,7 @@
         android:gravity="center"
         android:text="@string/ya_tiene_cuenta"
         android:textColor="@color/black"
-        android:textSize="18sp"
+        android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

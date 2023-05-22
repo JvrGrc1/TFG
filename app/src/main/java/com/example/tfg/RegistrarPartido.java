@@ -56,7 +56,6 @@ public class RegistrarPartido extends AppCompatActivity {
         pabellon.setEnabled(false);
         fecha.setEnabled(false);
 
-        //rellenarAnios();
         conexion.rellenarSpinnerTemporadas(RegistrarPartido.this, anios, division, jornada);
         rellenarDivisiones();
         rellenarJornadas();

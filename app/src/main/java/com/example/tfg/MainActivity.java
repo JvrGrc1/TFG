@@ -23,6 +23,7 @@ import com.example.tfg.conexion.ConexionFirebase;
 import com.example.tfg.databinding.ActivityMainBinding;
 import com.example.tfg.entidad.Partido;
 import com.example.tfg.entidad.Prenda;
+import com.example.tfg.entidad.Usuario;
 import com.example.tfg.fragments.EstadisticasFragment;
 import com.example.tfg.fragments.PartidosFragment;
 import com.example.tfg.fragments.TiendaFragment;
@@ -84,8 +85,6 @@ public class MainActivity extends AppCompatActivity {
         bottomNav.setSelectedItemId(R.id.partidos);
         bottomNav.setSelected(true);
 
-        //Establece el fragment Partidos para que sea el primero en aparecer
-
         AnimatorSet animSet = new AnimatorSet();
         animSet.playTogether(
                 ObjectAnimator.ofFloat(bottomNav, "scaleY", 1f, 0.90f, 1f),
@@ -139,8 +138,17 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case R.id.user:
                     Intent intentPerfilUsuario = new Intent(this, PerfilUsuario.class);
-                    startActivity(intentPerfilUsuario);
-                    drawerLayout.closeDrawer(GravityCompat.START);
+                    Task<Usuario> taskUser = conexion.datosUsuario(conexion.obtenerUser());
+                    taskUser.addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            Usuario usuario = task.getResult();
+                            intentPerfilUsuario.putExtra("usuario", (Serializable) usuario);
+                            startActivity(intentPerfilUsuario);
+                            drawerLayout.closeDrawer(GravityCompat.START);
+                        }else{
+                            Toast.makeText(this, "Error al obtener el usuario", Toast.LENGTH_SHORT).show();
+                        }
+                    });
                     break;
                 case R.id.registrarse:
                     Intent intentSignIn = new Intent(this, RegistrarUsuario.class);
@@ -191,7 +199,7 @@ public class MainActivity extends AppCompatActivity {
                         nombre.setText(String.format("%s %s", ds.getString("nombre"), ds.getString("apellido1")));
                         posicion.setVisibility(View.VISIBLE);
                         posicion.setText(ds.getString("rol"));
-                        if (ds.getString("imagen") != null) {
+                        if (ds.getString("imagen") != null && !ds.getString("imagen").isEmpty()) {
                             conexion.cargarImagen(MainActivity.this, imagen, abrir, ds.getString("imagen"));
                         }
                         if (ds.getString("rol").equals("Jugador")){
@@ -250,28 +258,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void intentMainActivity(){
-        Task<List<Partido>> partidos = conexion.obtenerPartidos();
-        partidos.addOnCompleteListener(task1 -> {
-            if (task1.isSuccessful()) {
-                List<Partido> partidos1 = task1.getResult();
-                Task<List<Prenda>> prendas = conexion.obtenerTienda();
-                prendas.addOnCompleteListener(task2 -> {
-                    if (task2.isSuccessful()){
-                        List<Prenda> prendas1 = task2.getResult();
-                        Intent intent = new Intent(this, MainActivity.class);
-                        intent.putExtra("lista", (Serializable) partidos1);
-                        intent.putExtra("ropa", (Serializable) prendas1);
-                        startActivity(intent);
-                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                        finishAffinity();
-                    }else{
-                        Toast.makeText(this, "Error obteniendo las prendas", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            } else {
-                Toast.makeText(this, "Error obteniendo partidos", Toast.LENGTH_SHORT).show();
-            }
-        });
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra("lista", (Serializable) j);
+        intent.putExtra("ropa", (Serializable) prendas);
+        startActivity(intent);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        finishAffinity();
     }
 
     @Override

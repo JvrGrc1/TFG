@@ -36,7 +36,6 @@ public class JornadasAdapter extends RecyclerView.Adapter<JornadasAdapter.Jornad
     }
 
     private void setJornadas(List<Partido> partidos) {
-        System.out.println(partidos.size());
         if (partidos.size() == 1){
             Jornada j = new Jornada(partidos.get(0).getJornada(), partidos);
             this.jornada.add(j);

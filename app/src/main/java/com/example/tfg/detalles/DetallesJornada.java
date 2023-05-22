@@ -15,13 +15,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.tfg.R;
 import com.example.tfg.adaptador.PartidosAdapter;
+import com.example.tfg.adaptador.RecyclerItemClickListener;
 import com.example.tfg.entidad.Partido;
 
+import java.io.Serializable;
 import java.util.List;
 
 public class DetallesJornada extends AppCompatActivity {
-
-    private TextView detalles;
 
     private RecyclerView recycler;
     private List<Partido> partidos;
@@ -33,22 +33,29 @@ public class DetallesJornada extends AppCompatActivity {
 
         getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-        detalles = findViewById(R.id.detallesPartidos);
         recycler = findViewById(R.id.recyclerDetallesJornada);
 
         Intent intent = getIntent();
         partidos = (List<Partido>)intent.getSerializableExtra("partidos");
 
-        View layout = findViewById(R.id.l);
+        View layout = findViewById(R.id.constrainDetallesJornadas);
         Animation animacion = AnimationUtils.loadAnimation(this, R.anim.escala);
-        // Asignar la animación al layout
         layout.startAnimation(animacion);
-
-        layout.setOnClickListener(v -> finish());
-        detalles.setOnClickListener(v -> {/*Método vacío*/});
 
         recycler.setLayoutManager(new LinearLayoutManager(this));
         PartidosAdapter adapter = new PartidosAdapter(this, partidos);
         recycler.setAdapter(adapter);
+
+        recycler.addOnItemTouchListener(new RecyclerItemClickListener(this, recycler, new RecyclerItemClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View v, int posicion) {
+                Intent intent = new Intent(v.getContext(), DetallesPartido.class);
+                intent.putExtra("partido", (Serializable) adapter.getDatos().get(posicion));
+                startActivity(intent);
+            }
+
+            @Override
+            public void onLongItemClick(View v, int posicion) {}
+        }));
     }
 }

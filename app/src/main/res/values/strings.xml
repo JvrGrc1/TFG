@@ -12,8 +12,9 @@
     <string name="xs">XS</string>
     <string name="conocerte">Queremos conocer más sobre ti</string>
     <string name="nombre">Nombre</string>
-    <string name="apelldo1">1º Apellido</string>
+    <string name="apellido1">1º Apellido</string>
     <string name="apellido2_opc">2º Apellido (opcional)</string>
+    <string name="apellido2">2º Apellido</string>
     <string name="admin">Administrador</string>
     <string name="entrenador">Entrenador</string>
     <string name="jugador">Jugador</string>
@@ -42,7 +43,7 @@
     <string name="registrarse">Registrarse</string>
     <string name="titulo_registro_user">Registro de\nusuario</string>
     <string name="advertencia_contraseña">La contraseña debe contener min. 6 caracteres.</string>
-    <string name="ya_tiene_cuenta">Si ya tienes cuenta.\n INICIA SESIÓN AQUÍ</string>
+    <string name="ya_tiene_cuenta">INICIA SESIÓN AQUÍ</string>
     <string name="from">From</string>
     <string name="posicion">Posición</string>
     <string name="ejemplo_cantidad">9</string>
@@ -54,5 +55,14 @@
     <string name="consultar_equipo">Consultar Equipo</string>
     <string name="ajustes">Ajustes</string>
     <string name="cerrar_sesion">Cerrar Sesión</string>
+    <string name="telefono">Teléfono</string>
+    <string name="direccion">Dirección</string>
+    <string name="ciudad">Ciudad</string>
+    <string name="provincia">Provincia</string>
+    <string name="ejemplo_ciudad_provincia">Ej: Leganés, Madrid</string>
+    <string name="portal">Portal</string>
+    <string name="piso">Piso</string>
+    <string name="ejemplo_piso">Ej: 1ºC</string>
+    <string name="confirmar_cambios">Confirmar cambios</string>
     <string name="elige_pago">Elige forma de pago</string>
 </resources>

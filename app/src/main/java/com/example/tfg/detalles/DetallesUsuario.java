@@ -1,6 +1,8 @@
 package com.example.tfg.detalles;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -10,6 +12,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -18,6 +21,8 @@ import com.example.tfg.R;
 import com.example.tfg.conexion.ConexionFirebase;
 import com.example.tfg.entidad.Partido;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -30,25 +35,27 @@ public class DetallesUsuario extends AppCompatActivity {
 
     private RadioGroup radioGroup;
     private RadioButton radioButton;
-    private LinearLayout linearLayoutCodigo;
-    private EditText codigo, nombre, apellido1, apellido2, tlf;
+    private TextInputEditText nombre, apellido1, apellido2, tlf, codigo;
+    private TextInputLayout codigo2;
     private Button continuar;
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final FirebaseAuth user = FirebaseAuth.getInstance();
 
+    @SuppressLint("MissingInflatedId")
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detalles_usuario);
 
-        radioGroup = findViewById(R.id.radio_group);
-        linearLayoutCodigo = findViewById(R.id.linearLayoutCodigo);
-        codigo = findViewById(R.id.codigoRol);
-        continuar = findViewById(R.id.continuarButton);
-        nombre = findViewById(R.id.nombreDetallesUser);
-        apellido1 = findViewById(R.id.apellido1DetallesUser);
-        apellido2 = findViewById(R.id.apellido2DetallesUser);
-        tlf = findViewById(R.id.telefonoDetallesUser);
+        radioGroup = findViewById(R.id.radioGroup);
+        codigo2 = findViewById(R.id.textInputLayoutCodigoDetallesUsuario);
+        codigo = findViewById(R.id.codigoDetallesUsuario);
+        continuar = findViewById(R.id.continuarDetallesUsuario);
+        nombre = findViewById(R.id.nombreDetallesUsuario);
+        apellido1 = findViewById(R.id.apellido1DetallesUsuario);
+        apellido2 = findViewById(R.id.apellido2DetallesUsuario);
+        tlf = findViewById(R.id.telefonoDetallesUsuario);
 
         String correo = getIntent().getStringExtra("correo");
         String psswrd = getIntent().getStringExtra("psswrd");
@@ -57,15 +64,17 @@ public class DetallesUsuario extends AppCompatActivity {
             radioButton = radioGroup.findViewById(checkedId);
             switch (radioButton.getId()){
                 case R.id.adminOption:
-                    linearLayoutCodigo.setVisibility(View.VISIBLE);
-                    codigo.setHint("Administrador");
+                    codigo2.setVisibility(View.VISIBLE);
+                    codigo.setText("");
+                    codigo2.setHint("Administrador");
                     break;
                 case R.id.entrenadorOption:
-                    linearLayoutCodigo.setVisibility(View.VISIBLE);
-                    codigo.setHint("Entrenador");
+                    codigo2.setVisibility(View.VISIBLE);
+                    codigo.setText("");
+                    codigo2.setHint("Entrenador");
                     break;
                 case R.id.jugadorOption:
-                    linearLayoutCodigo.setVisibility(View.INVISIBLE);
+                    codigo2.setVisibility(View.INVISIBLE);
                     break;
                 default:
                     Toast.makeText(DetallesUsuario.this, radioButton.getId() + "", Toast.LENGTH_SHORT).show();
@@ -74,7 +83,6 @@ public class DetallesUsuario extends AppCompatActivity {
         });
 
         continuar.setOnClickListener(view -> {
-            Toast.makeText(this, "Hola", Toast.LENGTH_SHORT).show();
             if (correcto(nombre.getText().toString(), nombre) && correcto(apellido1.getText().toString(), apellido1) && comprobarRadioButton()){
                 user.createUserWithEmailAndPassword(correo, psswrd).addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -134,16 +142,21 @@ public class DetallesUsuario extends AppCompatActivity {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     private void agregarUser(String correo, String nombre, String apellido1, String rol){
         Map<String, Object> usuario = new HashMap<>();
         usuario.put("correo", correo);
         usuario.put("nombre", nombre);
         usuario.put("apellido1", apellido1);
+        usuario.put("imagen", "gs://balonmano-f213a.appspot.com/perfilUsuario/default.png");
         usuario.put("rol", rol);
+        usuario.put("apellido2", "");
+        usuario.put("tlf", "");
+        usuario.put("direccion", "");
         if (!apellido2.getText().toString().isEmpty() && correcto(apellido2.getText().toString(), apellido2)){
-            usuario.put("apellido2", apellido2.getText().toString());
+            usuario.replace("apellido2", apellido2.getText().toString());
         }else if (tlfCorrecto(tlf.getText().toString())){
-            usuario.put("telefono", tlf.getText().toString());
+            usuario.replace("tlf", tlf.getText().toString());
         }
         db.collection("usuarios").add(usuario).addOnSuccessListener(documentReference -> {
             Toast.makeText(this, "Usuario agregado correctamente.", Toast.LENGTH_SHORT).show();

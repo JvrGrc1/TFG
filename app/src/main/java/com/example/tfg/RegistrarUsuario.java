@@ -33,9 +33,8 @@ public class RegistrarUsuario extends AppCompatActivity {
         setContentView(R.layout.activity_registrar_usuario);
 
         registro = findViewById(R.id.registroButton);
-        correo = findViewById(R.id.correoUserRegistro);
-        psswrd = findViewById(R.id.psswrdRegistroUser);
-        ver = findViewById(R.id.buttonVer);
+        correo = findViewById(R.id.correoUser);
+        psswrd = findViewById(R.id.contrasenaUser);
         iniciarSesion = findViewById(R.id.iniciarSesion);
 
         registro.setOnClickListener(view -> {
@@ -62,17 +61,6 @@ public class RegistrarUsuario extends AppCompatActivity {
             }
         });
 
-        ver.setOnClickListener(v -> {
-            if (isPsswrdVisible) {
-                psswrd.setTransformationMethod(PasswordTransformationMethod.getInstance());
-                ver.setBackgroundResource(R.drawable.ojo_abierto);
-                isPsswrdVisible = false;
-            }else {
-                psswrd.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
-                ver.setBackgroundResource(R.drawable.ojo_cerrado);
-                isPsswrdVisible = true;
-            }
-        });
         iniciarSesion.setOnClickListener(v -> {
             Intent intent = new Intent(this, Login.class);
             startActivity(intent);
