@@ -90,6 +90,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="30dp"
                 android:hint="@string/nombre"
+                app:hintTextColor="@color/azul_oscuro"
                 app:boxBackgroundMode="outline"
 
                 app:boxCornerRadiusBottomEnd="8dp"
@@ -118,6 +119,7 @@
                 android:layout_marginStart="30dp"
                 android:layout_marginTop="20dp"
                 android:hint="@string/apellido1"
+                app:hintTextColor="@color/azul_oscuro"
                 app:boxBackgroundMode="outline"
                 app:boxCornerRadiusBottomEnd="8dp"
                 app:boxCornerRadiusBottomStart="8dp"
@@ -149,6 +151,7 @@
                 app:boxCornerRadiusTopEnd="8dp"
                 app:boxCornerRadiusTopStart="8dp"
                 app:boxStrokeColor="@color/azul_oscuro"
+                app:hintTextColor="@color/azul_oscuro"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textInputLayoutNombreMiUsuario">
 
@@ -168,6 +171,7 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="30dp"
                 android:hint="@string/correo_user"
+                app:hintTextColor="@color/azul_oscuro"
                 app:boxBackgroundMode="outline"
 
                 app:boxCornerRadiusBottomEnd="8dp"
@@ -196,6 +200,7 @@
                 android:layout_marginEnd="30dp"
                 android:hint="@string/telefono"
                 app:boxStrokeColor="@color/azul_oscuro"
+                app:hintTextColor="@color/azul_oscuro"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textInputLayoutCorreoMiUsuario">
@@ -226,7 +231,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:hint="@string/direccion"
-                    app:boxStrokeColor="@color/azul_oscuro">
+                    app:boxStrokeColor="@color/azul_oscuro"
+                    app:hintTextColor="@color/azul_oscuro">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/direccionMiUsuario"
@@ -257,7 +263,8 @@
                     android:layout_weight="2"
                     android:hint="@string/piso"
                     app:boxStrokeColor="@color/azul_oscuro"
-                    app:helperText="@string/ejemplo_piso">
+                    app:helperText="@string/ejemplo_piso"
+                    app:hintTextColor="@color/azul_oscuro">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/pisoMiUsuario"
@@ -275,7 +282,8 @@
                     android:layout_marginStart="5dp"
                     android:layout_weight="2"
                     android:hint="@string/portal"
-                    app:boxStrokeColor="@color/azul_oscuro">
+                    app:boxStrokeColor="@color/azul_oscuro"
+                    app:hintTextColor="@color/azul_oscuro">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/portalMiUsuario"
@@ -309,7 +317,8 @@
                     android:layout_marginEnd="5dp"
                     android:layout_weight="1"
                     android:hint="@string/provincia"
-                    app:boxStrokeColor="@color/azul_oscuro">
+                    app:boxStrokeColor="@color/azul_oscuro"
+                    app:hintTextColor="@color/azul_oscuro">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/provinciaMiUsuario"
@@ -326,7 +335,8 @@
                     android:layout_marginEnd="5dp"
                     android:layout_weight="1"
                     android:hint="@string/ciudad"
-                    app:boxStrokeColor="@color/azul_oscuro">
+                    app:boxStrokeColor="@color/azul_oscuro"
+                    app:hintTextColor="@color/azul_oscuro">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/ciudadMiUsuario"

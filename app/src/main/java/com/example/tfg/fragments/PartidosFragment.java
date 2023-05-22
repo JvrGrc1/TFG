@@ -14,6 +14,7 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.tfg.conexion.ConexionFirebase;
 import com.example.tfg.detalles.DetallesJornada;
@@ -38,31 +39,16 @@ public class PartidosFragment extends Fragment {
     private Spinner temporadas, equipos, jornadas;
     private final ConexionFirebase conexion = new ConexionFirebase();
     private List<Partido> jugadores = new ArrayList<>();
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-    private String mParam1;
-    private String mParam2;
+
+    private SwipeRefreshLayout refresh;
 
     public PartidosFragment() {
         // Required empty public constructor
     }
 
-    public static PartidosFragment newInstance(String param1, String param2) {
-        PartidosFragment fragment = new PartidosFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -73,6 +59,7 @@ public class PartidosFragment extends Fragment {
         jornadas = root.findViewById(R.id.spinnerJornadaPartidos);
         temporadas = root.findViewById(R.id.spinnerTemporada);
         equipos = root.findViewById(R.id.spinnerDivisionPartidos);
+        refresh = root.findViewById(R.id.refreshLayout);
 
         rellenarTemporadas();
         rellenarEquipos();
@@ -84,7 +71,8 @@ public class PartidosFragment extends Fragment {
         Bundle args = getArguments();
         if (args != null && args.containsKey("lista")){
             jugadores = ((List<Partido>) args.getSerializable("lista"));
-            adapter = new JornadasAdapter(getContext(), jugadores);
+            List<Partido> lista = listaSegunTemporada("22-23", jugadores);
+            adapter = new JornadasAdapter(getContext(), lista);
             recycler.setAdapter(adapter);
         }
 
@@ -116,6 +104,20 @@ public class PartidosFragment extends Fragment {
                 jornadas.setVisibility(View.VISIBLE);
                 equipos.setVisibility(View.VISIBLE);
             }
+        });
+
+        refresh.setOnRefreshListener(() -> {
+            Task<List<Partido>> partidos = conexion.obtenerPartidos();
+            partidos.addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    jugadores = task.getResult();
+                    adapter = new JornadasAdapter(getContext(), listaSegunSpinner(jugadores));
+                    recycler.setAdapter(adapter);
+                    refresh.setRefreshing(false);
+                }else {
+                    Toast.makeText(getContext(), "Error al recargar partidos.", Toast.LENGTH_SHORT).show();
+                }
+            });
         });
 
         return root;
@@ -242,7 +244,7 @@ public class PartidosFragment extends Fragment {
             }
             ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, lista);
             temporadas.setAdapter(adapter);
-            temporadas.setSelection(0);
+            temporadas.setSelection(adapter.getCount() - 1);
             equipos.setEnabled(false);
             jornadas.setEnabled(false);
         });
