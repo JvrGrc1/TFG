@@ -114,7 +114,7 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="30dp"
                 android:orientation="vertical"
-                android:visibility="gone"
+                android:visibility="visible"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/layoutNuevaDireccion">
@@ -270,6 +270,19 @@
                     android:textSize="20sp"
                     android:textStyle="bold"/>
             </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/industrial_light"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:text="Tarjeta de Credito"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="30dp"
+                android:textColor="@color/black"
+                app:layout_constraintTop_toBottomOf="@id/crearDireccionPago"
+                app:layout_constraintStart_toStartOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 
@@ -281,12 +294,12 @@
         android:layout_marginStart="5dp"
         android:layout_marginEnd="5dp"
         android:layout_marginBottom="5dp"
-        app:layout_constraintBottom_toTopOf="@id/lienarTotal"
+        app:layout_constraintBottom_toTopOf="@id/linearTotal"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
     <LinearLayout
-        android:id="@+id/lienarTotal"
+        android:id="@+id/linearTotal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
@@ -325,7 +338,7 @@
         android:background="@color/gris_oscurito"
         android:layout_marginStart="5dp"
         android:layout_marginEnd="5dp"
-        app:layout_constraintTop_toBottomOf="@id/lienarTotal"
+        app:layout_constraintTop_toBottomOf="@id/linearTotal"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 

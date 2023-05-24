@@ -9,7 +9,6 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -18,13 +17,12 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.tfg.conexion.ConexionFirebase;
 import com.example.tfg.entidad.Pedido;
 import com.example.tfg.entidad.Usuario;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.List;
+import java.util.Objects;
 
 public class MetodoDePago extends AppCompatActivity {
 
@@ -79,7 +77,7 @@ public class MetodoDePago extends AppCompatActivity {
         for (Pedido p : pedidos){
             totalCompra += p.getCantidad() * p.getPrecioUnidad();
         }
-        total.setText(totalCompra + "€");
+        total.setText(String.format("%s€", totalCompra));
 
         nuevaDireccion.setOnClickListener(v -> {
             crearDireccion.setVisibility(View.VISIBLE);
@@ -112,11 +110,11 @@ public class MetodoDePago extends AppCompatActivity {
         });
     }
     private boolean comprobarDireccion(){
-        String direccion1 = direccion.getText().toString().trim();
-        String piso1 = piso.getText().toString().trim();
-        String ciudad1 = ciudad.getText().toString().trim();
-        String provincia1 = provincia.getText().toString().trim();
-        String portal1 = portal.getText().toString().trim();
+        String direccion1 = Objects.requireNonNull(direccion.getText()).toString().trim();
+        String piso1 = Objects.requireNonNull(piso.getText()).toString().trim();
+        String ciudad1 = Objects.requireNonNull(ciudad.getText()).toString().trim();
+        String provincia1 = Objects.requireNonNull(provincia.getText()).toString().trim();
+        String portal1 = Objects.requireNonNull(portal.getText()).toString().trim();
 
         if (direccion1.isEmpty() || piso1.isEmpty() || portal1.isEmpty() || ciudad1.isEmpty() || provincia1.isEmpty()){
             if (direccion1.isEmpty() && piso1.isEmpty() && portal1.isEmpty() && ciudad1.isEmpty() && provincia1.isEmpty()) {
@@ -159,6 +157,9 @@ public class MetodoDePago extends AppCompatActivity {
     }
 
     private String obtenerDireccion(){
-        return String.format("%s,%s,%s,%s,%s", direccion.getText().toString(), portal.getText().toString(), piso.getText().toString(), provincia.getText().toString(), ciudad.getText().toString());
+        return String.format("%s,%s,%s,%s,%s",
+                Objects.requireNonNull(direccion.getText()), Objects.requireNonNull(portal.getText()),
+                Objects.requireNonNull(piso.getText()), Objects.requireNonNull(provincia.getText()),
+                Objects.requireNonNull(ciudad.getText()));
     }
 }
