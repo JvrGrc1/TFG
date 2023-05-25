@@ -1,9 +1,5 @@
 package com.example.tfg;
 
-import static androidx.core.content.ContentProviderCompat.requireContext;
-
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 
@@ -11,9 +7,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
-import android.content.ContentValues;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -35,14 +29,13 @@ import com.google.firebase.storage.UploadTask;
 public class PerfilUsuario extends AppCompatActivity {
 
     private Usuario usuario;
-    private TextInputEditText nombre, apellido1, apellido2, correo, tlf, direccion, portal, piso, ciudad, provincia;
+    private TextInputEditText nombre, apellido1, correo, apellido2, tlf, direccion, portal, piso, ciudad, provincia;
     private TextView rol;
     private ImageView imagen;
     private ImageButton edit;
     private ConexionFirebase conexion = new ConexionFirebase();
     private StorageReference storageRef = FirebaseStorage.getInstance().getReference();
     private ImageButton guardar;
-    private Uri cam_uri;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,7 +68,7 @@ public class PerfilUsuario extends AppCompatActivity {
         if (usuario.getTlf() != null && !usuario.getTlf().isEmpty()) {tlf.setText(usuario.getTlf());}
 
         guardar.setOnClickListener(v -> {
-            if(comprobarNombreyApellidos() & tlfCorrecto() & comprobarDireccion() & correoCorrecto()) {
+            if(comprobarNombreyApellidos() & tlfCorrecto() & comprobarDireccion()) {
                 new AlertDialog.Builder(PerfilUsuario.this)
                         .setPositiveButton("Confirmar", (dialogInterface, i) -> modificarUser())
                         .setNegativeButton("Cancelar", (dialogInterface, i) -> dialogInterface.dismiss())
@@ -220,16 +213,6 @@ public class PerfilUsuario extends AppCompatActivity {
         }
     }
 
-    private boolean correoCorrecto(){
-        String email = correo.getText().toString();
-        if (email.matches("^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$")){
-            return true;
-        }else {
-            correo.setError("Mal formao.");
-            return false;
-        }
-    }
-
     private void ponerDireccion(String direccion1){
         String[] partes = direccion1.split(",");
         direccion.setText(partes[0].trim());
@@ -269,7 +252,6 @@ public class PerfilUsuario extends AppCompatActivity {
         addTextChangedListener(apellido1, usuario.getApellido1());
         addTextChangedListener(apellido2, usuario.getApellido2());
         addTextChangedListener(tlf, usuario.getTlf());
-        addTextChangedListener(correo, usuario.getCorreo());
         String[] partes = usuario.getDireccion().split(",");
         if (usuario.getDireccion() != null && !usuario.getDireccion().isEmpty()) {
             addTextChangedListener(direccion, partes[0].trim());
@@ -294,7 +276,6 @@ public class PerfilUsuario extends AppCompatActivity {
         }else{
             usuario.setApellido2(apellido2.getText().toString());
         }
-        usuario.setCorreo(correo.getText().toString());
         if (tlf.getText().toString().isEmpty()){
             usuario.setTlf("");
         }else{
