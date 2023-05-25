@@ -35,8 +35,11 @@
         android:id="@+id/recyclerPedidos"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="70dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="26dp"
+        android:layout_marginBottom="95dp"
+        app:layout_constraintBottom_toTopOf="@+id/buttonConfirmarPedido"
+        app:layout_constraintEnd_toEndOf="@id/divider"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/divider" />
 
@@ -44,8 +47,13 @@
         android:id="@+id/buttonConfirmarPedido"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/boton_custom"
+        android:fontFamily="@font/industrial_light"
+        android:padding="15dp"
         android:text="@string/confirmar_pedido"
+        android:textColor="@color/black"
+        android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
