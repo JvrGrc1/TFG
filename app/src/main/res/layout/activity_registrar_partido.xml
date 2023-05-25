@@ -243,11 +243,13 @@
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/buttonEditar"
+        android:contentDescription="Editar partido"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="22dp"
         android:clickable="true"
+        android:focusable="true"
         android:visibility="invisible"
         app:backgroundTint="@color/gris_casi_blanco"
         app:elevation="2dp"
@@ -258,11 +260,13 @@
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/buttonAgregar"
+        android:contentDescription="Agregar datos"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="20dp"
         android:clickable="true"
+        android:focusable="true"
         app:backgroundTint="@color/gris_casi_blanco"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

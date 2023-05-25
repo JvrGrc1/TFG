@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -18,7 +17,6 @@ import com.example.tfg.adaptador.PartidosAdapter;
 import com.example.tfg.adaptador.RecyclerItemClickListener;
 import com.example.tfg.entidad.Partido;
 
-import java.io.Serializable;
 import java.util.List;
 
 public class DetallesJornada extends AppCompatActivity {
@@ -50,7 +48,7 @@ public class DetallesJornada extends AppCompatActivity {
             @Override
             public void onItemClick(View v, int posicion) {
                 Intent intent = new Intent(v.getContext(), DetallesPartido.class);
-                intent.putExtra("partido", (Serializable) adapter.getDatos().get(posicion));
+                intent.putExtra("partido", adapter.getDatos().get(posicion));
                 startActivity(intent);
             }
 

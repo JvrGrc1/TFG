@@ -110,7 +110,7 @@ public class PedidosAdapter extends RecyclerView.Adapter<PedidosAdapter.PedidosV
             menos = itemView.findViewById(R.id.buttonMenosprendaPedido);
             trash = itemView.findViewById(R.id.buttonBasuraPrendaPedido);
 
-            trash.setOnClickListener(view -> {
+            trash.setOnClickListener(view ->
                 new AlertDialog.Builder(view.getContext())
                         .setPositiveButton("Confirmar", (dialogInterface, i) -> {
                             conexion.borrarPedido(view.getContext(), adapter.getDatos().get(getAdapterPosition()));
@@ -120,8 +120,8 @@ public class PedidosAdapter extends RecyclerView.Adapter<PedidosAdapter.PedidosV
                         .setNegativeButton("Cancelar", (dialogInterface, i) -> dialogInterface.dismiss())
                         .setTitle("¿Estás seguro?")
                         .setMessage("Si confirmas eliminarás esta prenda de tu pedido.")
-                        .show();
-            });
+                        .show()
+            );
 
             mas.setOnClickListener(view -> {
                 if (Integer.parseInt(cantidad.getText().toString()) == 9){

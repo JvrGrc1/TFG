@@ -3,14 +3,12 @@ package com.example.tfg.conexion;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 
 import com.example.tfg.Login;
 import com.example.tfg.PerfilUsuario;
@@ -18,7 +16,6 @@ import com.example.tfg.entidad.Partido;
 import com.example.tfg.entidad.Pedido;
 import com.example.tfg.entidad.Prenda;
 import com.example.tfg.entidad.Usuario;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.gms.tasks.Tasks;
@@ -152,44 +149,41 @@ public class ConexionFirebase {
 
     public void subirPedido(Context contexto, Map<String, Object> pedido) {
         Task<List<Pedido>> pedidos = obtenerPedidos(user.getEmail());
-        pedidos.addOnCompleteListener(new OnCompleteListener<List<Pedido>>() {
-            @Override
-            public void onComplete(@NonNull Task<List<Pedido>> task) {
-                if (task.isSuccessful()){
-                    List<Pedido> pedidos1 = task.getResult();
-                    if (pedidos1.isEmpty()){
-                        db.collection("pedidos").add(pedido).addOnCompleteListener(task1 -> {
-                            if (task1.isSuccessful()){
-                                Toast.makeText(contexto, "Se ha añadido el pedido correctamente.", Toast.LENGTH_SHORT).show();
-                            }else{
-                                Toast.makeText(contexto, "No se ha podido añadir el pedido. Intentelo de nuevo.", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                    }else{
-                        boolean repetido = false;
-                        long cantidad = 0;
-                        for (Pedido p : pedidos1){
-                            if (!p.isPagado() && p.getPrenda().equals(pedido.get("prenda")) && comprobarTallas(p.getTalla(), (String) pedido.get("talla"))){
-                                repetido = true;
-                                cantidad = p.getCantidad();
-                                borrarPedido(contexto, p);
-                            }
+        pedidos.addOnCompleteListener(task -> {
+            if (task.isSuccessful()){
+                List<Pedido> pedidos1 = task.getResult();
+                if (pedidos1.isEmpty()){
+                    db.collection("pedidos").add(pedido).addOnCompleteListener(task1 -> {
+                        if (task1.isSuccessful()){
+                            Toast.makeText(contexto, "Se ha añadido el pedido correctamente.", Toast.LENGTH_SHORT).show();
+                        }else{
+                            Toast.makeText(contexto, "No se ha podido añadir el pedido. Intentelo de nuevo.", Toast.LENGTH_SHORT).show();
                         }
-                        if (repetido){
-                            cantidad = cantidad + (long )pedido.get("cantidad");
-                            pedido.put("cantidad", cantidad);
-                        }
-                        db.collection("pedidos").add(pedido).addOnCompleteListener(task1 -> {
-                            if (task1.isSuccessful()){
-                                Toast.makeText(contexto, "Se ha añadido el pedido correctamente.", Toast.LENGTH_SHORT).show();
-                            }else{
-                                Toast.makeText(contexto, "No se ha podido añadir el pedido. Intentelo de nuevo.", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                    }
+                    });
                 }else{
-                    Toast.makeText(contexto, "Error al obtener los pedidos del usuario.", Toast.LENGTH_SHORT).show();
+                    boolean repetido = false;
+                    long cantidad = 0;
+                    for (Pedido p : pedidos1){
+                        if (!p.isPagado() && p.getPrenda().equals(pedido.get("prenda")) && comprobarTallas(p.getTalla(), (String) pedido.get("talla"))){
+                            repetido = true;
+                            cantidad = p.getCantidad();
+                            borrarPedido(contexto, p);
+                        }
+                    }
+                    if (repetido){
+                        cantidad = cantidad + (long )pedido.get("cantidad");
+                        pedido.put("cantidad", cantidad);
+                    }
+                    db.collection("pedidos").add(pedido).addOnCompleteListener(task1 -> {
+                        if (task1.isSuccessful()){
+                            Toast.makeText(contexto, "Se ha añadido el pedido correctamente.", Toast.LENGTH_SHORT).show();
+                        }else{
+                            Toast.makeText(contexto, "No se ha podido añadir el pedido. Intentelo de nuevo.", Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 }
+            }else{
+                Toast.makeText(contexto, "Error al obtener los pedidos del usuario.", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -198,8 +192,7 @@ public class ConexionFirebase {
         if (p == null && pedido == null){return true;}
         else if (p == null && pedido != null){return false;}
         else if (p != null && pedido == null){return false;}
-        else if (p.equals(pedido)){return true;}
-        else {return false;}
+        else return p.equals(pedido);
     }
 
     public void cargarImagen(Context contexto, ImageView holder, ImageView img, String url){
@@ -363,9 +356,7 @@ public class ConexionFirebase {
     }
 
     public void signIn(String correo, String psswrd, Login login){
-        auth.signInWithEmailAndPassword(correo, psswrd).addOnCompleteListener(task -> {
-            login.iniciarMainActivity(task);
-        });
+        auth.signInWithEmailAndPassword(correo, psswrd).addOnCompleteListener(task -> login.iniciarMainActivity(task));
     }
 
     public void signOut(){auth.signOut();}

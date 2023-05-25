@@ -9,7 +9,7 @@ public class Jugador implements Serializable {
     private String nombre;
     private String apellido1;
     private String apellido2;
-    private String posicion;        //Seguramente CAMBIO
+    private String posicion;
 
     public Jugador(String nombre, String apellido1, String apellido2, String posicion) {
         this.nombre = nombre;

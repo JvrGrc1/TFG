@@ -13,6 +13,7 @@
 
         <ImageView
             android:id="@+id/imagenPrenda"
+            android:contentDescription="Imagen prenda"
             android:layout_width="180dp"
             android:layout_height="180dp"
             android:layout_gravity="center_horizontal"

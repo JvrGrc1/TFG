@@ -42,9 +42,7 @@ public class PartidosFragment extends Fragment {
 
     private SwipeRefreshLayout refresh;
 
-    public PartidosFragment() {
-        // Required empty public constructor
-    }
+    public PartidosFragment() {/* Required empty public constructor*/}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

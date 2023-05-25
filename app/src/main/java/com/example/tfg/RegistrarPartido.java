@@ -28,7 +28,7 @@ public class RegistrarPartido extends AppCompatActivity {
     private Spinner anios, division, jornada;
     private EditText fecha, hora, local, visitante, gL, gV, pabellon;
     private FloatingActionButton agregar, editar;
-    private ConexionFirebase conexion = new ConexionFirebase();
+    private final ConexionFirebase conexion = new ConexionFirebase();
     private String id;
 
     @Override

@@ -13,6 +13,7 @@
 
         <ImageView
             android:id="@+id/imagenPrendaPedido"
+            android:contentDescription="Prenda pedida"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_gravity="center"

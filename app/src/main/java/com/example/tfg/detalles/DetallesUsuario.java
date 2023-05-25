@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
@@ -188,7 +187,7 @@ public class DetallesUsuario extends AppCompatActivity {
     }
 
     @Override
-    public void onBackPressed() {   //Si confirma la salida le devuelve a la MainActivity y si no se queda en DetallesUuario
+    public void onBackPressed() {   //Si confirma la salida le devuelve a la MainActivity y si no se queda en DetallesUsuario
         new AlertDialog.Builder(DetallesUsuario.this)
                 .setPositiveButton("Confirmar", (dialogInterface, i) -> intentMainActivity())
                 .setNegativeButton("Cancelar", (dialogInterface, i) -> dialogInterface.dismiss())

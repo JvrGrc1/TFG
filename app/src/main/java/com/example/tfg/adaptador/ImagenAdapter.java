@@ -8,7 +8,6 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.example.tfg.R;
 import com.example.tfg.conexion.ConexionFirebase;
 
@@ -16,8 +15,8 @@ import java.util.List;
 
 public class ImagenAdapter extends RecyclerView.Adapter<ImagenAdapter.ImageViewHolder> {
 
-    private List<String> imageUrlList;
-    private ConexionFirebase conexion = new ConexionFirebase();
+    private final List<String> imageUrlList;
+    private final ConexionFirebase conexion = new ConexionFirebase();
 
     public ImagenAdapter(List<String> imageUrlList) {
         this.imageUrlList = imageUrlList;

@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -23,7 +22,7 @@ public class PreCompra extends AppCompatActivity {
 
     private RecyclerView recycler;
     private Button confirmar;
-    private ConexionFirebase conexion = new ConexionFirebase();
+    private final ConexionFirebase conexion = new ConexionFirebase();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

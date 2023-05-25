@@ -12,6 +12,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.TFG"
+        android:screenOrientation="portrait"
         tools:targetApi="31">
         <activity
             android:name=".detalles.DetallesPartido"
@@ -51,8 +52,7 @@
             android:theme="@style/Theme.Transparent" />
         <activity
             android:name=".SplashScreen"
-            android:exported="true"
-            android:screenOrientation="portrait">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

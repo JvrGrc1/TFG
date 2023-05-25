@@ -30,6 +30,7 @@
         android:background="@color/white"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        android:contentDescription="Volver"
         app:srcCompat="@drawable/flecha_atras" />
 
     <View
@@ -79,7 +80,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/textViewdireccionPago"
+                    android:id="@+id/textViewDireccionPago"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
@@ -150,7 +151,7 @@
                     android:orientation="horizontal">
 
                     <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/textInputLayoutprovinciaPago"
+                        android:id="@+id/textInputLayoutProvinciaPago"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_marginEnd="5dp"
@@ -272,6 +273,7 @@
             </LinearLayout>
 
             <TextView
+                android:id="@+id/textViewTarjeta"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/industrial_light"
@@ -283,6 +285,20 @@
                 android:textColor="@color/black"
                 app:layout_constraintTop_toBottomOf="@id/crearDireccionPago"
                 app:layout_constraintStart_toStartOf="parent" />
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="30dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/gris_oscurito"
+                app:layout_constraintTop_toBottomOf="@id/textViewTarjeta"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+
+            </androidx.cardview.widget.CardView>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 

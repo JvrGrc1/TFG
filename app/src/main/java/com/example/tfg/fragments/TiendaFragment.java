@@ -27,12 +27,6 @@ import com.google.firebase.auth.FirebaseUser;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link TiendaFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class TiendaFragment extends Fragment {
 
     private RecyclerView recyclerView;
@@ -41,21 +35,8 @@ public class TiendaFragment extends Fragment {
     private List<Prenda> prendas = new ArrayList<>();
     private FirebaseUser user;
     private final ConexionFirebase conexion = new ConexionFirebase();
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    public TiendaFragment() {
-        // Required empty public constructor
-    }
-    public static TiendaFragment newInstance(String param1, String param2) {
-        TiendaFragment fragment = new TiendaFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
+    public TiendaFragment() {/*Required empty public constructor*/}
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,7 +88,7 @@ public class TiendaFragment extends Fragment {
                         Intent intent = new Intent(getContext(), PreCompra.class);
                         intent.putExtra("pedido", (Serializable) prendas1);
                         startActivity(intent);
-                        getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                        requireActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                     }
                 }else{
                     Toast.makeText(getContext(), "Error obteniendo los pedidos", Toast.LENGTH_SHORT).show();

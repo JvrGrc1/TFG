@@ -1,9 +1,5 @@
 package com.example.tfg;
 
-import static androidx.core.content.ContentProviderCompat.requireContext;
-
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 
@@ -11,9 +7,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
-import android.content.ContentValues;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -39,8 +33,8 @@ public class PerfilUsuario extends AppCompatActivity {
     private TextView rol;
     private ImageView imagen;
     private ImageButton edit;
-    private ConexionFirebase conexion = new ConexionFirebase();
-    private StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+    private final ConexionFirebase conexion = new ConexionFirebase();
+    private final StorageReference storageRef = FirebaseStorage.getInstance().getReference();
     private ImageButton guardar;
     private Uri cam_uri;
     @Override
@@ -108,7 +102,7 @@ public class PerfilUsuario extends AppCompatActivity {
 
 
 
-    private ActivityResultLauncher<Intent> elegirDeGaleria = registerForActivityResult(
+    private final ActivityResultLauncher<Intent> elegirDeGaleria = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), result -> {
                 if (result.getResultCode() == Activity.RESULT_OK) {
                     Uri imagenUri = result.getData().getData();
@@ -225,7 +219,7 @@ public class PerfilUsuario extends AppCompatActivity {
         if (email.matches("^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$")){
             return true;
         }else {
-            correo.setError("Mal formao.");
+            correo.setError("Correo mal formado.");
             return false;
         }
     }

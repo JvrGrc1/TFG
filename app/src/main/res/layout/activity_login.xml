@@ -16,7 +16,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewInicioSesion"
-        app:srcCompat="@drawable/logo" />
+        app:srcCompat="@drawable/logo"
+        android:contentDescription="Logo del club" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/correoUser1"
@@ -91,6 +92,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:clickable="true"
+        android:focusable="true"
         android:fontFamily="@font/industrial_light"
         android:text="@string/nueva_cuenta"
         android:textSize="16sp"

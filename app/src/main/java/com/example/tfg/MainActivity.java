@@ -1,5 +1,8 @@
 package com.example.tfg;
 
+import static com.example.tfg.R.*;
+import static com.example.tfg.R.id.*;
+
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
@@ -70,19 +73,19 @@ public class MainActivity extends AppCompatActivity {
             iniciarPartidos();
         }
 
-        bottomNav = findViewById(R.id.bottomNavigationView);
-        lateral = findViewById(R.id.lateral);
-        abrir = findViewById(R.id.botonAbrir);
-        drawerLayout = findViewById(R.id.drawer);
-        cerrar = lateral.getMenu().findItem(R.id.cerrar);
-        registroUser = lateral.getMenu().findItem(R.id.registrarse);
-        usuario = lateral.getMenu().findItem(R.id.user);
-        registroPartido = lateral.getMenu().findItem(R.id.registrarPartido);
+        bottomNav = findViewById(bottomNavigationView);
+        lateral = findViewById(id.lateral);
+        abrir = findViewById(botonAbrir);
+        drawerLayout = findViewById(drawer);
+        cerrar = lateral.getMenu().findItem(id.cerrar);
+        registroUser = lateral.getMenu().findItem(registrarse);
+        usuario = lateral.getMenu().findItem(user);
+        registroPartido = lateral.getMenu().findItem(registrarPartido);
 
         comprobarUser();
 
         //Selecciona partidos como el fragment principal
-        bottomNav.setSelectedItemId(R.id.partidos);
+        bottomNav.setSelectedItemId(partidos);
         bottomNav.setSelected(true);
 
         AnimatorSet animSet = new AnimatorSet();
@@ -95,27 +98,27 @@ public class MainActivity extends AppCompatActivity {
             if (item.getItemId() != bottomNav.getSelectedItemId()){
                 resetIcons();
                 switch (item.getItemId()) {
-                    case R.id.partidos:
+                    case partidos:
                         animSet.start();
-                        item.setIcon(R.drawable.partidos);
+                        item.setIcon(drawable.partidos);
                         Bundle b = new Bundle();
                         if (!j.isEmpty()) {b.putSerializable("lista", (Serializable) j);}
                         Fragment partidos = new PartidosFragment();
                         partidos.setArguments(b);
                         cambiarFragment(partidos);
                         break;
-                    case R.id.tienda:
+                    case tienda:
                         animSet.start();
-                        item.setIcon(R.drawable.tienda);
+                        item.setIcon(drawable.tienda);
                         Bundle bt = new Bundle();
                         if (!j.isEmpty()) {bt.putSerializable("ropa", (Serializable) prendas);}
                         Fragment tienda = new TiendaFragment();
                         tienda.setArguments(bt);
                         cambiarFragment(tienda);
                         break;
-                    case R.id.estadisticas:
+                    case estadisticas:
                         animSet.start();
-                        item.setIcon(R.drawable.estadisticas);
+                        item.setIcon(drawable.estadisticas);
                         cambiarFragment(new EstadisticasFragment());
                         break;
                 }
@@ -125,24 +128,24 @@ public class MainActivity extends AppCompatActivity {
 
         lateral.setNavigationItemSelectedListener(item -> {
             switch (item.getItemId()) {
-                case R.id.registrarPartido:
+                case registrarPartido:
                     String user = conexion.obtenerUser();
                     Intent intentRegistrar = new Intent(this, RegistrarPartido.class);
                     startActivity(intentRegistrar);
                     drawerLayout.closeDrawer(GravityCompat.START);
                     break;
-                case R.id.ajustes:
+                case ajustes:
                     Intent intentAjustes = new Intent(this, Ajustes.class);
                     startActivity(intentAjustes);
                     drawerLayout.closeDrawer(GravityCompat.START);
                     break;
-                case R.id.user:
+                case id.user:
                     Intent intentPerfilUsuario = new Intent(this, PerfilUsuario.class);
                     Task<Usuario> taskUser = conexion.datosUsuario(conexion.obtenerUser());
                     taskUser.addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             Usuario usuario = task.getResult();
-                            intentPerfilUsuario.putExtra("usuario", (Serializable) usuario);
+                            intentPerfilUsuario.putExtra("usuario", usuario);
                             startActivity(intentPerfilUsuario);
                             drawerLayout.closeDrawer(GravityCompat.START);
                         }else{
@@ -150,30 +153,28 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
                     break;
-                case R.id.registrarse:
+                case registrarse:
                     Intent intentSignIn = new Intent(this, RegistrarUsuario.class);
                     startActivity(intentSignIn);
                     drawerLayout.closeDrawer(GravityCompat.START);
                     break;
-                case R.id.cerrar:
+                case id.cerrar:
                     conexion.signOut();
                     intentMainActivity();
-                case R.id.consultaEquipo:
+                case consultaEquipo:
                     break;
             }
             return false;
         });
 
-        abrir.setOnClickListener(v -> {
-            drawerLayout.openDrawer(GravityCompat.START);
-        });
+        abrir.setOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
     }
 
     private void comprobarUser() {
         View header = lateral.getHeaderView(0);
-        TextView nombreUsuario = header.findViewById(R.id.nombreUsuario);
-        TextView posicion = header.findViewById(R.id.posicionUsuario);
-        ImageView imagen = header.findViewById(R.id.imagenUsuario);
+        TextView nombreUsuario = header.findViewById(id.nombreUsuario);
+        TextView posicion = header.findViewById(posicionUsuario);
+        ImageView imagen = header.findViewById(imagenUsuario);
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user == null){
             nombreUsuario.setText("Sin registrar");
@@ -202,11 +203,7 @@ public class MainActivity extends AppCompatActivity {
                         if (ds.getString("imagen") != null && !ds.getString("imagen").isEmpty()) {
                             conexion.cargarImagen(MainActivity.this, imagen, abrir, ds.getString("imagen"));
                         }
-                        if (ds.getString("rol").equals("Jugador")){
-                            registroPartido.setVisible(false);
-                        }else{
-                            registroPartido.setVisible(true);
-                        }
+                        registroPartido.setVisible(!ds.getString("rol").equals("Jugador"));
                     }
                 }
                 registroUser.setVisible(false);
@@ -225,7 +222,7 @@ public class MainActivity extends AppCompatActivity {
         partidos.setArguments(bundle);
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
-        transaction.replace(R.id.frame_layout, partidos);
+        transaction.replace(frame_layout, partidos);
         transaction.commit();
     }
 
@@ -238,7 +235,7 @@ public class MainActivity extends AppCompatActivity {
         tienda.setArguments(bundle);
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
-        transaction.replace(R.id.frame_layout, tienda);
+        transaction.replace(frame_layout, tienda);
         transaction.commit();
     }
 
@@ -252,8 +249,8 @@ public class MainActivity extends AppCompatActivity {
     private void cambiarFragment(Fragment fragment){
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
-        transaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
-        transaction.replace(R.id.frame_layout, fragment);
+        transaction.setCustomAnimations(anim.fade_in, anim.fade_out);
+        transaction.replace(frame_layout, fragment);
         transaction.commit();
     }
 
@@ -262,7 +259,7 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra("lista", (Serializable) j);
         intent.putExtra("ropa", (Serializable) prendas);
         startActivity(intent);
-        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        overridePendingTransition(anim.fade_in, anim.fade_out);
         finishAffinity();
     }
 
