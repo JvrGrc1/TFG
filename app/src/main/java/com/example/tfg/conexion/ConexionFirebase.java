@@ -368,9 +368,7 @@ public class ConexionFirebase {
     }
 
     public void signIn(String correo, String psswrd, Login login){
-        auth.signInWithEmailAndPassword(correo, psswrd).addOnCompleteListener(task -> {
-            login.iniciarMainActivity(task);
-        });
+        auth.signInWithEmailAndPassword(correo, psswrd).addOnCompleteListener(task -> login.iniciarMainActivity(task));
     }
 
     public void signOut(){auth.signOut();}

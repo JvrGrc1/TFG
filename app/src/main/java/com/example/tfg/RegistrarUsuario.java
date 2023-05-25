@@ -14,23 +14,33 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.tfg.conexion.ConexionFirebase;
 import com.example.tfg.detalles.DetallesUsuario;
+import com.example.tfg.entidad.Partido;
+import com.example.tfg.entidad.Pedido;
 import com.google.android.gms.tasks.Task;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class RegistrarUsuario extends AppCompatActivity {
 
-    private Button registro, ver;
+    private Button registro;
 
     private EditText correo, psswrd;
     private TextView iniciarSesion;
-    private boolean isPsswrdVisible = false;
+    private List<Partido> j = new ArrayList<>();
+    private List<Pedido> prendas = new ArrayList<>();
     private final ConexionFirebase conexion = new ConexionFirebase();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registrar_usuario);
+
+        Intent intentRecibido = getIntent();
+        j = (List<Partido>) intentRecibido.getSerializableExtra("lista");
+        prendas = (List<Pedido>) intentRecibido.getSerializableExtra("ropa");
 
         registro = findViewById(R.id.registroButton);
         correo = findViewById(R.id.correoUser);
@@ -63,6 +73,8 @@ public class RegistrarUsuario extends AppCompatActivity {
 
         iniciarSesion.setOnClickListener(v -> {
             Intent intent = new Intent(this, Login.class);
+            intent.putExtra("lista", (Serializable) j);
+            intent.putExtra("ropa", (Serializable) prendas);
             startActivity(intent);
             overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         });

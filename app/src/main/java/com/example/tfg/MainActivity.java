@@ -126,7 +126,6 @@ public class MainActivity extends AppCompatActivity {
         lateral.setNavigationItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.registrarPartido:
-                    String user = conexion.obtenerUser();
                     Intent intentRegistrar = new Intent(this, RegistrarPartido.class);
                     startActivity(intentRegistrar);
                     drawerLayout.closeDrawer(GravityCompat.START);
@@ -144,7 +143,9 @@ public class MainActivity extends AppCompatActivity {
                     taskUser.addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             Usuario usuario = task.getResult();
-                            intentPerfilUsuario.putExtra("usuario", (Serializable) usuario);
+                            intentPerfilUsuario.putExtra("usuario", usuario);
+                            intentPerfilUsuario.putExtra("lista", (Serializable) j);
+                            intentPerfilUsuario.putExtra("ropa", (Serializable) prendas);
                             startActivity(intentPerfilUsuario);
                             drawerLayout.closeDrawer(GravityCompat.START);
                         }else{
@@ -154,6 +155,8 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case R.id.registrarse:
                     Intent intentSignIn = new Intent(this, RegistrarUsuario.class);
+                    intentSignIn.putExtra("lista", (Serializable) j);
+                    intentSignIn.putExtra("ropa", (Serializable) prendas);
                     startActivity(intentSignIn);
                     drawerLayout.closeDrawer(GravityCompat.START);
                     break;

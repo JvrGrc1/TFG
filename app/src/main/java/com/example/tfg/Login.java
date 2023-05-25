@@ -2,10 +2,7 @@ package com.example.tfg;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.method.HideReturnsTransformationMethod;
-import android.text.method.PasswordTransformationMethod;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -13,14 +10,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.tfg.conexion.ConexionFirebase;
 import com.example.tfg.entidad.Partido;
-import com.example.tfg.entidad.Prenda;
+import com.example.tfg.entidad.Pedido;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Login extends AppCompatActivity {
@@ -28,12 +24,18 @@ public class Login extends AppCompatActivity {
     private Button login;
     private TextInputEditText correo, psswrd;
     private TextView nueva;
+    private List<Partido> j = new ArrayList<>();
+    private List<Pedido> prendas = new ArrayList<>();
     private final ConexionFirebase conexion = new ConexionFirebase();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        Intent intent = getIntent();
+        j = (List<Partido>) intent.getSerializableExtra("lista");
+        prendas = (List<Pedido>) intent.getSerializableExtra("ropa");
 
         login = findViewById(R.id.loginButton);
         correo = findViewById(R.id.correoUser);
@@ -51,28 +53,12 @@ public class Login extends AppCompatActivity {
 
     public void iniciarMainActivity(Task<AuthResult> task) {
         if (task.isSuccessful()) {
-            Task<List<Partido>> partidos = conexion.obtenerPartidos();
-            partidos.addOnCompleteListener(task1 -> {
-                if (task1.isSuccessful()) {
-                    List<Partido> partidos1 = task1.getResult();
-                    Task<List<Prenda>> prendas = conexion.obtenerTienda();
-                    prendas.addOnCompleteListener(task2 -> {
-                        if (task2.isSuccessful()){
-                            List<Prenda> prendas1 = task2.getResult();
-                            Intent intent = new Intent(Login.this, MainActivity.class);
-                            intent.putExtra("lista", (Serializable) partidos1);
-                            intent.putExtra("ropa", (Serializable) prendas1);
-                            startActivity(intent);
-                            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                            finishAffinity();
-                        }else{
-                            Toast.makeText(Login.this, "Error obteniendo las prendas", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                } else {
-                    Toast.makeText(Login.this, "Error obteniendo partidos", Toast.LENGTH_SHORT).show();
-                }
-            });
+            Intent intent = new Intent(Login.this, MainActivity.class);
+            intent.putExtra("lista", (Serializable) j);
+            intent.putExtra("ropa", (Serializable) prendas);
+            startActivity(intent);
+            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+            finishAffinity();
         } else {
             Toast.makeText(Login.this, "El usuario o la contraseña con erroneos", Toast.LENGTH_SHORT).show();
         }
