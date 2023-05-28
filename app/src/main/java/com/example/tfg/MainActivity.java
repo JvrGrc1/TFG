@@ -142,7 +142,9 @@ public class MainActivity extends AppCompatActivity {
                     taskUser.addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             Usuario usuario = task.getResult();
-                            intentPerfilUsuario.putExtra("usuario", (Serializable) usuario);
+                            intentPerfilUsuario.putExtra("usuario", usuario);
+                            intentPerfilUsuario.putExtra("partidos", (Serializable) j);
+                            intentPerfilUsuario.putExtra("prendas", (Serializable) prendas);
                             startActivity(intentPerfilUsuario);
                             drawerLayout.closeDrawer(GravityCompat.START);
                         }else{

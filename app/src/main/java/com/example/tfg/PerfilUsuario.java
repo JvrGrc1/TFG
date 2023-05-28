@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -20,11 +21,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.tfg.conexion.ConexionFirebase;
+import com.example.tfg.entidad.Partido;
+import com.example.tfg.entidad.Pedido;
 import com.example.tfg.entidad.Usuario;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+
+import java.io.ByteArrayOutputStream;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PerfilUsuario extends AppCompatActivity {
 
@@ -36,10 +44,15 @@ public class PerfilUsuario extends AppCompatActivity {
     private ConexionFirebase conexion = new ConexionFirebase();
     private StorageReference storageRef = FirebaseStorage.getInstance().getReference();
     private ImageButton guardar;
+    private Uri nuevaUri;
+    private List<Partido> partidos = new ArrayList<>();
+    private List<Pedido> pedidos = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_perfil_usuario);
+
+        nuevaUri = null;
 
         nombre = findViewById(R.id.nombreMiUsuario);
         imagen = findViewById(R.id.imagenMiUsuario);
@@ -58,6 +71,8 @@ public class PerfilUsuario extends AppCompatActivity {
 
         Intent intent = getIntent();
         usuario = (Usuario) intent.getSerializableExtra("usuario");
+        partidos = (List<Partido>) intent.getSerializableExtra("partidos");
+        pedidos = (List<Pedido>) intent.getSerializableExtra("prendas");
         nombre.setText(usuario.getNombre());
         apellido1.setText(usuario.getApellido1());
         correo.setText(usuario.getCorreo());
@@ -84,7 +99,7 @@ public class PerfilUsuario extends AppCompatActivity {
                     .setTitle("Title")
                     .setItems(opciones, (dialog, which) -> {
                         if (which == 0){
-                            //Intent para abrir la camara.
+                            tomarFoto.launch(null);
                         }else if (which == 1){
                             Intent elegirImagen = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                             elegirDeGaleria.launch(elegirImagen);
@@ -99,13 +114,24 @@ public class PerfilUsuario extends AppCompatActivity {
         textChangedListener();
     }
 
-
+    private ActivityResultLauncher<Void> tomarFoto = registerForActivityResult(
+            new ActivityResultContracts.TakePicturePreview(), result -> {
+                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                imagen.setImageBitmap(result);
+                result.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+                String path = MediaStore.Images.Media.insertImage(this.getContentResolver(), result, correo.toString(), null);
+                nuevaUri = Uri.parse(path);
+                guardar.setVisibility(View.VISIBLE);
+            }
+    );
 
     private ActivityResultLauncher<Intent> elegirDeGaleria = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), result -> {
                 if (result.getResultCode() == Activity.RESULT_OK) {
                     Uri imagenUri = result.getData().getData();
-                    subirImagen(imagenUri);
+                    imagen.setImageURI(imagenUri);
+                    nuevaUri = imagenUri;
+                    guardar.setVisibility(View.VISIBLE);
                 }
             }
     );
@@ -276,6 +302,9 @@ public class PerfilUsuario extends AppCompatActivity {
         }else{
             usuario.setApellido2(apellido2.getText().toString());
         }
+        if (nuevaUri != null){
+            subirImagen(nuevaUri);
+        }
         if (tlf.getText().toString().isEmpty()){
             usuario.setTlf("");
         }else{
@@ -287,6 +316,29 @@ public class PerfilUsuario extends AppCompatActivity {
             usuario.setDireccion("");
         }
         conexion.modificarUser(usuario, this);
+        intentMainActivity();
+    }
+
+    private void intentMainActivity() {
+        Intent intent = new Intent(PerfilUsuario.this, MainActivity.class);
+        intent.putExtra("lista", (Serializable) partidos);
+        intent.putExtra("ropa", (Serializable) pedidos);
+        startActivity(intent);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (guardar.getVisibility() == View.VISIBLE) {
+            new AlertDialog.Builder(PerfilUsuario.this)
+                    .setPositiveButton("Confirmar", (dialogInterface, i) -> dialogInterface.dismiss())
+                    .setNegativeButton("Salir", (dialogInterface, i) -> finish())
+                    .setTitle("Confirmar cambios")
+                    .setMessage("Se han detectado cambios en su usuario. ¿Desea continuar?")
+                    .show();
+        }else{
+            finish();
+        }
     }
 }

@@ -342,7 +342,7 @@
                 android:id="@+id/buttonEditarImagenUser"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:layout_marginTop="-22dp"
+                android:layout_marginTop="-30dp"
                 android:layout_marginEnd="-30dp"
                 android:background="@color/transparente"
                 app:layout_constraintEnd_toEndOf="@+id/imagenMiUsuario"
