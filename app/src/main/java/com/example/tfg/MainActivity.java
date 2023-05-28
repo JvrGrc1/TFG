@@ -144,8 +144,8 @@ public class MainActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             Usuario usuario = task.getResult();
                             intentPerfilUsuario.putExtra("usuario", usuario);
-                            intentPerfilUsuario.putExtra("lista", (Serializable) j);
-                            intentPerfilUsuario.putExtra("ropa", (Serializable) prendas);
+                            intentPerfilUsuario.putExtra("partidos", (Serializable) j);
+                            intentPerfilUsuario.putExtra("prendas", (Serializable) prendas);
                             startActivity(intentPerfilUsuario);
                             drawerLayout.closeDrawer(GravityCompat.START);
                         }else{
