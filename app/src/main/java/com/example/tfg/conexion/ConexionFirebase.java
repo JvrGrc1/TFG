@@ -1,6 +1,7 @@
 package com.example.tfg.conexion;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
@@ -12,11 +13,15 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.example.tfg.Ajustes;
 import com.example.tfg.Login;
-import com.example.tfg.RegistrarPartido;
+import com.example.tfg.MainActivity;
+import com.example.tfg.PerfilUsuario;
+import com.example.tfg.R;
 import com.example.tfg.entidad.Partido;
 import com.example.tfg.entidad.Pedido;
 import com.example.tfg.entidad.Prenda;
+import com.example.tfg.entidad.Usuario;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
@@ -33,6 +38,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -86,7 +92,7 @@ public class ConexionFirebase {
                 List<DocumentSnapshot> documents = document.getDocuments();
                 List<Prenda> prendas = new ArrayList<>();
                 for (DocumentSnapshot snapsot : documents){
-                    Prenda prenda = new Prenda(snapsot.getString("nombre"), (List<String>) snapsot.get("tallas"), snapsot.getDouble("precio"), snapsot.getString("imagen"));
+                    Prenda prenda = new Prenda(snapsot.getString("nombre"), (List<String>) snapsot.get("tallas"), snapsot.getDouble("precio"), (List<String>) snapsot.get("imagen"));
                     prendas.add(prenda);
                 }
                 taskCompletionSource.setResult(prendas);
@@ -105,7 +111,7 @@ public class ConexionFirebase {
                 List<DocumentSnapshot> documents = document.getDocuments();
                 List<Pedido> pedidos = new ArrayList<>();
                 for (DocumentSnapshot ds : documents){
-                    if (ds.getString("comprador").equals(usuario) && ds.getBoolean("pagado").equals(Boolean.FALSE)){
+                    if (Objects.equals(ds.getString("comprador"), usuario) && Objects.equals(ds.getBoolean("pagado"), Boolean.FALSE)){
                         Pedido pedido = new Pedido(ds.getString("prenda"), ds.getString("talla"), ds.getLong("cantidad"), ds.getLong("precioUnidad"));
                         pedidos.add(pedido);
                     }
@@ -118,8 +124,35 @@ public class ConexionFirebase {
         return taskCompletionSource.getTask();
     }
 
-    public String obtenerUser(){
-        return auth.getCurrentUser().getEmail();
+    public Task<Usuario> datosUsuario(String email){
+        TaskCompletionSource<Usuario> taskCompletionSource = new TaskCompletionSource<>();
+        db.collection("usuarios").get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()){
+                QuerySnapshot document = task.getResult();
+                List<DocumentSnapshot> documents = document.getDocuments();
+                Usuario user = new Usuario();
+                for (DocumentSnapshot ds : documents){
+                    if (Objects.equals(ds.getString("correo"), email)){
+                        user.setNombre(ds.getString("nombre"));
+                        user.setCorreo(ds.getString("correo"));
+                        user.setApellido1(ds.getString("apellido1"));
+                        user.setApellido2(ds.getString("apellido2"));
+                        user.setImagen(ds.getString("imagen"));
+                        user.setDireccion(ds.getString("direccion"));
+                        user.setRol(ds.getString("rol"));
+                        user.setTlf(ds.getString("tlf"));
+                    }
+                }
+                taskCompletionSource.setResult(user);
+            }else{
+                taskCompletionSource.setException(Objects.requireNonNull(task.getException()));
+            }
+        });
+        return taskCompletionSource.getTask();
+    }
+
+    public FirebaseUser obtenerUser(){
+        return auth.getCurrentUser();
     }
 
     public void subirPedido(Context contexto, Map<String, Object> pedido) {
@@ -165,6 +198,7 @@ public class ConexionFirebase {
             }
         });
     }
+
     private boolean comprobarTallas(String p, String pedido){
         if (p == null && pedido == null){return true;}
         else if (p == null && pedido != null){return false;}
@@ -175,7 +209,7 @@ public class ConexionFirebase {
 
     public void cargarImagen(Context contexto, ImageView holder, ImageView img, String url){
         StorageReference gsReference;
-        if (url == null){
+        if (url == null || url.isEmpty()){
             gsReference = storage.getReferenceFromUrl("gs://balonmano-f213a.appspot.com/imagenes-default/" + randomFoto());
         }else{
             gsReference = storage.getReferenceFromUrl(url);
@@ -183,9 +217,8 @@ public class ConexionFirebase {
         final long ONE_MEGABYTE = 5 * 1024 * 1024;
         gsReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(bytes -> {
             Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-            Bitmap bitmap1 = Bitmap.createScaledBitmap(bitmap, 500, 500, true);
-            holder.setImageBitmap(bitmap1);
-            if (img != null){img.setImageBitmap(bitmap1);}
+            holder.setImageBitmap(bitmap);
+            if (img != null){img.setImageBitmap(bitmap);}
         }).addOnFailureListener(exception -> Toast.makeText(contexto, "Error al descargar la imagen de la prenda", Toast.LENGTH_SHORT).show());
     }
 
@@ -239,7 +272,8 @@ public class ConexionFirebase {
                 String url = null;
                 for (DocumentSnapshot ds : documents){
                     if (ds.getString("nombre").matches(nombrePrenda)){
-                        url = ds.getString("imagen");
+                        List<String> lista = (List<String>) ds.get("imagen");
+                        url = lista.get(0);
                     }
                 }
                 taskCompletionSource.setResult(url);
@@ -266,8 +300,6 @@ public class ConexionFirebase {
                                     Toast.makeText(contexto, "Error al borrar el pedido", Toast.LENGTH_SHORT).show();
                                 }
                             });
-                        } else {
-                            Log.d("error", "Error, pedidos no iguales");
                         }
                     }
                 }
@@ -311,36 +343,45 @@ public class ConexionFirebase {
         });
         return taskCompletionSource.getTask();
     }
-
-    public void comprobarAdmin(FloatingActionButton floating, Context contexto){
-        if (user != null) {
-            db.collection("usuarios").get().addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    for (DocumentSnapshot document : task.getResult()) {
-                        if (document.get("correo").equals(user.getEmail())) {
-                            if (document.get("rol").equals("Administrador")) {
-                                floating.setVisibility(View.VISIBLE);
-                            } else {
-                                floating.setVisibility(View.INVISIBLE);
-                            }
-                        }
-                    }
-                } else {
-                    Toast.makeText(contexto, "Error con isAdmin().", Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-    }
     public DocumentReference getDocumento(String anios, String division, String id){
         return db.collection("temporadas").document(anios).collection(division).document(id);
     }
 
     public void signIn(String correo, String psswrd, Login login){
-        auth.signInWithEmailAndPassword(correo, psswrd).addOnCompleteListener(task -> {
-            login.iniciarMainActivity(task);
-        });
+        auth.signInWithEmailAndPassword(correo, psswrd).addOnCompleteListener(task -> login.iniciarMainActivity(task));
     }
+
     public void signOut(){auth.signOut();}
+    public Task<Boolean> borrarCuenta(String correo, Context context){
+        TaskCompletionSource<Boolean> taskCompletionSource = new TaskCompletionSource<>();
+        user.delete().addOnCompleteListener(task -> {
+            if (task.isSuccessful()){
+                db.collection("usuarios")
+                        .whereEqualTo("correo", correo)
+                        .get()
+                        .addOnCompleteListener(task1 -> {
+                            if (task1.isSuccessful()) {
+                                for (QueryDocumentSnapshot document : task1.getResult()) {
+                                    db.collection("usuarios").document(document.getId()).delete()
+                                            .addOnSuccessListener(aVoid -> {
+                                                taskCompletionSource.setResult(true);
+                                            })
+                                            .addOnFailureListener(e -> {
+                                                Toast.makeText(context, "Error al eliminar el documento", Toast.LENGTH_SHORT).show();
+                                            });
+                                }
+                            } else {
+                                taskCompletionSource.setResult(false);
+                                Toast.makeText(context, "Error al borrar documentos", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+            }else{
+                taskCompletionSource.setResult(false);
+                Toast.makeText(context, "Error al borrar la cuenta", Toast.LENGTH_SHORT).show();
+            }
+        });
+        return taskCompletionSource.getTask();
+    }
 
     public void rellenarSpinnerTemporadas(Context context, Spinner temporadas, Spinner division, Spinner jornada){
         db.collection("temporadas").get().addOnCompleteListener(task -> {
@@ -399,23 +440,34 @@ public class ConexionFirebase {
             }
         });
         return taskCompletionSource.getTask();
-        /*
-        TaskCompletionSource<List<Prenda>> taskCompletionSource = new TaskCompletionSource<>();
-        db.collection("prendas").get().addOnCompleteListener(task -> {
+    }
+
+    public void modificarUser(Usuario usuario, PerfilUsuario perfilUsuario) {
+        String correo = obtenerUser().getEmail();
+        Map<String, Object> user = new HashMap<>();
+        user.put("nombre", usuario.getNombre());
+        user.put("apellido1", usuario.getApellido1());
+        user.put("apellido2", usuario.getApellido2());
+        user.put("tlf", usuario.getTlf());
+        user.put("correo", usuario.getCorreo());
+        user.put("imagen", usuario.getImagen());
+        user.put("rol", usuario.getRol());
+        user.put("direccion", usuario.getDireccion());
+        db.collection("usuarios").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()){
-                QuerySnapshot document  = task.getResult();
-                List<DocumentSnapshot> documents = document.getDocuments();
-                List<Prenda> prendas = new ArrayList<>();
-                for (DocumentSnapshot snapsot : documents){
-                    Prenda prenda = new Prenda(snapsot.getString("nombre"), (List<String>) snapsot.get("tallas"), snapsot.getDouble("precio"), snapsot.getString("imagen"));
-                    prendas.add(prenda);
+                for (QueryDocumentSnapshot documents : task.getResult()){
+                    if (documents.getString("correo").equals(correo)){
+                        db.collection("usuarios").document(documents.getId()).update(user).addOnCompleteListener(task1 -> {
+                            if (task1.isSuccessful()){
+                                Toast.makeText(perfilUsuario,"Modificado correctamente", Toast.LENGTH_SHORT).show();
+                            }else{
+                                Toast.makeText(perfilUsuario,"Algo ha ido mal.", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                        break;
+                    }
                 }
-                taskCompletionSource.setResult(prendas);
-            }else{
-                taskCompletionSource.setException(Objects.requireNonNull(task.getException()));
             }
         });
-        return taskCompletionSource.getTask();
-         */
     }
 }

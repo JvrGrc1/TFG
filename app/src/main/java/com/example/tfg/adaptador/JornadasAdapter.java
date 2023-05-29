@@ -30,20 +30,27 @@ public class JornadasAdapter extends RecyclerView.Adapter<JornadasAdapter.Jornad
         //Quiero rellenar una lista de Jornadas pasandole una lista de Partidos.
         //Cada Jornada consta de: nº de jornada y lista de Partidos
         //Tengo que separar por jornadas los Partidos y con cada lista crear una Jornada que añado a la lista de Jornadas
-        setJornadas(partidos);
+        if (!partidos.isEmpty()) {
+            setJornadas(partidos);
+        }
     }
 
     private void setJornadas(List<Partido> partidos) {
-        for(int x = 1; x < partidos.size(); x++){
-            List<Partido> elegidos = new ArrayList<>();
-            for (Partido p : partidos){
-                if (p.getJornada() == x){
-                    elegidos.add(p);
+        if (partidos.size() == 1){
+            Jornada j = new Jornada(partidos.get(0).getJornada(), partidos);
+            this.jornada.add(j);
+        }else {
+            for (int x = 0; x <= partidos.size(); x++) {
+                List<Partido> elegidos = new ArrayList<>();
+                for (Partido p : partidos) {
+                    if (p.getJornada() == x) {
+                        elegidos.add(p);
+                    }
                 }
-            }
-            if (!elegidos.isEmpty()) {
-                Jornada j = new Jornada(x, elegidos);
-                this.jornada.add(j);
+                if (!elegidos.isEmpty()) {
+                    Jornada j = new Jornada(x, elegidos);
+                    this.jornada.add(j);
+                }
             }
         }
     }

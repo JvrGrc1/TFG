@@ -4,15 +4,10 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,6 +23,7 @@ import com.example.tfg.conexion.ConexionFirebase;
 import com.example.tfg.databinding.ActivityMainBinding;
 import com.example.tfg.entidad.Partido;
 import com.example.tfg.entidad.Prenda;
+import com.example.tfg.entidad.Usuario;
 import com.example.tfg.fragments.EstadisticasFragment;
 import com.example.tfg.fragments.PartidosFragment;
 import com.example.tfg.fragments.TiendaFragment;
@@ -39,8 +35,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -91,8 +85,6 @@ public class MainActivity extends AppCompatActivity {
         bottomNav.setSelectedItemId(R.id.partidos);
         bottomNav.setSelected(true);
 
-        //Establece el fragment Partidos para que sea el primero en aparecer
-
         AnimatorSet animSet = new AnimatorSet();
         animSet.playTogether(
                 ObjectAnimator.ofFloat(bottomNav, "scaleY", 1f, 0.90f, 1f),
@@ -134,27 +126,37 @@ public class MainActivity extends AppCompatActivity {
         lateral.setNavigationItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.registrarPartido:
-                    String user = conexion.obtenerUser();
-                    if (user != null){
                     Intent intentRegistrar = new Intent(this, RegistrarPartido.class);
                     startActivity(intentRegistrar);
                     drawerLayout.closeDrawer(GravityCompat.START);
-                    }else{
-                        Toast.makeText(this, "Solo los entrenadores y administradores pueden usar esta función", Toast.LENGTH_SHORT).show();
-                    }
                     break;
                 case R.id.ajustes:
                     Intent intentAjustes = new Intent(this, Ajustes.class);
+                    intentAjustes.putExtra("lista", (Serializable) j);
+                    intentAjustes.putExtra("ropa", (Serializable) prendas);
                     startActivity(intentAjustes);
                     drawerLayout.closeDrawer(GravityCompat.START);
                     break;
                 case R.id.user:
                     Intent intentPerfilUsuario = new Intent(this, PerfilUsuario.class);
-                    startActivity(intentPerfilUsuario);
-                    drawerLayout.closeDrawer(GravityCompat.START);
+                    Task<Usuario> taskUser = conexion.datosUsuario(conexion.obtenerUser().getEmail());
+                    taskUser.addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            Usuario usuario = task.getResult();
+                            intentPerfilUsuario.putExtra("usuario", usuario);
+                            intentPerfilUsuario.putExtra("partidos", (Serializable) j);
+                            intentPerfilUsuario.putExtra("prendas", (Serializable) prendas);
+                            startActivity(intentPerfilUsuario);
+                            drawerLayout.closeDrawer(GravityCompat.START);
+                        }else{
+                            Toast.makeText(this, "Error al obtener el usuario", Toast.LENGTH_SHORT).show();
+                        }
+                    });
                     break;
                 case R.id.registrarse:
                     Intent intentSignIn = new Intent(this, RegistrarUsuario.class);
+                    intentSignIn.putExtra("lista", (Serializable) j);
+                    intentSignIn.putExtra("ropa", (Serializable) prendas);
                     startActivity(intentSignIn);
                     drawerLayout.closeDrawer(GravityCompat.START);
                     break;
@@ -202,7 +204,7 @@ public class MainActivity extends AppCompatActivity {
                         nombre.setText(String.format("%s %s", ds.getString("nombre"), ds.getString("apellido1")));
                         posicion.setVisibility(View.VISIBLE);
                         posicion.setText(ds.getString("rol"));
-                        if (ds.getString("imagen") != null) {
+                        if (ds.getString("imagen") != null && !ds.getString("imagen").isEmpty()) {
                             conexion.cargarImagen(MainActivity.this, imagen, abrir, ds.getString("imagen"));
                         }
                         if (ds.getString("rol").equals("Jugador")){
@@ -261,28 +263,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void intentMainActivity(){
-        Task<List<Partido>> partidos = conexion.obtenerPartidos();
-        partidos.addOnCompleteListener(task1 -> {
-            if (task1.isSuccessful()) {
-                List<Partido> partidos1 = task1.getResult();
-                Task<List<Prenda>> prendas = conexion.obtenerTienda();
-                prendas.addOnCompleteListener(task2 -> {
-                    if (task2.isSuccessful()){
-                        List<Prenda> prendas1 = task2.getResult();
-                        Intent intent = new Intent(this, MainActivity.class);
-                        intent.putExtra("lista", (Serializable) partidos1);
-                        intent.putExtra("ropa", (Serializable) prendas1);
-                        startActivity(intent);
-                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                        finishAffinity();
-                    }else{
-                        Toast.makeText(this, "Error obteniendo las prendas", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            } else {
-                Toast.makeText(this, "Error obteniendo partidos", Toast.LENGTH_SHORT).show();
-            }
-        });
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra("lista", (Serializable) j);
+        intent.putExtra("ropa", (Serializable) prendas);
+        startActivity(intent);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        finishAffinity();
     }
 
     @Override

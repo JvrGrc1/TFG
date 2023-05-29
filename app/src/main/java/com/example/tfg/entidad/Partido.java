@@ -124,25 +124,25 @@ public class Partido implements Serializable {
     }
 
     public void setHoraS(String hora) {
-        DateTimeFormatter formatter;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            formatter = DateTimeFormatter.ofPattern("HH:mm");
-            this.hora = LocalTime.parse(hora, formatter);
+        if (hora == null){
+            this.hora = null;
+        }else {
+            DateTimeFormatter formatter;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                formatter = DateTimeFormatter.ofPattern("HH:mm");
+                this.hora = LocalTime.parse(hora, formatter);
+            }
         }
     }
 
-    public Long getJornada() {
-        return jornada;
-    }
+    public Long getJornada() {return jornada;}
 
-    public void setJornada(Long jornada) {
-        this.jornada = jornada;
-    }
+    public void setJornada(Long jornada) {this.jornada = jornada;}
 
     @NonNull
     @SuppressLint("DefaultLocale")
     @Override
     public String toString() {
-        return String.format("Jornada: %d, División: %s. %s  %d - %d  %s. Pabellón: %s, Fecha: %s %s\n", getJornada(), getDivision(), getLocal(), getGolesLocal(), getGolesVisitante(), getVisitante(), getPabellon(), getFecha(), getHora().toString());
+        return String.format("Jornada: %d, División: %s. %s  %d - %d  %s. Pabellón: %s, Fecha: %s, %s", getJornada(), getDivision(), getLocal(), getGolesLocal(), getGolesVisitante(), getVisitante(), getPabellon(), getFecha(), getHora().toString());
     }
 }

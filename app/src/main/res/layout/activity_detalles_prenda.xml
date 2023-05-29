@@ -12,7 +12,7 @@
         android:id="@+id/card_view"
         android:layout_width="350dp"
         android:layout_height="500dp"
-        app:cardBackgroundColor="@color/casi_blanco"
+        app:cardBackgroundColor="@color/gris_casi_blanco"
         app:cardCornerRadius="6dp"
         app:cardElevation="6dp"
         app:cardPreventCornerOverlap="false"
@@ -32,12 +32,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
-                android:background="@drawable/fondo_spinner"
-                android:fontFamily="@font/thinoobold"
+                android:background="@drawable/fondo_spinner_disenabled"
+                android:fontFamily="@font/industrial_light"
                 android:padding="10dp"
-                android:text="@string/aniadir_carrito"
+                android:text="@string/aniadir_cesta"
                 android:textColor="@color/black"
-                android:textSize="18sp"
+                android:textSize="22sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -47,12 +47,12 @@
                 android:id="@+id/precioDetallesPrenda"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="25dp"
+                android:layout_marginEnd="45dp"
                 android:layout_marginBottom="20dp"
-                android:fontFamily="@font/thinoobold"
+                android:fontFamily="@font/industrial_light"
                 android:text="@string/ejemplo_precio"
                 android:textColor="@color/black"
-                android:textSize="16sp"
+                android:textSize="18sp"
                 app:layout_constraintBottom_toTopOf="@+id/buttonAniadirPrenda"
                 app:layout_constraintEnd_toEndOf="parent" />
 
@@ -60,11 +60,11 @@
                 android:id="@+id/radioGroupTallas"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="25dp"
-                android:layout_marginBottom="30dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginBottom="20dp"
                 android:orientation="horizontal"
-                app:layout_constraintBottom_toTopOf="@+id/precioDetallesPrenda"
-                app:layout_constraintEnd_toEndOf="parent">
+                app:layout_constraintBottom_toTopOf="@+id/cantidadSpinner"
+                app:layout_constraintStart_toEndOf="@+id/textViewTalla">
 
                 <RadioButton
                     android:id="@+id/buttonXL"
@@ -101,22 +101,22 @@
                 android:id="@+id/textViewTalla"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="35dp"
-                android:fontFamily="@font/thinoobold"
+                android:layout_marginStart="45dp"
+                android:layout_marginBottom="20dp"
+                android:fontFamily="@font/industrial_light"
                 android:text="@string/talla"
                 android:textColor="@color/black"
-                android:textSize="20sp"
+                android:textSize="22sp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@+id/precioDetallesPrenda"
-                app:layout_constraintEnd_toStartOf="@+id/radioGroupTallas"
+                app:layout_constraintBottom_toTopOf="@+id/cantidadSpinner"
                 app:layout_constraintStart_toStartOf="parent" />
 
             <TextView
                 android:id="@+id/nombreDetallesPrenda"
-                android:layout_width="200dp"
+                android:layout_width="250dp"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="40dp"
-                android:fontFamily="@font/thinoobold"
+                android:layout_marginBottom="20dp"
+                android:fontFamily="@font/industrial_light"
                 android:gravity="center"
                 android:text="@string/ejemplo_prenda"
                 android:textColor="@color/black"
@@ -126,29 +126,32 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
 
-            <ImageView
-                android:id="@+id/imagenDetallesPrenda"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="25dp"
+            <androidx.cardview.widget.CardView
+                android:layout_width="250dp"
+                android:layout_height="250dp"
                 android:layout_marginTop="25dp"
-                android:layout_marginEnd="25dp"
                 android:layout_marginBottom="25dp"
+                app:cardCornerRadius="10dp"
                 app:layout_constraintBottom_toTopOf="@+id/nombreDetallesPrenda"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:srcCompat="@tools:sample/avatars" />
+                app:layout_constraintTop_toTopOf="parent">
+
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/viewpagerImagenes"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+
+                    />
+            </androidx.cardview.widget.CardView>
 
             <Spinner
                 android:id="@+id/cantidadSpinner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="30dp"
+                android:layout_marginStart="45dp"
                 android:layout_marginBottom="20dp"
                 app:layout_constraintBottom_toTopOf="@+id/buttonAniadirPrenda"
-                app:layout_constraintEnd_toStartOf="@+id/precioDetallesPrenda"
-                app:layout_constraintHorizontal_bias="0.165"
                 app:layout_constraintStart_toStartOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
