@@ -1,6 +1,8 @@
 package com.example.tfg.fragments;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -28,11 +31,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link TiendaFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class TiendaFragment extends Fragment {
 
     private RecyclerView recyclerView;
@@ -41,19 +39,10 @@ public class TiendaFragment extends Fragment {
     private List<Prenda> prendas = new ArrayList<>();
     private FirebaseUser user;
     private final ConexionFirebase conexion = new ConexionFirebase();
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private ConstraintLayout constraintLayout;
 
     public TiendaFragment() {
         // Required empty public constructor
-    }
-    public static TiendaFragment newInstance(String param1, String param2) {
-        TiendaFragment fragment = new TiendaFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
     }
 
     @Override
@@ -71,6 +60,8 @@ public class TiendaFragment extends Fragment {
         user  = FirebaseAuth.getInstance().getCurrentUser();
         recyclerView = root.findViewById(R.id.recyclerTienda);
         compra = root.findViewById(R.id.botonCompra);
+        constraintLayout = root.findViewById(R.id.constrainTienda);
+
         recyclerView.setLayoutManager(new GridLayoutManager(root.getContext(), 2));
         adapter = new TiendaAdapter(getContext(), prendas);
         recyclerView.setAdapter(adapter);
@@ -114,6 +105,17 @@ public class TiendaFragment extends Fragment {
                 }
             });
         });
+
+        boolean isDarkModeEnabled = getActivity().getSharedPreferences("Ajustes", Context.MODE_PRIVATE)
+                .getBoolean("modoOscuro", false);
+
+        if (isDarkModeEnabled) {
+            constraintLayout.setBackgroundColor(Color.BLACK);
+            compra.setBackgroundColor(Color.BLACK);
+        } else {
+            constraintLayout.setBackgroundColor(Color.WHITE);
+            compra.setBackgroundColor(Color.WHITE);
+        }
 
         return root;
     }

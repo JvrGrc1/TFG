@@ -1,6 +1,7 @@
 package com.example.tfg.adaptador;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.tfg.R;
@@ -34,7 +36,7 @@ public class TiendaAdapter extends RecyclerView.Adapter<TiendaAdapter.TiendaView
     @Override
     public TiendaAdapter.TiendaViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(contexto).inflate(R.layout.tienda_view, parent, false);
-        return new TiendaViewHolder(view);
+        return new TiendaViewHolder(view, contexto);
     }
 
     @Override
@@ -55,13 +57,27 @@ public class TiendaAdapter extends RecyclerView.Adapter<TiendaAdapter.TiendaView
     public static class TiendaViewHolder extends RecyclerView.ViewHolder {
         TextView nombre, precio;
         ImageView imagen;
+        ConstraintLayout constraintLayout;
 
-        public TiendaViewHolder(@NonNull View itemView) {
+        public TiendaViewHolder(@NonNull View itemView, Context context) {
             super(itemView);
 
             nombre = itemView.findViewById(R.id.nombrePrenda);
             precio = itemView.findViewById(R.id.precioPrenda);
             imagen = itemView.findViewById(R.id.imagenPrenda);
+            constraintLayout = itemView.findViewById(R.id.constrainTiendaView);
+
+            boolean isDarkModeEnabled = context.getSharedPreferences("Ajustes", Context.MODE_PRIVATE)
+                    .getBoolean("modoOscuro", false);
+            if (isDarkModeEnabled) {
+                constraintLayout.setBackgroundColor(Color.rgb(24,23, 28));
+                nombre.setTextColor(Color.WHITE);
+                precio.setTextColor(Color.WHITE);
+            } else {
+                constraintLayout.setBackgroundColor(Color.WHITE);
+                nombre.setTextColor(Color.BLACK);
+                precio.setTextColor(Color.BLACK);
+            }
         }
     }
 }

@@ -1,9 +1,13 @@
 package com.example.tfg.adaptador;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -67,7 +71,7 @@ public class JornadasAdapter extends RecyclerView.Adapter<JornadasAdapter.Jornad
     @Override
     public JornadasAdapter.JornadaViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(contexto).inflate(R.layout.jornadas_view, parent, false);
-        return new JornadaViewHolder(view);
+        return new JornadaViewHolder(view, contexto);
     }
 
     @Override
@@ -92,11 +96,19 @@ public class JornadasAdapter extends RecyclerView.Adapter<JornadasAdapter.Jornad
         TextView jornada;
         RecyclerView recyclerView;
 
-        public JornadaViewHolder(@NonNull View itemView) {
+        public JornadaViewHolder(@NonNull View itemView, Context context) {
             super(itemView);
 
             jornada = itemView.findViewById(R.id.jornada);
             recyclerView = itemView.findViewById(R.id.recyclerPartidos);
+
+            boolean isDarkModeEnabled = context.getSharedPreferences("Ajustes", Context.MODE_PRIVATE)
+                    .getBoolean("modoOscuro", false);
+            if (isDarkModeEnabled) {
+                recyclerView.setBackgroundColor(Color.rgb(24,23, 28));
+            } else {
+                recyclerView.setBackgroundColor(Color.WHITE);
+            }
 
         }
     }

@@ -3,16 +3,23 @@ package com.example.tfg;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.content.res.Resources;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
@@ -35,6 +42,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+
+import org.checkerframework.checker.units.qual.C;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -59,7 +68,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
         Intent intent = getIntent();
         if (!intent.hasExtra("lista")) {
             iniciarPartidos();
@@ -169,9 +177,23 @@ public class MainActivity extends AppCompatActivity {
             return false;
         });
 
-        abrir.setOnClickListener(v -> {
-            drawerLayout.openDrawer(GravityCompat.START);
-        });
+        abrir.setOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
+
+        boolean isDarkModeEnabled = getSharedPreferences("Ajustes", Context.MODE_PRIVATE)
+                .getBoolean("modoOscuro", false);
+        Window window = getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        if (isDarkModeEnabled) {
+            window.setStatusBarColor(Color.BLACK);
+            drawerLayout.setBackgroundColor(Color.BLACK);
+            lateral.setBackgroundColor(Color.BLACK);
+            lateral.setItemTextColor(ColorStateList.valueOf(Color.WHITE));
+        } else {
+            window.setStatusBarColor(Color.WHITE);
+            drawerLayout.setBackgroundColor(Color.WHITE);
+            lateral.setBackgroundColor(Color.WHITE);
+            lateral.setItemTextColor(ColorStateList.valueOf(getColor(R.color.azul_oscuro)));
+        }
     }
 
     private void comprobarUser() {
