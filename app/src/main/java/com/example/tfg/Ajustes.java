@@ -4,12 +4,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.tfg.conexion.ConexionFirebase;
 import com.example.tfg.entidad.Partido;
 import com.example.tfg.entidad.Pedido;
+import com.example.tfg.entidad.Usuario;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
@@ -35,8 +37,13 @@ public class Ajustes extends AppCompatActivity {
         j = (List<Partido>) intent.getSerializableExtra("lista");
         prendas = (List<Pedido>) intent.getSerializableExtra("ropa");
 
+        if (conexion.obtenerUser() == null){
+            borrar.setVisibility(View.INVISIBLE);
+            cambiar.setVisibility(View.INVISIBLE);
+        }
+
         borrar.setOnClickListener(v -> {
-            Task<Boolean> borrado = conexion.borrarCuenta(conexion.obtenerUser(), Ajustes.this);
+            Task<Boolean> borrado = conexion.borrarCuenta(conexion.obtenerUser().getEmail(), Ajustes.this);
             borrado.addOnCompleteListener(task -> {
                 if (task.isSuccessful()){
                     Intent intent1 = new Intent(this, MainActivity.class);

@@ -139,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case R.id.user:
                     Intent intentPerfilUsuario = new Intent(this, PerfilUsuario.class);
-                    Task<Usuario> taskUser = conexion.datosUsuario(conexion.obtenerUser());
+                    Task<Usuario> taskUser = conexion.datosUsuario(conexion.obtenerUser().getEmail());
                     taskUser.addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             Usuario usuario = task.getResult();

@@ -137,7 +137,7 @@ public class PerfilUsuario extends AppCompatActivity {
     );
 
     private void subirImagen(Uri imagenUri){
-        String[] partes = conexion.obtenerUser().split("@");
+        String[] partes = conexion.obtenerUser().getEmail().split("@");
         StorageReference ref = storageRef.child("perfilUsuario/" + partes[0] + ".jpg");
         UploadTask uploadTask = ref.putFile(imagenUri);
         uploadTask.continueWithTask(contTask -> {

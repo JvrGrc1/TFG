@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.tfg.conexion.ConexionFirebase;
 import com.example.tfg.entidad.Partido;
+import com.example.tfg.entidad.Usuario;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.DocumentReference;
@@ -49,7 +50,14 @@ public class RegistrarPartido extends AppCompatActivity {
         agregar = findViewById(R.id.buttonAgregar);
         editar = findViewById(R.id.buttonEditar);
 
-        conexion.comprobarAdmin(editar, RegistrarPartido.this);
+        Task<Usuario> user = conexion.datosUsuario(conexion.obtenerUser().getEmail());
+        user.addOnCompleteListener(task -> {
+            if (task.isSuccessful()){
+                Usuario usuario = task.getResult();
+                if (usuario.getRol().equals("Administrador")){editar.setVisibility(View.VISIBLE);}
+                else {editar.setVisibility(View.INVISIBLE);}
+            }
+        });
         local.setEnabled(false);
         visitante.setEnabled(false);
         hora.setEnabled(false);

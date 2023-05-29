@@ -151,8 +151,8 @@ public class ConexionFirebase {
         return taskCompletionSource.getTask();
     }
 
-    public String obtenerUser(){
-        return auth.getCurrentUser().getEmail();
+    public FirebaseUser obtenerUser(){
+        return auth.getCurrentUser();
     }
 
     public void subirPedido(Context contexto, Map<String, Object> pedido) {
@@ -343,26 +343,6 @@ public class ConexionFirebase {
         });
         return taskCompletionSource.getTask();
     }
-
-    public void comprobarAdmin(FloatingActionButton floating, Context contexto){
-        if (user != null) {
-            db.collection("usuarios").get().addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    for (DocumentSnapshot document : task.getResult()) {
-                        if (document.get("correo").equals(user.getEmail())) {
-                            if (document.get("rol").equals("Administrador")) {
-                                floating.setVisibility(View.VISIBLE);
-                            } else {
-                                floating.setVisibility(View.INVISIBLE);
-                            }
-                        }
-                    }
-                } else {
-                    Toast.makeText(contexto, "Error con isAdmin().", Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-    }
     public DocumentReference getDocumento(String anios, String division, String id){
         return db.collection("temporadas").document(anios).collection(division).document(id);
     }
@@ -463,7 +443,7 @@ public class ConexionFirebase {
     }
 
     public void modificarUser(Usuario usuario, PerfilUsuario perfilUsuario) {
-        String correo = obtenerUser();
+        String correo = obtenerUser().getEmail();
         Map<String, Object> user = new HashMap<>();
         user.put("nombre", usuario.getNombre());
         user.put("apellido1", usuario.getApellido1());
