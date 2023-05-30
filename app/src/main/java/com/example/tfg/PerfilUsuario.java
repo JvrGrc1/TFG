@@ -5,16 +5,22 @@ import androidx.activity.result.contract.ActivityResultContracts;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -25,6 +31,7 @@ import com.example.tfg.entidad.Partido;
 import com.example.tfg.entidad.Pedido;
 import com.example.tfg.entidad.Usuario;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -38,7 +45,9 @@ public class PerfilUsuario extends AppCompatActivity {
 
     private Usuario usuario;
     private TextInputEditText nombre, apellido1, correo, apellido2, tlf, direccion, portal, piso, ciudad, provincia;
-    private TextView rol;
+    private TextInputLayout nombre1, apellido11, correo1, apellido21, tlf1, direccion1, portal1, piso1, ciudad1, provincia1;
+    private ConstraintLayout constraintLayout, constraintLayout2;
+    private TextView rol, titulo;
     private ImageView imagen;
     private ImageButton edit;
     private ConexionFirebase conexion = new ConexionFirebase();
@@ -55,19 +64,32 @@ public class PerfilUsuario extends AppCompatActivity {
         nuevaUri = null;
 
         nombre = findViewById(R.id.nombreMiUsuario);
+        nombre1 = findViewById(R.id.textInputLayoutNombreMiUsuario);
         imagen = findViewById(R.id.imagenMiUsuario);
         edit = findViewById(R.id.buttonEditarImagenUser);
         rol = findViewById(R.id.rolMiUsuario);
         apellido1 = findViewById(R.id.apellido1MiUsuario);
+        apellido11 = findViewById(R.id.textInputLayoutApellido1MiUsuario);
         apellido2 = findViewById(R.id.apellido2MiUsuario);
+        apellido21 = findViewById(R.id.textInputLayoutApellido2MiUsuario);
         tlf = findViewById(R.id.telefonoMiUsuario);
+        tlf1 = findViewById(R.id.textInputLayoutTelefonoMiUsuario);
         direccion = findViewById(R.id.direccionMiUsuario);
+        direccion1 = findViewById(R.id.textInputLayoutDireccionMiusuario);
         provincia = findViewById(R.id.provinciaMiUsuario);
+        provincia1 = findViewById(R.id.textInputLayoutprovinciaMiUsuario);
         ciudad = findViewById(R.id.ciudadMiUsuario);
+        ciudad1 = findViewById(R.id.textInputLayoutCiudadMiUsuario);
         piso = findViewById(R.id.pisoMiUsuario);
+        piso1 = findViewById(R.id.textInputLayoutPisoMiUsuario);
         portal = findViewById(R.id.portalMiUsuario);
+        portal1 = findViewById(R.id.textInputLayoutPortalMiUsuario);
         correo = findViewById(R.id.correoMiUsuario);
+        correo1 = findViewById(R.id.textInputLayoutCorreoMiUsuario);
         guardar = findViewById(R.id.buttonGuardar);
+        constraintLayout = findViewById(R.id.constrainLayoutPerfilUsuario);
+        constraintLayout2 = findViewById(R.id.constrainLayoutPerfilUsuario2);
+        titulo = findViewById(R.id.textViewTitulo);
 
         Intent intent = getIntent();
         usuario = (Usuario) intent.getSerializableExtra("usuario");
@@ -112,6 +134,45 @@ public class PerfilUsuario extends AppCompatActivity {
         });
 
         textChangedListener();
+
+        boolean modoOscuro = getSharedPreferences("Ajustes", Context.MODE_PRIVATE)
+                .getBoolean("modoOscuro", false);
+        Window window = getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        if (modoOscuro) {
+            window.setStatusBarColor(Color.BLACK);
+            constraintLayout.setBackgroundColor(Color.BLACK);
+            constraintLayout2.setBackgroundColor(Color.BLACK);
+            titulo.setTextColor(Color.WHITE);
+            edit.setImageDrawable(getDrawable(R.drawable.lapiz_night));
+            edit.setBackgroundColor(Color.BLACK);
+            cambiarInputLayout(nombre, nombre1);
+            cambiarInputLayout(apellido1, apellido11);
+            cambiarInputLayout(apellido2, apellido21);
+            cambiarInputLayout(tlf, tlf1);
+            cambiarInputLayout(direccion, direccion1);
+            cambiarInputLayout(ciudad, ciudad1);
+            cambiarInputLayout(provincia, provincia1);
+            cambiarInputLayout(piso, piso1);
+            piso1.setHelperTextColor(ColorStateList.valueOf(Color.WHITE));
+            cambiarInputLayout(portal, portal1);
+            correo1.setBoxBackgroundColor(Color.rgb(100, 100, 100));
+            correo.setTextColor(Color.BLACK);
+            correo1.setBoxStrokeColor(Color.WHITE);
+            correo1.setDefaultHintTextColor(ColorStateList.valueOf(Color.WHITE));
+        }else {
+            window.setStatusBarColor(Color.WHITE);
+            constraintLayout.setBackgroundColor(Color.WHITE);
+            constraintLayout2.setBackgroundColor(Color.WHITE);
+            titulo.setTextColor(Color.BLACK);
+            edit.setImageDrawable(getDrawable(R.drawable.lapiz));
+        }
+    }
+    private void cambiarInputLayout(TextInputEditText inputEditText, TextInputLayout textInputLayout){
+        textInputLayout.setBoxBackgroundColor(Color.rgb(26, 26, 26));
+        inputEditText.setTextColor(Color.WHITE);
+        textInputLayout.setBoxStrokeColor(Color.WHITE);
+        textInputLayout.setDefaultHintTextColor(ColorStateList.valueOf(Color.WHITE));
     }
 
     private ActivityResultLauncher<Void> tomarFoto = registerForActivityResult(

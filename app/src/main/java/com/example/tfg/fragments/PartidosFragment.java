@@ -78,7 +78,7 @@ public class PartidosFragment extends Fragment {
             recycler.setAdapter(adapter);
         }
 
-        recycler.addOnItemTouchListener(new RecyclerItemClickListener(getContext(), recycler, new RecyclerItemClickListener.OnItemClickListener() {
+        /*recycler.addOnItemTouchListener(new RecyclerItemClickListener(getContext(), recycler, new RecyclerItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View v, int posicion) {
                 Intent intent = new Intent(v.getContext(), DetallesJornada.class);
@@ -90,7 +90,7 @@ public class PartidosFragment extends Fragment {
 
             @Override
             public void onLongItemClick(View v, int posicion) {}
-        }));
+        }));*/
 
         buscar.setOnClickListener(v -> {
             if (temporadas.getVisibility() == View.VISIBLE) {

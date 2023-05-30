@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.view.GravityCompat;
@@ -61,8 +63,10 @@ public class MainActivity extends AppCompatActivity {
     private final ConexionFirebase conexion = new ConexionFirebase();
     private DrawerLayout drawerLayout;
     private MenuItem cerrar, registroUser, usuario, registroPartido;
+    private TextView titulo;
 
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
         registroUser = lateral.getMenu().findItem(R.id.registrarse);
         usuario = lateral.getMenu().findItem(R.id.user);
         registroPartido = lateral.getMenu().findItem(R.id.registrarPartido);
+        titulo = findViewById(R.id.textViewTitulo);
 
         comprobarUser();
 
@@ -188,6 +193,8 @@ public class MainActivity extends AppCompatActivity {
             drawerLayout.setBackgroundColor(Color.BLACK);
             lateral.setBackgroundColor(Color.BLACK);
             lateral.setItemTextColor(ColorStateList.valueOf(Color.WHITE));
+            titulo.setTextColor(Color.WHITE);
+            this.setTheme(R.style.Theme_TFG_Night);
         } else {
             window.setStatusBarColor(Color.WHITE);
             drawerLayout.setBackgroundColor(Color.WHITE);

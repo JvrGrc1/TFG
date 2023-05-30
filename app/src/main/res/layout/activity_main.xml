@@ -15,7 +15,7 @@
         tools:context=".MainActivity">
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/textViewTitulo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -35,7 +35,7 @@
             android:layout_height="60dp"
             android:layout_gravity="end"
             android:layout_marginTop="10dp"
-            android:layout_marginEnd="45dp"
+            android:layout_marginEnd="35dp"
             app:layout_constraintStart_toEndOf="@+id/textView"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@mipmap/logo_club_foreground" />

@@ -1,11 +1,10 @@
 package com.example.tfg;
 
+import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.text.method.HideReturnsTransformationMethod;
-import android.text.method.PasswordTransformationMethod;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -23,8 +22,7 @@ import com.example.tfg.detalles.DetallesUsuario;
 import com.example.tfg.entidad.Partido;
 import com.example.tfg.entidad.Pedido;
 import com.google.android.gms.tasks.Task;
-
-import org.checkerframework.checker.units.qual.C;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -39,6 +37,7 @@ public class RegistrarUsuario extends AppCompatActivity {
     private EditText correo, psswrd;
     private TextView iniciarSesion, registroUsuario, ayuda;
     private ConstraintLayout constraintLayout;
+    private TextInputLayout psswrd1, correo1;
     private ImageView logo;
     private List<Partido> j = new ArrayList<>();
     private List<Pedido> prendas = new ArrayList<>();
@@ -60,6 +59,8 @@ public class RegistrarUsuario extends AppCompatActivity {
         logo = findViewById(R.id.imageViewRegistroLogo);
         registroUsuario = findViewById(R.id.textViewRegistro);
         ayuda = findViewById(R.id.textView6);
+        psswrd1 = findViewById(R.id.contrasenaUser1);
+        correo1 = findViewById(R.id.correoUser1);
 
         registro.setOnClickListener(view -> {
             if (correoValido(correo.getText().toString()) && psswrdValida(psswrd.getText().toString())) {
@@ -93,10 +94,11 @@ public class RegistrarUsuario extends AppCompatActivity {
             overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         });
 
+        boolean modoOscuro = getSharedPreferences("Ajustes", Context.MODE_PRIVATE)
+                .getBoolean("modoOscuro", false);
         Window window = getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
 
-        boolean modoOscuro = getSharedPreferences("Ajutes", this.MODE_PRIVATE).getBoolean("modoOscuro", false);
         if (modoOscuro){
             window.setStatusBarColor(Color.BLACK);
             constraintLayout.setBackgroundColor(Color.BLACK);
@@ -104,6 +106,10 @@ public class RegistrarUsuario extends AppCompatActivity {
             iniciarSesion.setTextColor(Color.WHITE);
             registroUsuario.setTextColor(Color.WHITE);
             ayuda.setTextColor(Color.WHITE);
+            correo1.setBoxStrokeColor(Color.WHITE);
+            correo1.setHintTextColor(ColorStateList.valueOf(Color.WHITE));
+            psswrd1.setBoxStrokeColor(Color.WHITE);
+            psswrd1.setHintTextColor(ColorStateList.valueOf(Color.WHITE));
         }else {
             window.setStatusBarColor(Color.WHITE);
             constraintLayout.setBackgroundColor(Color.WHITE);

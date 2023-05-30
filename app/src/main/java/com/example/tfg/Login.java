@@ -2,7 +2,9 @@ package com.example.tfg;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
@@ -11,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
@@ -19,6 +22,7 @@ import com.example.tfg.entidad.Partido;
 import com.example.tfg.entidad.Pedido;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 
 import java.io.Serializable;
@@ -29,6 +33,7 @@ public class Login extends AppCompatActivity {
 
     private Button login;
     private TextInputEditText correo, psswrd;
+    private TextInputLayout psswrd1, correo1;
     private TextView nueva, inicioSesion;
     private ConstraintLayout constraintLayout;
     private ImageView logo;
@@ -36,6 +41,7 @@ public class Login extends AppCompatActivity {
     private List<Pedido> prendas = new ArrayList<>();
     private final ConexionFirebase conexion = new ConexionFirebase();
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +58,8 @@ public class Login extends AppCompatActivity {
         constraintLayout = findViewById(R.id.constrainLogin);
         inicioSesion = findViewById(R.id.textViewInicioSesion);
         logo = findViewById(R.id.imageViewInicioSesionLogo);
+        psswrd1 = findViewById(R.id.contrasenaUser1);
+        correo1 = findViewById(R.id.correoUser1);
 
         login.setOnClickListener(view -> {
             if (correoValido(correo.getText().toString()) && psswrdValida(psswrd.getText().toString())) {
@@ -72,6 +80,10 @@ public class Login extends AppCompatActivity {
             nueva.setTextColor(Color.WHITE);
             inicioSesion.setTextColor(Color.WHITE);
             logo.setImageDrawable(getDrawable(R.drawable.logo_night));
+            correo1.setBoxStrokeColor(Color.WHITE);
+            correo1.setHintTextColor(ColorStateList.valueOf(Color.WHITE));
+            psswrd1.setBoxStrokeColor(Color.WHITE);
+            psswrd1.setHintTextColor(ColorStateList.valueOf(Color.WHITE));
         }else{
             window.setStatusBarColor(Color.WHITE);
             constraintLayout.setBackgroundColor(Color.WHITE);

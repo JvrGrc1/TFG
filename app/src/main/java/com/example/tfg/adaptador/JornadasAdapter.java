@@ -3,6 +3,7 @@ package com.example.tfg.adaptador;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -67,6 +69,7 @@ public class JornadasAdapter extends RecyclerView.Adapter<JornadasAdapter.Jornad
         return jornada;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @NonNull
     @Override
     public JornadasAdapter.JornadaViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -96,6 +99,7 @@ public class JornadasAdapter extends RecyclerView.Adapter<JornadasAdapter.Jornad
         TextView jornada;
         RecyclerView recyclerView;
 
+        @RequiresApi(api = Build.VERSION_CODES.M)
         public JornadaViewHolder(@NonNull View itemView, Context context) {
             super(itemView);
 
@@ -106,7 +110,7 @@ public class JornadasAdapter extends RecyclerView.Adapter<JornadasAdapter.Jornad
                     .getBoolean("modoOscuro", false);
             if (modoOscuro) {
                 jornada.setTextColor(Color.WHITE);
-                recyclerView.setBackgroundColor(Color.rgb(153, 153, 153));
+                recyclerView.setBackgroundColor(Color.rgb(26, 26, 26));
             } else {
                 jornada.setTextColor(context.getColor(R.color.azul_oscuro));
                 recyclerView.setBackgroundColor(Color.WHITE);

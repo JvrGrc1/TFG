@@ -3,7 +3,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/constrainLayout"
+    android:id="@+id/constrainLayoutPerfilUsuario"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
@@ -15,7 +15,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         android:fontFamily="@font/favter1"
         android:text="@string/usuario"
         android:textColor="@color/azul_oscuro"
@@ -27,7 +27,7 @@
         android:id="@+id/buttonGuardar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="30dp"
         android:background="@color/white"
         android:visibility="invisible"
@@ -50,13 +50,13 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="63dp"
+        android:layout_marginTop="53dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/divider">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constrainLayout2"
+            android:id="@+id/constrainLayoutPerfilUsuario2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -90,14 +90,14 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="30dp"
                 android:hint="@string/nombre"
-                app:hintTextColor="@color/azul_oscuro"
                 app:boxBackgroundMode="outline"
-
                 app:boxCornerRadiusBottomEnd="8dp"
+
                 app:boxCornerRadiusBottomStart="8dp"
                 app:boxCornerRadiusTopEnd="8dp"
                 app:boxCornerRadiusTopStart="8dp"
                 app:boxStrokeColor="@color/azul_oscuro"
+                app:hintTextColor="@color/azul_oscuro"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/rolMiUsuario">
@@ -119,13 +119,13 @@
                 android:layout_marginStart="30dp"
                 android:layout_marginTop="20dp"
                 android:hint="@string/apellido1"
-                app:hintTextColor="@color/azul_oscuro"
                 app:boxBackgroundMode="outline"
                 app:boxCornerRadiusBottomEnd="8dp"
                 app:boxCornerRadiusBottomStart="8dp"
                 app:boxCornerRadiusTopEnd="8dp"
                 app:boxCornerRadiusTopStart="8dp"
                 app:boxStrokeColor="@color/azul_oscuro"
+                app:hintTextColor="@color/azul_oscuro"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textInputLayoutNombreMiUsuario">
 
@@ -171,23 +171,23 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="30dp"
                 android:hint="@string/correo_user"
-                app:hintTextColor="@color/azul_oscuro"
                 app:boxBackgroundMode="outline"
-
                 app:boxCornerRadiusBottomEnd="8dp"
+
                 app:boxCornerRadiusBottomStart="8dp"
                 app:boxCornerRadiusTopEnd="8dp"
                 app:boxCornerRadiusTopStart="8dp"
                 app:boxStrokeColor="@color/azul_oscuro"
+                app:hintTextColor="@color/azul_oscuro"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/textInputLayoutApellido2MiUsuario">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/correoMiUsuario"
-                    android:enabled="false"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:enabled="false"
                     android:fontFamily="@font/thinoobold" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -210,9 +210,9 @@
                     android:id="@+id/telefonoMiUsuario"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:maxLength="9"
+                    android:fontFamily="@font/thinoobold"
                     android:inputType="phone"
-                    android:fontFamily="@font/thinoobold" />
+                    android:maxLength="9" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <LinearLayout
@@ -239,8 +239,8 @@
                         android:id="@+id/direccionMiUsuario"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:inputType="textEmailAddress"
-                        android:fontFamily="@font/thinoobold" />
+                        android:fontFamily="@font/thinoobold"
+                        android:inputType="textEmailAddress" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -271,8 +271,8 @@
                         android:id="@+id/pisoMiUsuario"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:maxLength="4"
-                        android:fontFamily="@font/thinoobold" />
+                        android:fontFamily="@font/thinoobold"
+                        android:maxLength="4" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -291,8 +291,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:fontFamily="@font/thinoobold"
-                        android:maxLength="2"
-                        android:inputType="number"/>
+                        android:inputType="number"
+                        android:maxLength="2" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -306,7 +306,7 @@
                 android:layout_marginEnd="30dp"
                 android:layout_marginBottom="10dp"
                 android:orientation="horizontal"
-                app:layout_constraintBottom_toBottomOf="@id/constrainLayout2"
+                app:layout_constraintBottom_toBottomOf="@id/constrainLayoutPerfilUsuario2"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/linearLayoutProvinciaMiUsuario">
