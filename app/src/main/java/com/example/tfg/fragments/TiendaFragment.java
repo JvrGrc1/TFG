@@ -106,10 +106,10 @@ public class TiendaFragment extends Fragment {
             });
         });
 
-        boolean isDarkModeEnabled = getActivity().getSharedPreferences("Ajustes", Context.MODE_PRIVATE)
+        boolean modoOscuro = getActivity().getSharedPreferences("Ajustes", Context.MODE_PRIVATE)
                 .getBoolean("modoOscuro", false);
 
-        if (isDarkModeEnabled) {
+        if (modoOscuro) {
             constraintLayout.setBackgroundColor(Color.BLACK);
             compra.setBackgroundColor(Color.BLACK);
         } else {

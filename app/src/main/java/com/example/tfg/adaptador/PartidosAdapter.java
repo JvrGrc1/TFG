@@ -125,9 +125,9 @@ public class PartidosAdapter extends RecyclerView.Adapter<PartidosAdapter.Partid
             coronaVisitante = itemView.findViewById(R.id.coronaVisitante);
             puntos = itemView.findViewById(R.id.puntos);
 
-            boolean isDarkModeEnabled = context.getSharedPreferences("Ajustes", Context.MODE_PRIVATE)
+            boolean modoOscuro = context.getSharedPreferences("Ajustes", Context.MODE_PRIVATE)
                     .getBoolean("modoOscuro", false);
-            if (isDarkModeEnabled) {
+            if (modoOscuro) {
                 division.setTextColor(Color.WHITE);
                 local.setTextColor(Color.WHITE);
                 visitante.setTextColor(Color.WHITE);

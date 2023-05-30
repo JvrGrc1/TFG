@@ -40,11 +40,11 @@ public class SplashScreen extends AppCompatActivity {
         logo = findViewById(R.id.imageViewLogo);
         jvr = findViewById(R.id.imageViewJvr);
 
-        boolean isDarkModeEnabled = getSharedPreferences("Ajustes", Context.MODE_PRIVATE)
+        boolean modoOscuro = getSharedPreferences("Ajustes", Context.MODE_PRIVATE)
                 .getBoolean("modoOscuro", false);
         Window window = getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        if (isDarkModeEnabled) {
+        if (modoOscuro) {
             window.setStatusBarColor(Color.BLACK);
             from.setTextColor(Color.WHITE);
             logo.setImageDrawable(getDrawable(R.drawable.logo_night));

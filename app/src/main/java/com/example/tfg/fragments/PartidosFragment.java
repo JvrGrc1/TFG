@@ -122,10 +122,10 @@ public class PartidosFragment extends Fragment {
             });
         });
 
-        boolean isDarkModeEnabled = getActivity().getSharedPreferences("Ajustes", Context.MODE_PRIVATE)
+        boolean modoOscuro = getActivity().getSharedPreferences("Ajustes", Context.MODE_PRIVATE)
                 .getBoolean("modoOscuro", false);
 
-        if (isDarkModeEnabled) {
+        if (modoOscuro) {
             constraintLayout.setBackgroundColor(Color.BLACK);
             buscar.setBackgroundColor(Color.BLACK);
         } else {

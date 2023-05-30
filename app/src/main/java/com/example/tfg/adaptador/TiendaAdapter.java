@@ -67,9 +67,9 @@ public class TiendaAdapter extends RecyclerView.Adapter<TiendaAdapter.TiendaView
             imagen = itemView.findViewById(R.id.imagenPrenda);
             constraintLayout = itemView.findViewById(R.id.constrainTiendaView);
 
-            boolean isDarkModeEnabled = context.getSharedPreferences("Ajustes", Context.MODE_PRIVATE)
+            boolean modoOscuro = context.getSharedPreferences("Ajustes", Context.MODE_PRIVATE)
                     .getBoolean("modoOscuro", false);
-            if (isDarkModeEnabled) {
+            if (modoOscuro) {
                 constraintLayout.setBackgroundColor(Color.rgb(24,23, 28));
                 nombre.setTextColor(Color.WHITE);
                 precio.setTextColor(Color.WHITE);

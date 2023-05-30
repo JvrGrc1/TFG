@@ -179,11 +179,11 @@ public class MainActivity extends AppCompatActivity {
 
         abrir.setOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
 
-        boolean isDarkModeEnabled = getSharedPreferences("Ajustes", Context.MODE_PRIVATE)
+        boolean modoOscuro = getSharedPreferences("Ajustes", Context.MODE_PRIVATE)
                 .getBoolean("modoOscuro", false);
         Window window = getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        if (isDarkModeEnabled) {
+        if (modoOscuro) {
             window.setStatusBarColor(Color.BLACK);
             drawerLayout.setBackgroundColor(Color.BLACK);
             lateral.setBackgroundColor(Color.BLACK);

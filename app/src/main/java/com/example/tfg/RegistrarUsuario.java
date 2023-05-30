@@ -1,22 +1,30 @@
 package com.example.tfg;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.example.tfg.conexion.ConexionFirebase;
 import com.example.tfg.detalles.DetallesUsuario;
 import com.example.tfg.entidad.Partido;
 import com.example.tfg.entidad.Pedido;
 import com.google.android.gms.tasks.Task;
+
+import org.checkerframework.checker.units.qual.C;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -29,7 +37,9 @@ public class RegistrarUsuario extends AppCompatActivity {
     private Button registro;
 
     private EditText correo, psswrd;
-    private TextView iniciarSesion;
+    private TextView iniciarSesion, registroUsuario, ayuda;
+    private ConstraintLayout constraintLayout;
+    private ImageView logo;
     private List<Partido> j = new ArrayList<>();
     private List<Pedido> prendas = new ArrayList<>();
     private final ConexionFirebase conexion = new ConexionFirebase();
@@ -46,6 +56,10 @@ public class RegistrarUsuario extends AppCompatActivity {
         correo = findViewById(R.id.correoUser);
         psswrd = findViewById(R.id.contrasenaUser);
         iniciarSesion = findViewById(R.id.iniciarSesion);
+        constraintLayout = findViewById(R.id.constrainRegistrarUsuario);
+        logo = findViewById(R.id.imageViewRegistroLogo);
+        registroUsuario = findViewById(R.id.textViewRegistro);
+        ayuda = findViewById(R.id.textView6);
 
         registro.setOnClickListener(view -> {
             if (correoValido(correo.getText().toString()) && psswrdValida(psswrd.getText().toString())) {
@@ -78,6 +92,26 @@ public class RegistrarUsuario extends AppCompatActivity {
             startActivity(intent);
             overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         });
+
+        Window window = getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+
+        boolean modoOscuro = getSharedPreferences("Ajutes", this.MODE_PRIVATE).getBoolean("modoOscuro", false);
+        if (modoOscuro){
+            window.setStatusBarColor(Color.BLACK);
+            constraintLayout.setBackgroundColor(Color.BLACK);
+            logo.setImageDrawable(getDrawable(R.drawable.logo_night));
+            iniciarSesion.setTextColor(Color.WHITE);
+            registroUsuario.setTextColor(Color.WHITE);
+            ayuda.setTextColor(Color.WHITE);
+        }else {
+            window.setStatusBarColor(Color.WHITE);
+            constraintLayout.setBackgroundColor(Color.WHITE);
+            logo.setImageDrawable(getDrawable(R.drawable.logo));
+            iniciarSesion.setTextColor(Color.BLACK);
+            registroUsuario.setTextColor(getColor(R.color.azul_oscuro));
+            ayuda.setTextColor(Color.BLACK);
+        }
     }
 
     private boolean correoValido(String correo){

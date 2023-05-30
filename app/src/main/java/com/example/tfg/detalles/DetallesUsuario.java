@@ -2,19 +2,25 @@ package com.example.tfg.detalles;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.example.tfg.MainActivity;
 import com.example.tfg.R;
@@ -26,6 +32,8 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import org.checkerframework.checker.units.qual.C;
+
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
@@ -34,10 +42,12 @@ import java.util.Map;
 public class DetallesUsuario extends AppCompatActivity {
 
     private RadioGroup radioGroup;
-    private RadioButton radioButton;
+    private RadioButton radioButton, admin, entrenador, jugador;
     private TextInputEditText nombre, apellido1, apellido2, tlf, codigo;
-    private TextInputLayout codigo2;
+    private TextInputLayout nombre2, apellido12, apellido22, tlf2, codigo2;
+    private ConstraintLayout constraintLayout, constrainScroll;
     private Button continuar;
+    private TextView titulo, rol;
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final FirebaseAuth user = FirebaseAuth.getInstance();
 
@@ -49,13 +59,25 @@ public class DetallesUsuario extends AppCompatActivity {
         setContentView(R.layout.activity_detalles_usuario);
 
         radioGroup = findViewById(R.id.radioGroup);
-        codigo2 = findViewById(R.id.textInputLayoutCodigoDetallesUsuario);
         codigo = findViewById(R.id.codigoDetallesUsuario);
+        codigo2 = findViewById(R.id.textInputLayoutCodigoDetallesUsuario);
         continuar = findViewById(R.id.continuarDetallesUsuario);
         nombre = findViewById(R.id.nombreDetallesUsuario);
+        nombre2 = findViewById(R.id.textInputLayoutNombreDetallesUsuario);
         apellido1 = findViewById(R.id.apellido1DetallesUsuario);
+        apellido12 = findViewById(R.id.textInputLayoutApellido1DetallesUsuario);
         apellido2 = findViewById(R.id.apellido2DetallesUsuario);
+        apellido22 = findViewById(R.id.textInputLayoutApellido2DetallesUsuario);
         tlf = findViewById(R.id.telefonoDetallesUsuario);
+        tlf2 = findViewById(R.id.textInputLayoutTelefonoDetallesUsuario);
+        constraintLayout = findViewById(R.id.constrainDetallesUsuario);
+        constrainScroll = findViewById(R.id.constrainScrollDetallesUsuario);
+        admin = findViewById(R.id.adminOption);
+        entrenador = findViewById(R.id.entrenadorOption);
+        jugador = findViewById(R.id.jugadorOption);
+        titulo = findViewById(R.id.tituloDetallesUsuario);
+        rol = findViewById(R.id.rolDetallesUsuario);
+
 
         String correo = getIntent().getStringExtra("correo");
         String psswrd = getIntent().getStringExtra("psswrd");
@@ -97,6 +119,44 @@ public class DetallesUsuario extends AppCompatActivity {
                 Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show();
             }
         });
+
+        boolean modoOscuro = getSharedPreferences("Ajustes", this.MODE_PRIVATE).getBoolean("modoOscuro", false);
+        Window window = getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+
+        if (modoOscuro) {
+            window.setStatusBarColor(Color.BLACK);
+            constraintLayout.setBackgroundColor(Color.BLACK);
+            constrainScroll.setBackgroundColor(Color.BLACK);
+            radioGroup.setBackgroundColor(Color.BLACK);
+            admin.setTextColor(Color.WHITE);
+            entrenador.setTextColor(Color.WHITE);
+            jugador.setTextColor(Color.WHITE);
+            titulo.setTextColor(Color.WHITE);
+            rol.setTextColor(Color.WHITE);
+            cambiarTextInputLayout(nombre2, Color.WHITE, R.color.gris_oscurito);
+            cambiarTextInputLayout(apellido12, Color.WHITE, R.color.gris_oscurito);
+            cambiarTextInputLayout(apellido22, Color.WHITE, R.color.gris_oscurito);
+            cambiarTextInputLayout(tlf2, Color.WHITE, R.color.gris_oscurito);
+            cambiarTextInputLayout(codigo2, Color.WHITE, R.color.gris_oscurito);
+        }else{
+            window.setStatusBarColor(Color.WHITE);
+            constraintLayout.setBackgroundColor(Color.WHITE);
+            constrainScroll.setBackgroundColor(Color.WHITE);
+            radioGroup.setBackgroundColor(Color.WHITE);
+            admin.setTextColor(Color.BLACK);
+            entrenador.setTextColor(Color.BLACK);
+            jugador.setTextColor(Color.BLACK);
+            titulo.setTextColor(Color.BLACK);
+            rol.setTextColor(Color.BLACK);
+        }
+    }
+
+    private void cambiarTextInputLayout(TextInputLayout textInputLayout, int color, int colorFondo){
+        textInputLayout.setBoxStrokeColor(color);
+        textInputLayout.setBackgroundColor(getColor(colorFondo));
+        textInputLayout.setHintTextColor(ColorStateList.valueOf(color));
+        textInputLayout.setHelperTextColor(ColorStateList.valueOf(color));
     }
 
     private boolean correcto(String string, EditText text){

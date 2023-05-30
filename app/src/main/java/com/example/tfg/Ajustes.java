@@ -66,12 +66,10 @@ public class Ajustes extends AppCompatActivity {
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         modo.setChecked(modoOscuro);
         if (!modoOscuro){
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(Color.WHITE);
             constraintLayout.setBackgroundColor(Color.WHITE);
             modo.setTextColor(Color.BLACK);
         }else{
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(Color.BLACK);
             constraintLayout.setBackgroundColor(Color.BLACK);
             modo.setTextColor(Color.WHITE);

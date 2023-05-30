@@ -1,12 +1,18 @@
 package com.example.tfg;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.example.tfg.conexion.ConexionFirebase;
 import com.example.tfg.entidad.Partido;
@@ -23,7 +29,9 @@ public class Login extends AppCompatActivity {
 
     private Button login;
     private TextInputEditText correo, psswrd;
-    private TextView nueva;
+    private TextView nueva, inicioSesion;
+    private ConstraintLayout constraintLayout;
+    private ImageView logo;
     private List<Partido> j = new ArrayList<>();
     private List<Pedido> prendas = new ArrayList<>();
     private final ConexionFirebase conexion = new ConexionFirebase();
@@ -41,6 +49,9 @@ public class Login extends AppCompatActivity {
         correo = findViewById(R.id.correoUser);
         psswrd = findViewById(R.id.contrasenaUser);
         nueva = findViewById(R.id.nuevaCuenta);
+        constraintLayout = findViewById(R.id.constrainLogin);
+        inicioSesion = findViewById(R.id.textViewInicioSesion);
+        logo = findViewById(R.id.imageViewInicioSesionLogo);
 
         login.setOnClickListener(view -> {
             if (correoValido(correo.getText().toString()) && psswrdValida(psswrd.getText().toString())) {
@@ -49,6 +60,25 @@ public class Login extends AppCompatActivity {
         });
 
         nueva.setOnClickListener(view -> finish());
+
+        SharedPreferences sp = getSharedPreferences("Ajustes", this.MODE_PRIVATE);
+        Window window = getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+
+        boolean modoOscuro = sp.getBoolean("modoOscuro", false);
+        if (modoOscuro){
+            window.setStatusBarColor(Color.BLACK);
+            constraintLayout.setBackgroundColor(Color.BLACK);
+            nueva.setTextColor(Color.WHITE);
+            inicioSesion.setTextColor(Color.WHITE);
+            logo.setImageDrawable(getDrawable(R.drawable.logo_night));
+        }else{
+            window.setStatusBarColor(Color.WHITE);
+            constraintLayout.setBackgroundColor(Color.WHITE);
+            nueva.setTextColor(Color.BLACK);
+            inicioSesion.setTextColor(getColor(R.color.azul_oscuro));
+            logo.setImageDrawable(getDrawable(R.drawable.logo));
+        }
     }
 
     public void iniciarMainActivity(Task<AuthResult> task) {
