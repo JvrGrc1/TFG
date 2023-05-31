@@ -3,8 +3,10 @@ package com.example.tfg;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -40,20 +42,7 @@ public class SplashScreen extends AppCompatActivity {
         logo = findViewById(R.id.imageViewLogo);
         jvr = findViewById(R.id.imageViewJvr);
 
-        boolean modoOscuro = getSharedPreferences("Ajustes", Context.MODE_PRIVATE)
-                .getBoolean("modoOscuro", false);
-        Window window = getWindow();
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        if (modoOscuro) {
-            window.setStatusBarColor(Color.BLACK);
-            from.setTextColor(Color.WHITE);
-            logo.setImageDrawable(getDrawable(R.drawable.logo_night));
-            jvr.setImageDrawable(getDrawable(R.drawable.jvr_night));
-            constraintLayout.setBackgroundColor(Color.BLACK);
-        }else{
-            window.setStatusBarColor(Color.WHITE);
-            constraintLayout.setBackgroundColor(Color.WHITE);
-        }
+        establecerModo();
 
         Task<List<Partido>> partidos = conexion.obtenerPartidos();
         partidos.addOnCompleteListener(task -> {
@@ -77,5 +66,22 @@ public class SplashScreen extends AppCompatActivity {
                 Toast.makeText(SplashScreen.this, "Error obteniendo partidos", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void establecerModo(){
+        boolean modoOscuro = getSharedPreferences("Ajustes", Context.MODE_PRIVATE)
+                .getBoolean("modoOscuro", false);
+        Window window = getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        if (modoOscuro) {
+            window.setStatusBarColor(Color.BLACK);
+            from.setTextColor(Color.WHITE);
+            logo.setImageDrawable(getDrawable(R.drawable.logo_night));
+            jvr.setImageDrawable(getDrawable(R.drawable.jvr_night));
+            constraintLayout.setBackgroundColor(Color.BLACK);
+        }else{
+            window.setStatusBarColor(Color.WHITE);
+            constraintLayout.setBackgroundColor(Color.WHITE);
+        }
     }
 }

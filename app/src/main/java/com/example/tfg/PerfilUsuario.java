@@ -3,6 +3,7 @@ package com.example.tfg;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -14,6 +15,7 @@ import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.Editable;
@@ -56,6 +58,7 @@ public class PerfilUsuario extends AppCompatActivity {
     private Uri nuevaUri;
     private List<Partido> partidos = new ArrayList<>();
     private List<Pedido> pedidos = new ArrayList<>();
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -118,7 +121,7 @@ public class PerfilUsuario extends AppCompatActivity {
         edit.setOnClickListener(v -> {
             String[] opciones = {"Tomar foto", "Elegir de la galeria"};
             AlertDialog.Builder builder = new AlertDialog.Builder(this)
-                    .setTitle("Title")
+                    .setTitle("Elige una opción:")
                     .setItems(opciones, (dialog, which) -> {
                         if (which == 0){
                             tomarFoto.launch(null);
@@ -146,6 +149,7 @@ public class PerfilUsuario extends AppCompatActivity {
             titulo.setTextColor(Color.WHITE);
             edit.setImageDrawable(getDrawable(R.drawable.lapiz_night));
             edit.setBackgroundColor(Color.BLACK);
+            guardar.setBackgroundColor(Color.BLACK);
             cambiarInputLayout(nombre, nombre1);
             cambiarInputLayout(apellido1, apellido11);
             cambiarInputLayout(apellido2, apellido21);
@@ -164,7 +168,7 @@ public class PerfilUsuario extends AppCompatActivity {
             window.setStatusBarColor(Color.WHITE);
             constraintLayout.setBackgroundColor(Color.WHITE);
             constraintLayout2.setBackgroundColor(Color.WHITE);
-            titulo.setTextColor(Color.BLACK);
+            titulo.setTextColor(getColor(R.color.azul_oscuro));
             edit.setImageDrawable(getDrawable(R.drawable.lapiz));
         }
     }

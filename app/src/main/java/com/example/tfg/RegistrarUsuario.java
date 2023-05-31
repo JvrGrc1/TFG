@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -13,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -42,6 +45,7 @@ public class RegistrarUsuario extends AppCompatActivity {
     private List<Partido> j = new ArrayList<>();
     private List<Pedido> prendas = new ArrayList<>();
     private final ConexionFirebase conexion = new ConexionFirebase();
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,6 +76,8 @@ public class RegistrarUsuario extends AppCompatActivity {
                             Intent intent = new Intent(getApplicationContext(), DetallesUsuario.class);
                             intent.putExtra("correo", correo.getText().toString());
                             intent.putExtra("psswrd", psswrd.getText().toString());
+                            intent.putExtra("lista", (Serializable) j);
+                            intent.putExtra("ropa", (Serializable) prendas);
                             startActivity(intent);
                             finish();
                         }else {

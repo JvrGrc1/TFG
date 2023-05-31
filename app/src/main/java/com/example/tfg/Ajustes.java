@@ -25,11 +25,7 @@ import android.widget.ToggleButton;
 import com.example.tfg.conexion.ConexionFirebase;
 import com.example.tfg.entidad.Partido;
 import com.example.tfg.entidad.Pedido;
-import com.example.tfg.entidad.Usuario;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
-
-import org.checkerframework.checker.units.qual.C;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -42,7 +38,7 @@ public class Ajustes extends AppCompatActivity {
     private List<Partido> j = new ArrayList<>();
     private List<Pedido> prendas = new ArrayList<>();
     private ConstraintLayout constraintLayout;
-    private TextView titulo;
+    private TextView titulo, oscuro;
     private Switch modo;
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -55,6 +51,7 @@ public class Ajustes extends AppCompatActivity {
         constraintLayout = findViewById(R.id.constrainAjustes);
         modo = findViewById(R.id.switchModo);
         titulo = findViewById(R.id.textViewTituloAjustes);
+        oscuro = findViewById(R.id.oscuro);
 
         Intent intent = getIntent();
         j = (List<Partido>) intent.getSerializableExtra("lista");
@@ -75,23 +72,27 @@ public class Ajustes extends AppCompatActivity {
             constraintLayout.setBackgroundColor(Color.WHITE);
             modo.setTextColor(Color.BLACK);
             titulo.setTextColor(getColor(R.color.azul_oscuro));
+            oscuro.setTextColor(Color.BLACK);
         }else{
             window.setStatusBarColor(Color.BLACK);
             constraintLayout.setBackgroundColor(Color.BLACK);
             modo.setTextColor(Color.WHITE);
             titulo.setTextColor(Color.WHITE);
+            oscuro.setTextColor(Color.WHITE);
         }
         modo.setOnClickListener(v -> {
             if (sharedPreferences.getBoolean("modoOscuro", false)){
                 window.setStatusBarColor(Color.WHITE);
                 constraintLayout.setBackgroundColor(Color.WHITE);
                 modo.setTextColor(Color.BLACK);
+                oscuro.setTextColor(Color.BLACK);
                 titulo.setTextColor(getColor(R.color.azul_oscuro));
                 sharedPreferences.edit().putBoolean("modoOscuro", !sharedPreferences.getBoolean("modoOscuro", false)).apply();
             }else{
                 window.setStatusBarColor(Color.BLACK);
                 constraintLayout.setBackgroundColor(Color.BLACK);
                 modo.setTextColor(Color.WHITE);
+                oscuro.setTextColor(Color.WHITE);
                 titulo.setTextColor(Color.WHITE);
                 sharedPreferences.edit().putBoolean("modoOscuro", !sharedPreferences.getBoolean("modoOscuro", false)).apply();
             }

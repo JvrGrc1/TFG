@@ -50,6 +50,8 @@ public class ConexionFirebase {
     private final FirebaseStorage storage = FirebaseStorage.getInstance();
     private final FirebaseAuth auth = FirebaseAuth.getInstance();
     private final FirebaseUser user = auth.getCurrentUser();
+    final long ONE_MEGABYTE = 5 * 1024 * 1024;
+
 
     public Task<List<Partido>> obtenerPartidos() {
         TaskCompletionSource<List<Partido>> taskCompletionSource = new TaskCompletionSource<>();
@@ -214,7 +216,6 @@ public class ConexionFirebase {
         }else{
             gsReference = storage.getReferenceFromUrl(url);
         }
-        final long ONE_MEGABYTE = 5 * 1024 * 1024;
         gsReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(bytes -> {
             Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
             holder.setImageBitmap(bitmap);
@@ -469,5 +470,9 @@ public class ConexionFirebase {
                 }
             }
         });
+    }
+
+    public void sendVerfificacion(String correo){
+        user.sendEmailVerification();
     }
 }

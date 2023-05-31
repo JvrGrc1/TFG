@@ -11,7 +11,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -24,17 +23,15 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.example.tfg.MainActivity;
 import com.example.tfg.R;
-import com.example.tfg.conexion.ConexionFirebase;
 import com.example.tfg.entidad.Partido;
-import com.google.android.gms.tasks.Task;
+import com.example.tfg.entidad.Pedido;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import org.checkerframework.checker.units.qual.C;
-
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,6 +47,8 @@ public class DetallesUsuario extends AppCompatActivity {
     private TextView titulo, rol;
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final FirebaseAuth user = FirebaseAuth.getInstance();
+    private List<Partido> j = new ArrayList<>();
+    private List<Pedido> prendas = new ArrayList<>();
 
     @SuppressLint("MissingInflatedId")
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -81,6 +80,8 @@ public class DetallesUsuario extends AppCompatActivity {
 
         String correo = getIntent().getStringExtra("correo");
         String psswrd = getIntent().getStringExtra("psswrd");
+        j = (List<Partido>) getIntent().getSerializableExtra("lista");
+        prendas = (List<Pedido>) getIntent().getSerializableExtra("ropa");
 
         radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
             radioButton = radioGroup.findViewById(checkedId);
@@ -152,6 +153,7 @@ public class DetallesUsuario extends AppCompatActivity {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     private void cambiarTextInputLayout(TextInputLayout textInputLayout, int color, int colorFondo){
         textInputLayout.setBoxStrokeColor(color);
         textInputLayout.setBackgroundColor(getColor(colorFondo));
@@ -225,20 +227,12 @@ public class DetallesUsuario extends AppCompatActivity {
     }
 
     private void intentMainActivity() {
-        ConexionFirebase conexion = new ConexionFirebase();
-        Task<List<Partido>> task = conexion.obtenerPartidos();
-        task.addOnCompleteListener(task1 -> {
-            if (task1.isSuccessful()) {
-                List<Partido> partidos = task1.getResult();
-                Intent intent = new Intent(DetallesUsuario.this, MainActivity.class);
-                intent.putExtra("lista", (Serializable) partidos);
-                startActivity(intent);
-                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                finish();
-            } else {
-                Toast.makeText(DetallesUsuario.this, "Error obteniendo partidos", Toast.LENGTH_SHORT).show();
-            }
-        });
+        Intent intent = new Intent(DetallesUsuario.this, MainActivity.class);
+        intent.putExtra("lista", (Serializable) j);
+        intent.putExtra("ropa", (Serializable) prendas);
+        startActivity(intent);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        finish();
     }
 
     @Override

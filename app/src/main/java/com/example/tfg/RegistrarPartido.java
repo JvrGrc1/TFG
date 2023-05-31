@@ -1,16 +1,26 @@
 package com.example.tfg;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.example.tfg.conexion.ConexionFirebase;
 import com.example.tfg.entidad.Partido;
@@ -18,6 +28,8 @@ import com.example.tfg.entidad.Usuario;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.DocumentReference;
+
+import org.checkerframework.checker.units.qual.C;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -31,7 +43,11 @@ public class RegistrarPartido extends AppCompatActivity {
     private FloatingActionButton agregar, editar;
     private ConexionFirebase conexion = new ConexionFirebase();
     private String id;
+    private TextView titulo;
+    private ConstraintLayout constraintLayout;
+    private LinearLayout linearSpinners, linearEquipos, linearGoles, linearFecha;
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +65,12 @@ public class RegistrarPartido extends AppCompatActivity {
         pabellon = findViewById(R.id.pabellonRegistrar);
         agregar = findViewById(R.id.buttonAgregar);
         editar = findViewById(R.id.buttonEditar);
+        titulo = findViewById(R.id.textViewTitulo);
+        constraintLayout = findViewById(R.id.constrainLayoutRegistroPartidos);
+        linearEquipos = findViewById(R.id.linearLayoutEquipos);
+        linearSpinners = findViewById(R.id.linearLayoutSpinners);
+        linearGoles = findViewById(R.id.linearLayoutGoles);
+        linearFecha = findViewById(R.id.linearLayoutFecha);
 
         Task<Usuario> user = conexion.datosUsuario(conexion.obtenerUser().getEmail());
         user.addOnCompleteListener(task -> {
@@ -101,6 +123,27 @@ public class RegistrarPartido extends AppCompatActivity {
                 Toast.makeText(RegistrarPartido.this, "Puedes editar los campos", Toast.LENGTH_SHORT).show();
             }
         });
+
+        boolean modoOscuro = getSharedPreferences("Ajustes", Context.MODE_PRIVATE).getBoolean("modoOscuro", false);
+        Window window = getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        if (modoOscuro){
+            window.setStatusBarColor(Color.BLACK);
+            titulo.setTextColor(Color.WHITE);
+            constraintLayout.setBackgroundColor(Color.BLACK);
+            linearFecha.setBackgroundColor(Color.BLACK);
+            linearGoles.setBackgroundColor(Color.BLACK);
+            linearSpinners.setBackgroundColor(Color.BLACK);
+            linearEquipos.setBackgroundColor(Color.BLACK);
+        }else{
+            window.setStatusBarColor(Color.WHITE);
+            titulo.setTextColor(getColor(R.color.azul_oscuro));
+            constraintLayout.setBackgroundColor(Color.WHITE);
+            linearFecha.setBackgroundColor(Color.WHITE);
+            linearGoles.setBackgroundColor(Color.WHITE);
+            linearSpinners.setBackgroundColor(Color.WHITE);
+            linearEquipos.setBackgroundColor(Color.WHITE);
+        }
     }
 
     private void actualizarPartido(DocumentReference docRef, Map<String, Object> partido) {

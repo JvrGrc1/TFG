@@ -26,5 +26,5 @@
     <color name="casi_blanco">#F6F6F6</color>
     <color name="gris_oscurito">#B5B2B2</color>
     <color name="gris_oscuro">#838383</color>
-    <color name="transparente">#1AFFFFFF</color>
+    <color name="transparente">#00FFFFFF</color>
 </resources>
