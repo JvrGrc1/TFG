@@ -5,10 +5,13 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
@@ -27,6 +30,8 @@ import com.example.tfg.conexion.ConexionFirebase;
 import com.example.tfg.entidad.Pedido;
 import com.example.tfg.entidad.Prenda;
 
+import org.checkerframework.checker.units.qual.C;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -37,12 +42,12 @@ public class DetallesPrenda extends AppCompatActivity {
     private TextView nombrePrenda, precioPrenda, tallas;
     private Button aniadir;
     private RadioGroup grupo;
-    private RadioButton radioButton;
+    private RadioButton radioButton, xl,l,m,xs,s;
     private Spinner cantidad;
     private ViewPager2 imagen;
     private final ConexionFirebase conexion = new ConexionFirebase();
 
-    @SuppressLint("DefaultLocale")
+    @SuppressLint({"DefaultLocale", "ResourceType"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +64,11 @@ public class DetallesPrenda extends AppCompatActivity {
         cantidad = findViewById(R.id.cantidadSpinner);
         imagen = findViewById(R.id.viewpagerImagenes);
         tallas = findViewById(R.id.textViewTalla);
+        xl = findViewById(R.id.buttonXL);
+        l = findViewById(R.id.buttonL);
+        m = findViewById(R.id.buttonM);
+        xs = findViewById(R.id.buttonXS);
+        s = findViewById(R.id.buttonS);
 
         Prenda prenda = (Prenda) getIntent().getSerializableExtra("prenda");
         Pedido pedido = new Pedido();
@@ -85,6 +95,28 @@ public class DetallesPrenda extends AppCompatActivity {
 
         constrain.setOnClickListener(v -> finish());
         constrain2.setOnClickListener(v -> {});
+
+        boolean modoOscuro = getSharedPreferences("Ajustes", Context.MODE_PRIVATE).getBoolean("modoOscuro", false);
+        Window window = getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        if (modoOscuro){
+            constrain2.setBackgroundColor(Color.BLACK);
+            precioPrenda.setTextColor(Color.WHITE);
+            tallas.setTextColor(Color.WHITE);
+            xl.setTextColor(Color.WHITE);
+            xl.setButtonDrawable(R.drawable.radio_night);
+            l.setTextColor(Color.WHITE);
+            l.setButtonDrawable(R.drawable.radio_night);
+            m.setTextColor(Color.WHITE);
+            m.setButtonDrawable(R.drawable.radio_night);
+            xs.setTextColor(Color.WHITE);
+            xs.setButtonDrawable(R.drawable.radio_night);
+            s.setTextColor(Color.WHITE);
+            s.setButtonDrawable(R.drawable.radio_night);
+            nombrePrenda.setTextColor(Color.WHITE);
+        }else {
+
+        }
 
 
         grupo.setOnCheckedChangeListener((group, id) -> {

@@ -90,6 +90,8 @@ public class RegistrarPartido extends AppCompatActivity {
         rellenarDivisiones();
         rellenarJornadas();
 
+
+
         jornada.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -288,22 +290,14 @@ public class RegistrarPartido extends AppCompatActivity {
             visitante.setEnabled(true);
             visitante.setBackgroundResource(R.drawable.fondo_visitante);
             hora.setEnabled(true);
-            hora.setBackgroundResource(R.drawable.fondo_spinner);
             pabellon.setEnabled(true);
-            pabellon.setBackgroundResource(R.drawable.fondo_spinner);
             fecha.setEnabled(true);
-            fecha.setBackgroundResource(R.drawable.fondo_spinner);
         }else{
             local.setEnabled(false);
-            local.setBackgroundResource(R.drawable.fondo_local_disenabled);
             visitante.setEnabled(false);
-            visitante.setBackgroundResource(R.drawable.fondo_visitante_disenabled);
             hora.setEnabled(false);
-            hora.setBackgroundResource(R.drawable.fondo_spinner_disenabled);
             pabellon.setEnabled(false);
-            pabellon.setBackgroundResource(R.drawable.fondo_spinner_disenabled);
             fecha.setEnabled(false);
-            fecha.setBackgroundResource(R.drawable.fondo_spinner_disenabled);
         }
 
     }

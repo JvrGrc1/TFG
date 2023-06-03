@@ -129,6 +129,7 @@ public class Ajustes extends AppCompatActivity {
         intent.putExtra("lista", (Serializable) j);
         intent.putExtra("ropa", (Serializable) prendas);
         startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         finishAffinity();
     }
 }
