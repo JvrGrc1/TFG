@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Window;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import com.example.tfg.adaptador.PedidosAdapter;
 import com.example.tfg.entidad.Pedido;
 
+import java.io.Serializable;
 import java.util.List;
 
 public class PreCompra extends AppCompatActivity {
@@ -54,5 +56,11 @@ public class PreCompra extends AppCompatActivity {
             constraintLayout.setBackgroundColor(Color.WHITE);
             titulo.setTextColor(Color.BLACK);
         }
+
+        confirmar.setOnClickListener(v -> {
+            Intent intent = new Intent(this, MetodoDePago.class);
+            intent.putExtra("pedido", (Serializable) pedidos);
+            startActivity(intent);
+        });
     }
 }

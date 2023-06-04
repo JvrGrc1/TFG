@@ -4,8 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/constrainMetodoPago"
     android:background="@color/white"
-    android:theme="@style/Theme.Material3.DayNight.NoActionBar"
+    android:theme="@style/Theme.Material3.Light"
     tools:context=".MetodoDePago">
 
     <TextView
@@ -56,6 +57,7 @@
         app:layout_constraintTop_toBottomOf="@id/divider2">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constrainPago"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -64,29 +66,30 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="20dp"
                 android:orientation="vertical"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
                     android:id="@+id/nombreApellidosPago"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/industrial_light"
                     android:text="@string/text_view"
                     android:textColor="@color/black"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:textSize="22sp"
+                    android:textStyle="bold|italic" />
 
                 <TextView
                     android:id="@+id/textViewDireccionPago"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="15dp"
                     android:fontFamily="@font/industrial_light"
                     android:text="@string/direccion"
-                    android:textSize="18sp" />
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
 
                 <RadioGroup
                     android:id="@+id/radioGroupPago"
@@ -102,9 +105,28 @@
                         android:fontFamily="@font/industrial_light"
                         android:text="@string/text_view"
                         android:textColor="@color/black"
-                        android:textSize="20sp"
-                        style="@style/Theme.TFG"/>
+                        android:textSize="20sp" />
                 </RadioGroup>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layoutNuevaDireccion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="40dp"
+                android:layout_marginTop="20dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/linearHorizPagos">
+
+                <TextView
+                    android:id="@+id/textViewAniadirDireccion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/industrial_light"
+                    android:text="@string/aniadir_direccion"
+                    android:textColor="@color/azul_oscuro"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <LinearLayout
@@ -115,7 +137,7 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="30dp"
                 android:orientation="vertical"
-                android:visibility="visible"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/layoutNuevaDireccion">
@@ -172,8 +194,8 @@
                         android:id="@+id/textInputLayoutCiudadPago"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="5dp"
                         android:layout_weight="1"
+                        android:layout_marginStart="5dp"
                         android:hint="@string/ciudad"
                         app:boxStrokeColor="@color/azul_oscuro"
                         app:hintTextColor="@color/azul_oscuro">
@@ -197,6 +219,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
+                        android:layout_marginEnd="5dp"
                         android:hint="@string/piso"
                         app:boxStrokeColor="@color/azul_oscuro"
                         app:helperText="@string/ejemplo_piso"
@@ -239,6 +262,11 @@
                     <Button
                         android:id="@+id/buttonContinuarPago"
                         android:layout_width="match_parent"
+                        android:background="@drawable/fondo_registros"
+                        android:fontFamily="@font/industrial_light"
+                        android:textStyle="bold"
+                        android:layout_marginEnd="5dp"
+                        android:textSize="20dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/continuar" />
@@ -247,57 +275,180 @@
                         android:id="@+id/buttonCancelarPago"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:background="@drawable/fondo_registros"
+                        android:fontFamily="@font/industrial_light"
+                        android:textStyle="bold"
+                        android:textSize="20dp"
                         android:layout_weight="1"
                         android:text="@string/cancelar" />
                 </LinearLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/layoutNuevaDireccion"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="40dp"
-                android:layout_marginTop="20dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearHorizPagos">
-
-                <TextView
-                    android:id="@+id/textView12"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/industrial_light"
-                    android:text="@string/aniadir_direccion"
-                    android:textColor="@color/azul_oscuro"
-                    android:textSize="20sp"
-                    android:textStyle="bold"/>
             </LinearLayout>
 
             <TextView
                 android:id="@+id/textViewTarjeta"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/industrial_light"
-                android:textStyle="bold"
-                android:textSize="20sp"
-                android:text="Tarjeta de Credito"
                 android:layout_marginStart="30dp"
                 android:layout_marginTop="30dp"
+                android:fontFamily="@font/industrial_light"
+                android:text="Tarjeta de Credito"
                 android:textColor="@color/black"
-                app:layout_constraintTop_toBottomOf="@id/crearDireccionPago"
-                app:layout_constraintStart_toStartOf="parent" />
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/crearDireccionPago" />
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/cardView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="30dp"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="30dp"
-                android:layout_marginTop="5dp"
-                android:background="@color/gris_oscurito"
-                app:layout_constraintTop_toBottomOf="@id/textViewTarjeta"
+                android:layout_marginTop="15dp"
+                android:layout_marginRight="30dp"
+                app:cardCornerRadius="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent">
+                app:layout_constraintTop_toBottomOf="@id/textViewTarjeta">
 
 
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/constrainCard"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/morado_claro">
+
+                    <Spinner
+                        android:id="@+id/spinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="55dp"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="25dp"
+                        android:layout_marginEnd="20dp"
+                        android:background="@drawable/fondo_spinner"
+                        android:gravity="center_horizontal"
+                        android:padding="10dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/textInputLayoutNumeroTarjeta"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginEnd="20dp"
+                        android:hint="Número de la tarjeta"
+                        app:boxBackgroundColor="@color/white"
+                        app:boxBackgroundMode="outline"
+                        app:boxCornerRadiusBottomEnd="8dp"
+                        app:boxCornerRadiusBottomStart="8dp"
+                        app:boxCornerRadiusTopEnd="8dp"
+                        app:boxCornerRadiusTopStart="8dp"
+                        app:boxStrokeColor="@color/morado_muy_claro"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/spinner">
+
+                        <EditText
+                            android:id="@+id/numeroTarjeta"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/thinoobold"
+                            android:maxLength="16"
+                            android:gravity="center"
+                            android:inputType="number" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/textInputLayoutTitularTarjeta"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginEnd="20dp"
+                        android:hint="Titular"
+                        app:boxBackgroundColor="@color/white"
+                        app:boxBackgroundMode="outline"
+                        app:boxCornerRadiusBottomEnd="8dp"
+                        app:boxCornerRadiusBottomStart="8dp"
+                        app:boxCornerRadiusTopEnd="8dp"
+                        app:boxCornerRadiusTopStart="8dp"
+                        app:boxStrokeColor="@color/morado_muy_claro"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/textInputLayoutNumeroTarjeta">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/titularTarjeta"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/thinoobold"
+                            android:gravity="center"
+                            android:inputType="text" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/textInputLayoutCvvTarjeta"
+                        android:layout_width="150dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginBottom="10dp"
+                        android:hint="CVV"
+                        app:boxBackgroundColor="@color/white"
+                        app:boxStrokeColor="@color/morado_muy_claro"
+                        app:boxBackgroundMode="outline"
+                        app:boxCornerRadiusBottomEnd="8dp"
+                        app:boxCornerRadiusBottomStart="8dp"
+                        app:boxCornerRadiusTopEnd="8dp"
+                        app:boxCornerRadiusTopStart="8dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/textInputLayoutTitularTarjeta">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/cvvTarjeta"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/thinoobold"
+                            android:maxLength="4"
+                            android:gravity="center"
+                            android:inputType="number" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/textInputLayoutFechaTarjeta"
+                        android:layout_width="150dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginEnd="20dp"
+                        android:layout_marginBottom="10dp"
+                        android:hint="Fecha"
+                        app:boxBackgroundColor="@color/white"
+                        app:boxStrokeColor="@color/morado_muy_claro"
+                        app:boxBackgroundMode="outline"
+                        app:boxCornerRadiusBottomEnd="8dp"
+                        app:boxCornerRadiusBottomStart="8dp"
+                        app:boxCornerRadiusTopEnd="8dp"
+                        app:boxCornerRadiusTopStart="8dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/textInputLayoutCvvTarjeta"
+                        app:layout_constraintTop_toBottomOf="@+id/textInputLayoutTitularTarjeta">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/fechaTarjeta"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/thinoobold"
+                            android:gravity="center"
+                            android:maxLength="7"
+                            android:inputType="date" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
@@ -323,7 +474,7 @@
         app:layout_constraintBottom_toTopOf="@id/buttonPago">
 
         <TextView
-            android:id="@+id/textView4"
+            android:id="@+id/textViewTotal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="30dp"
@@ -363,8 +514,12 @@
         android:id="@+id/buttonPago"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="15dp"
         android:text="@string/pagar"
+        android:background="@drawable/fondo_registros"
+        android:fontFamily="@font/industrial_light"
+        android:textStyle="bold"
+        android:textSize="22dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

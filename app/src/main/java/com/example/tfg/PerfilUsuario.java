@@ -79,7 +79,7 @@ public class PerfilUsuario extends AppCompatActivity {
         tlf = findViewById(R.id.telefonoMiUsuario);
         tlf1 = findViewById(R.id.textInputLayoutTelefonoMiUsuario);
         direccion = findViewById(R.id.direccionMiUsuario);
-        direccion1 = findViewById(R.id.textInputLayoutDireccionMiusuario);
+        direccion1 = findViewById(R.id.textInputLayoutDireccionMiUsuario);
         provincia = findViewById(R.id.provinciaMiUsuario);
         provincia1 = findViewById(R.id.textInputLayoutprovinciaMiUsuario);
         ciudad = findViewById(R.id.ciudadMiUsuario);
