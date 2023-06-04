@@ -1,11 +1,8 @@
 package com.example.tfg.conexion;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.Log;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -13,11 +10,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
-import com.example.tfg.Ajustes;
 import com.example.tfg.Login;
-import com.example.tfg.MainActivity;
 import com.example.tfg.PerfilUsuario;
-import com.example.tfg.R;
 import com.example.tfg.entidad.Partido;
 import com.example.tfg.entidad.Pedido;
 import com.example.tfg.entidad.Prenda;
@@ -26,7 +20,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.gms.tasks.Tasks;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.SignInMethodQueryResult;
@@ -38,7 +31,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -291,7 +283,7 @@ public class ConexionFirebase {
                 QuerySnapshot snapsot = task.getResult();
                 List<DocumentSnapshot> documents = snapsot.getDocuments();
                 for (DocumentSnapshot ds : documents){
-                    if (ds.getString("comprador").equals(obtenerUser()) && ds.getBoolean("pagado").equals(false)) {
+                    if (ds.getString("comprador").equals(obtenerUser().getEmail()) && ds.getBoolean("pagado").equals(false)) {
                         Pedido pedido = new Pedido(ds.getString("prenda"), ds.getString("talla"), ds.getLong("cantidad"), ds.getLong("precioUnidad"));
 
                         if (pedido.getPrenda().equals(prenda.getPrenda()) && pedido.getCantidad().equals(prenda.getCantidad()) && comprobarTallas(pedido.getTalla(), prenda.getTalla()) && (pedido.getPrecioUnidad() == prenda.getPrecioUnidad())) {

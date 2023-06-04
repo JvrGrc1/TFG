@@ -17,7 +17,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -29,8 +28,6 @@ import com.example.tfg.adaptador.ImagenAdapter;
 import com.example.tfg.conexion.ConexionFirebase;
 import com.example.tfg.entidad.Pedido;
 import com.example.tfg.entidad.Prenda;
-
-import org.checkerframework.checker.units.qual.C;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -148,24 +145,21 @@ public class DetallesPrenda extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 pedido.setCantidad(parent.getItemIdAtPosition(position + 1));
             }
-
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
+            public void onNothingSelected(AdapterView<?> parent) {}
         });
 
         aniadir.setOnClickListener(view -> {
             if (pedido.getTalla() == null || !pedido.getTalla().equals("-1")){
                 Map<String, Object> map = new HashMap<>();
-                map.put("comprador", conexion.obtenerUser());
+                map.put("comprador", conexion.obtenerUser().getEmail());
                 map.put("prenda", pedido.getPrenda());
                 map.put("talla", pedido.getTalla());
                 map.put("cantidad", pedido.getCantidad());
                 map.put("precioUnidad", prenda.getPrecio());
                 map.put("pagado", false);
                 conexion.subirPedido(this, map);
-
+                finish();
             }else{
                 Toast.makeText(this, "Debes elegir la talla antes de añadirlo al carrito.", Toast.LENGTH_SHORT).show();
             }

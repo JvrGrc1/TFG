@@ -42,6 +42,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class PerfilUsuario extends AppCompatActivity {
 
@@ -138,6 +139,11 @@ public class PerfilUsuario extends AppCompatActivity {
 
         textChangedListener();
 
+        comprobarModo();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void comprobarModo() {
         boolean modoOscuro = getSharedPreferences("Ajustes", Context.MODE_PRIVATE)
                 .getBoolean("modoOscuro", false);
         Window window = getWindow();
@@ -215,7 +221,6 @@ public class PerfilUsuario extends AppCompatActivity {
                 Uri downloadUri = completeTask.getResult();
                 String urlFoto = downloadUri.toString();
                 conexion.cargarImagen(PerfilUsuario.this, imagen, null, urlFoto);
-                usuario.setImagen(urlFoto);
             } else {
                 Toast.makeText(PerfilUsuario.this, "Error al poner la imagen.", Toast.LENGTH_SHORT).show();
             }
@@ -369,13 +374,14 @@ public class PerfilUsuario extends AppCompatActivity {
         }
         if (nuevaUri != null){
             subirImagen(nuevaUri);
+            usuario.setImagen("gs://balonmano-f213a.appspot.com/perfilUsuario/" + conexion.obtenerUser().getEmail().split("@")[0] + ".jpg");
         }
-        if (tlf.getText().toString().isEmpty()){
+        if (Objects.requireNonNull(tlf.getText()).toString().isEmpty()){
             usuario.setTlf("");
         }else{
             usuario.setTlf(tlf.getText().toString());
         }
-        if (!direccion.getText().toString().isEmpty()){
+        if (!Objects.requireNonNull(direccion.getText()).toString().isEmpty()){
             usuario.setDireccion(obtenerDireccion());
         }else{
             usuario.setDireccion("");

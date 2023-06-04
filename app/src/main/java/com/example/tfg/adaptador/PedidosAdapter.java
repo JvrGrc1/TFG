@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -118,30 +117,7 @@ public class PedidosAdapter extends RecyclerView.Adapter<PedidosAdapter.PedidosV
             linearDetalles = itemView.findViewById(R.id.linearDetalles);
             linearMasMenos = itemView.findViewById(R.id.linearMasMenos);
 
-            boolean modoOscuro = adapter1.context.getSharedPreferences("Ajustes", adapter1.context.MODE_PRIVATE).getBoolean("modoOscuro", false);
-            if (modoOscuro){
-                linear.setBackgroundColor(Color.BLACK);
-                linearCantidad.setBackgroundColor(Color.BLACK);
-                linearDetalles.setBackgroundColor(Color.BLACK);
-                linearMasMenos.setBackgroundColor(Color.BLACK);
-                nombre.setTextColor(Color.WHITE);
-                talla.setTextColor(Color.WHITE);
-                precio.setTextColor(Color.WHITE);
-                cantidad.setTextColor(Color.WHITE);
-                mas.setBackgroundResource(R.drawable.mas_night);
-                menos.setBackgroundResource(R.drawable.menos_night);
-            }else{
-                linear.setBackgroundColor(Color.WHITE);
-                linearCantidad.setBackgroundColor(Color.WHITE);
-                linearDetalles.setBackgroundColor(Color.WHITE);
-                linearMasMenos.setBackgroundColor(Color.WHITE);
-                nombre.setTextColor(Color.BLACK);
-                talla.setTextColor(Color.BLACK);
-                precio.setTextColor(Color.BLACK);
-                cantidad.setTextColor(Color.BLACK);
-                mas.setBackgroundResource(R.drawable.mas);
-                menos.setBackgroundResource(R.drawable.menos);
-            }
+            comprobarModo(adapter1);
 
             trash.setOnClickListener(view -> {
                 new AlertDialog.Builder(view.getContext())
@@ -175,6 +151,33 @@ public class PedidosAdapter extends RecyclerView.Adapter<PedidosAdapter.PedidosV
                     //conexion.updatePedido(cantidadNueva);
                 }
             });
+        }
+
+        private void comprobarModo(PedidosAdapter adapter1) {
+            boolean modoOscuro = adapter1.context.getSharedPreferences("Ajustes", adapter1.context.MODE_PRIVATE).getBoolean("modoOscuro", false);
+            if (modoOscuro){
+                linear.setBackgroundColor(Color.BLACK);
+                linearCantidad.setBackgroundColor(Color.BLACK);
+                linearDetalles.setBackgroundColor(Color.BLACK);
+                linearMasMenos.setBackgroundColor(Color.BLACK);
+                nombre.setTextColor(Color.WHITE);
+                talla.setTextColor(Color.WHITE);
+                precio.setTextColor(Color.WHITE);
+                cantidad.setTextColor(Color.WHITE);
+                mas.setBackgroundResource(R.drawable.mas_night);
+                menos.setBackgroundResource(R.drawable.menos_night);
+            }else{
+                linear.setBackgroundColor(Color.WHITE);
+                linearCantidad.setBackgroundColor(Color.WHITE);
+                linearDetalles.setBackgroundColor(Color.WHITE);
+                linearMasMenos.setBackgroundColor(Color.WHITE);
+                nombre.setTextColor(Color.BLACK);
+                talla.setTextColor(Color.BLACK);
+                precio.setTextColor(Color.BLACK);
+                cantidad.setTextColor(Color.BLACK);
+                mas.setBackgroundResource(R.drawable.mas);
+                menos.setBackgroundResource(R.drawable.menos);
+            }
         }
     }
 }

@@ -135,11 +135,11 @@ public class DetallesUsuario extends AppCompatActivity {
             jugador.setTextColor(Color.WHITE);
             titulo.setTextColor(Color.WHITE);
             rol.setTextColor(Color.WHITE);
-            cambiarTextInputLayout(nombre2, Color.WHITE, R.color.gris_oscurito);
-            cambiarTextInputLayout(apellido12, Color.WHITE, R.color.gris_oscurito);
-            cambiarTextInputLayout(apellido22, Color.WHITE, R.color.gris_oscurito);
-            cambiarTextInputLayout(tlf2, Color.WHITE, R.color.gris_oscurito);
-            cambiarTextInputLayout(codigo2, Color.WHITE, R.color.gris_oscurito);
+            cambiarInputLayout(nombre,nombre2);
+            cambiarInputLayout(apellido1, apellido12);
+            cambiarInputLayout(apellido2, apellido22);
+            cambiarInputLayout(tlf, tlf2);
+            cambiarInputLayout(codigo, codigo2);
         }else{
             window.setStatusBarColor(Color.WHITE);
             constraintLayout.setBackgroundColor(Color.WHITE);
@@ -153,12 +153,11 @@ public class DetallesUsuario extends AppCompatActivity {
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    private void cambiarTextInputLayout(TextInputLayout textInputLayout, int color, int colorFondo){
-        textInputLayout.setBoxStrokeColor(color);
-        textInputLayout.setBackgroundColor(getColor(colorFondo));
-        textInputLayout.setHintTextColor(ColorStateList.valueOf(color));
-        textInputLayout.setHelperTextColor(ColorStateList.valueOf(color));
+    private void cambiarInputLayout(TextInputEditText inputEditText, TextInputLayout textInputLayout){
+        textInputLayout.setBoxBackgroundColor(Color.rgb(26, 26, 26));
+        inputEditText.setTextColor(Color.WHITE);
+        textInputLayout.setBoxStrokeColor(Color.WHITE);
+        textInputLayout.setDefaultHintTextColor(ColorStateList.valueOf(Color.WHITE));
     }
 
     private boolean correcto(String string, EditText text){

@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
 
         comprobarUser();
 
-        //Selecciona partidos como el fragment principal
+        //Selecciona fragmentPartidos como el fragment principal
         bottomNav.setSelectedItemId(R.id.partidos);
         bottomNav.setSelected(true);
 
@@ -229,10 +229,10 @@ public class MainActivity extends AppCompatActivity {
                         nombre.setText(String.format("%s %s", ds.getString("nombre"), ds.getString("apellido1")));
                         posicion.setVisibility(View.VISIBLE);
                         posicion.setText(ds.getString("rol"));
-                        if (ds.getString("imagen") != null && !ds.getString("imagen").isEmpty()) {
+                        if (ds.getString("imagen") != null && !Objects.requireNonNull(ds.getString("imagen")).isEmpty()) {
                             conexion.cargarImagen(MainActivity.this, imagen, abrir, ds.getString("imagen"));
                         }
-                        if (ds.getString("rol").equals("Jugador")){
+                        if (Objects.equals(ds.getString("rol"), "Jugador")){
                             registroPartido.setVisible(false);
                         }else{
                             registroPartido.setVisible(true);

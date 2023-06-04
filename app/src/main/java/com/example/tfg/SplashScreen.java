@@ -3,10 +3,8 @@ package com.example.tfg;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -20,8 +18,6 @@ import com.example.tfg.conexion.ConexionFirebase;
 import com.example.tfg.entidad.Partido;
 import com.example.tfg.entidad.Prenda;
 import com.google.android.gms.tasks.Task;
-
-import org.checkerframework.checker.units.qual.C;
 
 import java.io.Serializable;
 import java.util.List;
