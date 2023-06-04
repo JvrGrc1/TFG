@@ -3,7 +3,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/constrainLayout"
+    android:id="@+id/constrainLayoutPerfilUsuario"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
@@ -28,7 +28,7 @@
         android:contentDescription="Guardar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="30dp"
         android:background="@color/white"
         android:visibility="invisible"
@@ -57,7 +57,7 @@
         app:layout_constraintTop_toBottomOf="@id/divider">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constrainLayout2"
+            android:id="@+id/constrainLayoutPerfilUsuario2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -189,6 +189,7 @@
                     android:id="@+id/correoMiUsuario"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:enabled="false"
                     android:fontFamily="@font/thinoobold" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -307,7 +308,7 @@
                 android:layout_marginEnd="30dp"
                 android:layout_marginBottom="10dp"
                 android:orientation="horizontal"
-                app:layout_constraintBottom_toBottomOf="@id/constrainLayout2"
+                app:layout_constraintBottom_toBottomOf="@id/constrainLayoutPerfilUsuario2"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/linearLayoutProvinciaMiUsuario">
@@ -354,7 +355,7 @@
                 android:contentDescription="Editar imagen usuario"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:layout_marginTop="-22dp"
+                android:layout_marginTop="-30dp"
                 android:layout_marginEnd="-30dp"
                 android:background="@color/transparente"
                 app:layout_constraintEnd_toEndOf="@+id/imagenMiUsuario"

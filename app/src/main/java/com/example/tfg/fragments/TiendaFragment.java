@@ -1,6 +1,8 @@
 package com.example.tfg.fragments;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,6 +30,7 @@ import com.google.firebase.auth.FirebaseUser;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
 public class TiendaFragment extends Fragment {
 
     private RecyclerView recyclerView;
@@ -35,8 +39,12 @@ public class TiendaFragment extends Fragment {
     private List<Prenda> prendas = new ArrayList<>();
     private FirebaseUser user;
     private final ConexionFirebase conexion = new ConexionFirebase();
+    private ConstraintLayout constraintLayout;
 
-    public TiendaFragment() {/*Required empty public constructor*/}
+    public TiendaFragment() {
+        // Required empty public constructor
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +60,8 @@ public class TiendaFragment extends Fragment {
         user  = FirebaseAuth.getInstance().getCurrentUser();
         recyclerView = root.findViewById(R.id.recyclerTienda);
         compra = root.findViewById(R.id.botonCompra);
+        constraintLayout = root.findViewById(R.id.constrainTienda);
+
         recyclerView.setLayoutManager(new GridLayoutManager(root.getContext(), 2));
         adapter = new TiendaAdapter(getContext(), prendas);
         recyclerView.setAdapter(adapter);
@@ -88,13 +98,24 @@ public class TiendaFragment extends Fragment {
                         Intent intent = new Intent(getContext(), PreCompra.class);
                         intent.putExtra("pedido", (Serializable) prendas1);
                         startActivity(intent);
-                        requireActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                        getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                     }
                 }else{
                     Toast.makeText(getContext(), "Error obteniendo los pedidos", Toast.LENGTH_SHORT).show();
                 }
             });
         });
+
+        boolean modoOscuro = getActivity().getSharedPreferences("Ajustes", Context.MODE_PRIVATE)
+                .getBoolean("modoOscuro", false);
+
+        if (modoOscuro) {
+            constraintLayout.setBackgroundColor(Color.BLACK);
+            compra.setBackgroundColor(Color.BLACK);
+        } else {
+            constraintLayout.setBackgroundColor(Color.WHITE);
+            compra.setBackgroundColor(Color.WHITE);
+        }
 
         return root;
     }

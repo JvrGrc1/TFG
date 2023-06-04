@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/constrainLayoutRegistroPartidos"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
@@ -13,6 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:fontFamily="@font/favter1"
+        android:gravity="center"
         android:text="@string/registrar_partido"
         android:textColor="@color/azul_oscuro"
         android:textStyle="italic"
@@ -33,7 +35,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textViewTitulo" />
 
     <LinearLayout
-        android:id="@+id/linearLayout"
+        android:id="@+id/linearLayoutSpinners"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -84,7 +86,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/linearLayout2"
+        android:id="@+id/linearLayoutEquipos"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
@@ -93,14 +95,13 @@
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+        app:layout_constraintTop_toBottomOf="@+id/linearLayoutSpinners">
 
         <EditText
             android:id="@+id/localRegistro"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:autoSizeTextType="uniform"
-            android:background="@drawable/fondo_local_disenabled"
+            android:background="@drawable/fondo_local"
             android:ems="10"
             android:fontFamily="@font/thinoobold"
             android:gravity="center"
@@ -126,7 +127,7 @@
             android:id="@+id/visitanteRegistro"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/fondo_visitante_disenabled"
+            android:background="@drawable/fondo_visitante"
             android:ems="10"
             android:fontFamily="@font/thinoobold"
             android:gravity="center"
@@ -139,7 +140,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/linearLayout5"
+        android:id="@+id/linearLayoutGoles"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
@@ -148,7 +149,7 @@
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
+        app:layout_constraintTop_toBottomOf="@+id/linearLayoutEquipos">
 
         <EditText
             android:id="@+id/golesLocalRegistro"
@@ -197,7 +198,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/linearLayout6"
+        android:id="@+id/linearLayoutFecha"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
@@ -206,7 +207,7 @@
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout5">
+        app:layout_constraintTop_toBottomOf="@+id/linearLayoutGoles">
 
         <EditText
             android:id="@+id/fechaRegistrar"
@@ -214,7 +215,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="5dp"
             android:layout_weight="1"
-            android:background="@drawable/fondo_spinner_disenabled"
+            android:background="@drawable/fondo"
             android:ems="10"
             android:fontFamily="@font/thinoobold"
             android:gravity="center"
@@ -230,12 +231,12 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
             android:layout_weight="1"
-            android:background="@drawable/fondo_spinner_disenabled"
+            android:background="@drawable/fondo"
             android:ems="10"
             android:fontFamily="@font/thinoobold"
             android:gravity="center"
             android:hint="@string/hora"
-            android:inputType="text"
+            android:inputType="time"
             android:padding="10dp"
             android:textColorHint="@color/black"
             android:textSize="24sp" />
@@ -277,7 +278,7 @@
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="60dp"
-        android:background="@drawable/fondo_spinner_disenabled"
+        android:background="@drawable/fondo"
         android:ems="10"
         android:fontFamily="@font/thinoobold"
         android:gravity="center"
@@ -288,6 +289,6 @@
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout6" />
+        app:layout_constraintTop_toBottomOf="@+id/linearLayoutFecha" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

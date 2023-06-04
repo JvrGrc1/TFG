@@ -3,12 +3,12 @@ package com.example.tfg.conexion;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 
 import com.example.tfg.Login;
 import com.example.tfg.PerfilUsuario;
@@ -16,10 +16,10 @@ import com.example.tfg.entidad.Partido;
 import com.example.tfg.entidad.Pedido;
 import com.example.tfg.entidad.Prenda;
 import com.example.tfg.entidad.Usuario;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.gms.tasks.Tasks;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.SignInMethodQueryResult;
@@ -42,6 +42,8 @@ public class ConexionFirebase {
     private final FirebaseStorage storage = FirebaseStorage.getInstance();
     private final FirebaseAuth auth = FirebaseAuth.getInstance();
     private final FirebaseUser user = auth.getCurrentUser();
+    final long ONE_MEGABYTE = 5 * 1024 * 1024;
+
 
     public Task<List<Partido>> obtenerPartidos() {
         TaskCompletionSource<List<Partido>> taskCompletionSource = new TaskCompletionSource<>();
@@ -143,47 +145,50 @@ public class ConexionFirebase {
         return taskCompletionSource.getTask();
     }
 
-    public String obtenerUser(){
-        return auth.getCurrentUser().getEmail();
+    public FirebaseUser obtenerUser(){
+        return auth.getCurrentUser();
     }
 
     public void subirPedido(Context contexto, Map<String, Object> pedido) {
         Task<List<Pedido>> pedidos = obtenerPedidos(user.getEmail());
-        pedidos.addOnCompleteListener(task -> {
-            if (task.isSuccessful()){
-                List<Pedido> pedidos1 = task.getResult();
-                if (pedidos1.isEmpty()){
-                    db.collection("pedidos").add(pedido).addOnCompleteListener(task1 -> {
-                        if (task1.isSuccessful()){
-                            Toast.makeText(contexto, "Se ha añadido el pedido correctamente.", Toast.LENGTH_SHORT).show();
-                        }else{
-                            Toast.makeText(contexto, "No se ha podido añadir el pedido. Intentelo de nuevo.", Toast.LENGTH_SHORT).show();
+        pedidos.addOnCompleteListener(new OnCompleteListener<List<Pedido>>() {
+            @Override
+            public void onComplete(@NonNull Task<List<Pedido>> task) {
+                if (task.isSuccessful()){
+                    List<Pedido> pedidos1 = task.getResult();
+                    if (pedidos1.isEmpty()){
+                        db.collection("pedidos").add(pedido).addOnCompleteListener(task1 -> {
+                            if (task1.isSuccessful()){
+                                Toast.makeText(contexto, "Se ha añadido el pedido correctamente.", Toast.LENGTH_SHORT).show();
+                            }else{
+                                Toast.makeText(contexto, "No se ha podido añadir el pedido. Intentelo de nuevo.", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }else{
+                        boolean repetido = false;
+                        long cantidad = 0;
+                        for (Pedido p : pedidos1){
+                            if (!p.isPagado() && p.getPrenda().equals(pedido.get("prenda")) && comprobarTallas(p.getTalla(), (String) pedido.get("talla"))){
+                                repetido = true;
+                                cantidad = p.getCantidad();
+                                borrarPedido(contexto, p);
+                            }
                         }
-                    });
+                        if (repetido){
+                            cantidad = cantidad + (long )pedido.get("cantidad");
+                            pedido.put("cantidad", cantidad);
+                        }
+                        db.collection("pedidos").add(pedido).addOnCompleteListener(task1 -> {
+                            if (task1.isSuccessful()){
+                                Toast.makeText(contexto, "Se ha añadido el pedido correctamente.", Toast.LENGTH_SHORT).show();
+                            }else{
+                                Toast.makeText(contexto, "No se ha podido añadir el pedido. Intentelo de nuevo.", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
                 }else{
-                    boolean repetido = false;
-                    long cantidad = 0;
-                    for (Pedido p : pedidos1){
-                        if (!p.isPagado() && p.getPrenda().equals(pedido.get("prenda")) && comprobarTallas(p.getTalla(), (String) pedido.get("talla"))){
-                            repetido = true;
-                            cantidad = p.getCantidad();
-                            borrarPedido(contexto, p);
-                        }
-                    }
-                    if (repetido){
-                        cantidad = cantidad + (long )pedido.get("cantidad");
-                        pedido.put("cantidad", cantidad);
-                    }
-                    db.collection("pedidos").add(pedido).addOnCompleteListener(task1 -> {
-                        if (task1.isSuccessful()){
-                            Toast.makeText(contexto, "Se ha añadido el pedido correctamente.", Toast.LENGTH_SHORT).show();
-                        }else{
-                            Toast.makeText(contexto, "No se ha podido añadir el pedido. Intentelo de nuevo.", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                    Toast.makeText(contexto, "Error al obtener los pedidos del usuario.", Toast.LENGTH_SHORT).show();
                 }
-            }else{
-                Toast.makeText(contexto, "Error al obtener los pedidos del usuario.", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -192,7 +197,8 @@ public class ConexionFirebase {
         if (p == null && pedido == null){return true;}
         else if (p == null && pedido != null){return false;}
         else if (p != null && pedido == null){return false;}
-        else return p.equals(pedido);
+        else if (p.equals(pedido)){return true;}
+        else {return false;}
     }
 
     public void cargarImagen(Context contexto, ImageView holder, ImageView img, String url){
@@ -202,7 +208,6 @@ public class ConexionFirebase {
         }else{
             gsReference = storage.getReferenceFromUrl(url);
         }
-        final long ONE_MEGABYTE = 5 * 1024 * 1024;
         gsReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(bytes -> {
             Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
             holder.setImageBitmap(bitmap);
@@ -278,7 +283,7 @@ public class ConexionFirebase {
                 QuerySnapshot snapsot = task.getResult();
                 List<DocumentSnapshot> documents = snapsot.getDocuments();
                 for (DocumentSnapshot ds : documents){
-                    if (ds.getString("comprador").equals(obtenerUser()) && ds.getBoolean("pagado").equals(false)) {
+                    if (ds.getString("comprador").equals(obtenerUser().getEmail()) && ds.getBoolean("pagado").equals(false)) {
                         Pedido pedido = new Pedido(ds.getString("prenda"), ds.getString("talla"), ds.getLong("cantidad"), ds.getLong("precioUnidad"));
 
                         if (pedido.getPrenda().equals(prenda.getPrenda()) && pedido.getCantidad().equals(prenda.getCantidad()) && comprobarTallas(pedido.getTalla(), prenda.getTalla()) && (pedido.getPrecioUnidad() == prenda.getPrecioUnidad())) {
@@ -331,26 +336,6 @@ public class ConexionFirebase {
         });
         return taskCompletionSource.getTask();
     }
-
-    public void comprobarAdmin(FloatingActionButton floating, Context contexto){
-        if (user != null) {
-            db.collection("usuarios").get().addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    for (DocumentSnapshot document : task.getResult()) {
-                        if (document.get("correo").equals(user.getEmail())) {
-                            if (document.get("rol").equals("Administrador")) {
-                                floating.setVisibility(View.VISIBLE);
-                            } else {
-                                floating.setVisibility(View.INVISIBLE);
-                            }
-                        }
-                    }
-                } else {
-                    Toast.makeText(contexto, "Error con isAdmin().", Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-    }
     public DocumentReference getDocumento(String anios, String division, String id){
         return db.collection("temporadas").document(anios).collection(division).document(id);
     }
@@ -360,6 +345,36 @@ public class ConexionFirebase {
     }
 
     public void signOut(){auth.signOut();}
+    public Task<Boolean> borrarCuenta(String correo, Context context){
+        TaskCompletionSource<Boolean> taskCompletionSource = new TaskCompletionSource<>();
+        user.delete().addOnCompleteListener(task -> {
+            if (task.isSuccessful()){
+                db.collection("usuarios")
+                        .whereEqualTo("correo", correo)
+                        .get()
+                        .addOnCompleteListener(task1 -> {
+                            if (task1.isSuccessful()) {
+                                for (QueryDocumentSnapshot document : task1.getResult()) {
+                                    db.collection("usuarios").document(document.getId()).delete()
+                                            .addOnSuccessListener(aVoid -> {
+                                                taskCompletionSource.setResult(true);
+                                            })
+                                            .addOnFailureListener(e -> {
+                                                Toast.makeText(context, "Error al eliminar el documento", Toast.LENGTH_SHORT).show();
+                                            });
+                                }
+                            } else {
+                                taskCompletionSource.setResult(false);
+                                Toast.makeText(context, "Error al borrar documentos", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+            }else{
+                taskCompletionSource.setResult(false);
+                Toast.makeText(context, "Error al borrar la cuenta", Toast.LENGTH_SHORT).show();
+            }
+        });
+        return taskCompletionSource.getTask();
+    }
 
     public void rellenarSpinnerTemporadas(Context context, Spinner temporadas, Spinner division, Spinner jornada){
         db.collection("temporadas").get().addOnCompleteListener(task -> {
@@ -421,7 +436,7 @@ public class ConexionFirebase {
     }
 
     public void modificarUser(Usuario usuario, PerfilUsuario perfilUsuario) {
-        String correo = obtenerUser();
+        String correo = obtenerUser().getEmail();
         Map<String, Object> user = new HashMap<>();
         user.put("nombre", usuario.getNombre());
         user.put("apellido1", usuario.getApellido1());
@@ -447,5 +462,9 @@ public class ConexionFirebase {
                 }
             }
         });
+    }
+
+    public void sendVerfificacion(String correo){
+        user.sendEmailVerification();
     }
 }

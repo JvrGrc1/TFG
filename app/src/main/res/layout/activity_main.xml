@@ -8,14 +8,14 @@
     android:orientation="horizontal">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/cordinatorMain"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_columnWeight="1"
-        android:background="@color/white"
         tools:context=".MainActivity">
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/textViewTitulo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -23,6 +23,7 @@
             android:fontFamily="@font/favter1"
             android:text="@string/app_name"
             android:textColor="@color/azul_oscuro"
+            android:textSize="15sp"
             android:textStyle="normal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -30,14 +31,13 @@
 
         <ImageView
             android:id="@+id/logo"
-            android:contentDescription="Logo del club"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_gravity="end"
-            android:layout_marginEnd="40dp"
+            android:layout_marginEnd="35dp"
             app:layout_constraintStart_toEndOf="@+id/textView"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@mipmap/logo_foreground" />
+            app:srcCompat="@mipmap/logo_club_foreground" />
 
         <View
             android:id="@+id/divider2"
@@ -85,7 +85,6 @@
 
         <ImageView
             android:id="@+id/botonAbrir"
-            android:contentDescription="Abrir menu lateral"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginStart="25dp"

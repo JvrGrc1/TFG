@@ -1,19 +1,30 @@
 package com.example.tfg;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.example.tfg.conexion.ConexionFirebase;
 import com.example.tfg.entidad.Partido;
+import com.example.tfg.entidad.Usuario;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.DocumentReference;
@@ -30,7 +41,11 @@ public class RegistrarPartido extends AppCompatActivity {
     private FloatingActionButton agregar, editar;
     private final ConexionFirebase conexion = new ConexionFirebase();
     private String id;
+    private TextView titulo;
+    private ConstraintLayout constraintLayout;
+    private LinearLayout linearSpinners, linearEquipos, linearGoles, linearFecha;
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,8 +63,22 @@ public class RegistrarPartido extends AppCompatActivity {
         pabellon = findViewById(R.id.pabellonRegistrar);
         agregar = findViewById(R.id.buttonAgregar);
         editar = findViewById(R.id.buttonEditar);
+        titulo = findViewById(R.id.textViewTitulo);
+        constraintLayout = findViewById(R.id.constrainLayoutRegistroPartidos);
+        linearEquipos = findViewById(R.id.linearLayoutEquipos);
+        linearSpinners = findViewById(R.id.linearLayoutSpinners);
+        linearGoles = findViewById(R.id.linearLayoutGoles);
+        linearFecha = findViewById(R.id.linearLayoutFecha);
+        comprobarModo();
 
-        conexion.comprobarAdmin(editar, RegistrarPartido.this);
+        Task<Usuario> user = conexion.datosUsuario(conexion.obtenerUser().getEmail());
+        user.addOnCompleteListener(task -> {
+            if (task.isSuccessful()){
+                Usuario usuario = task.getResult();
+                if (usuario.getRol().equals("Administrador")){editar.setVisibility(View.VISIBLE);}
+                else {editar.setVisibility(View.INVISIBLE);}
+            }
+        });
         local.setEnabled(false);
         visitante.setEnabled(false);
         hora.setEnabled(false);
@@ -59,7 +88,6 @@ public class RegistrarPartido extends AppCompatActivity {
         conexion.rellenarSpinnerTemporadas(RegistrarPartido.this, anios, division, jornada);
         rellenarDivisiones();
         rellenarJornadas();
-
         jornada.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -71,15 +99,22 @@ public class RegistrarPartido extends AppCompatActivity {
         });
 
         agregar.setOnClickListener(v -> {
-            if (jornada.getSelectedItem() == null || anios.getSelectedItem().equals("")){
-                Toast.makeText(RegistrarPartido.this, "No has seleccionado jornada", Toast.LENGTH_SHORT).show();
+            if (jornada.getSelectedItem() == null || anios.getSelectedItem().equals("") || division.getSelectedItem().equals("")){
+                Toast.makeText(RegistrarPartido.this, "Error en los Spinners", Toast.LENGTH_SHORT).show();
             }else{
                 if (todoRelleno()){
-                    DocumentReference docRef = conexion.getDocumento(anios.getSelectedItem().toString(), division.getSelectedItem().toString(), id);
-                    // Crear un mapa con los campos que se van a actualizar y sus valores
-                    Map<String, Object> partido = crearMapaPartido();
-                    // Actualizar los campos del documento en Firebase Firestore
-                    actualizarPartido(docRef, partido);
+                    new AlertDialog.Builder(RegistrarPartido.this)
+                            .setPositiveButton("Confirmar", (dialogInterface, i) -> {
+                                DocumentReference docRef = conexion.getDocumento(anios.getSelectedItem().toString(), division.getSelectedItem().toString(), id);
+                                // Crear un mapa con los campos que se van a actualizar y sus valores
+                                Map<String, Object> partido = crearMapaPartido();
+                                // Actualizar los campos del documento en Firebase Firestore
+                                actualizarPartido(docRef, partido);
+                            })
+                            .setNegativeButton("Salir", (dialogInterface, i) -> dialogInterface.dismiss())
+                            .setTitle("Confirmar cambios")
+                            .setMessage("Has realizado cambios en el partido ¿Desea continuar?")
+                            .show();
                 }
             }
         });
@@ -193,7 +228,15 @@ public class RegistrarPartido extends AppCompatActivity {
         }
     }
     private boolean todoRelleno(){
-        return !local.getText().toString().isEmpty() && !visitante.getText().toString().isEmpty() && !gV.getText().toString().isEmpty() && !gL.getText().toString().isEmpty() && !hora.getText().toString().isEmpty() && !fecha.getText().toString().isEmpty() && !pabellon.getText().toString().isEmpty() && getFecha() != null && getFecha() != null;
+        if (!local.getText().toString().isEmpty() && !visitante.getText().toString().isEmpty() && !gV.getText().toString().isEmpty() && !gL.getText().toString().isEmpty() && !hora.getText().toString().isEmpty() && !fecha.getText().toString().isEmpty() && !pabellon.getText().toString().isEmpty() && getFecha() != null && getFecha() != null){
+            if (getHora() != null && getDivision() != null && getFecha() != null){
+                return true;
+            }else{
+                return false;
+            }
+        }else {
+            return false;
+        }
     }
     private String getDivision(){
         String divison = division.getSelectedItem().toString();
@@ -212,7 +255,7 @@ public class RegistrarPartido extends AppCompatActivity {
         return null;
     }
     private String getHora(){
-        String patron = "^(0?[1-9]|1\\d|2[0-4]):([0-5]?\\d)$";
+        String patron = "^([01]\\d|2[0-3]):[0-5]\\d$";
         if (hora.getText().toString().matches(patron)){
             return hora.getText().toString();
         }else{
@@ -221,7 +264,7 @@ public class RegistrarPartido extends AppCompatActivity {
         }
     }
     private String getFecha(){
-        String patron = "\\d{2}-\\d{2}-(2020|2021|2022|2023)";
+        String patron = "^(0[1-9]|1\\d|2[0-9]|3[01])-(0[1-9]|1[0-2])-20(20|21|22|23)$";
         if (fecha.getText().toString().matches(patron)){
             return fecha.getText().toString();
         }else{
@@ -237,23 +280,39 @@ public class RegistrarPartido extends AppCompatActivity {
             visitante.setEnabled(true);
             visitante.setBackgroundResource(R.drawable.fondo_visitante);
             hora.setEnabled(true);
-            hora.setBackgroundResource(R.drawable.fondo_spinner);
             pabellon.setEnabled(true);
-            pabellon.setBackgroundResource(R.drawable.fondo_spinner);
             fecha.setEnabled(true);
-            fecha.setBackgroundResource(R.drawable.fondo_spinner);
         }else{
             local.setEnabled(false);
-            local.setBackgroundResource(R.drawable.fondo_local_disenabled);
             visitante.setEnabled(false);
-            visitante.setBackgroundResource(R.drawable.fondo_visitante_disenabled);
             hora.setEnabled(false);
-            hora.setBackgroundResource(R.drawable.fondo_spinner_disenabled);
             pabellon.setEnabled(false);
-            pabellon.setBackgroundResource(R.drawable.fondo_spinner_disenabled);
             fecha.setEnabled(false);
-            fecha.setBackgroundResource(R.drawable.fondo_spinner_disenabled);
         }
 
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void comprobarModo() {
+        boolean modoOscuro = getSharedPreferences("Ajustes", Context.MODE_PRIVATE).getBoolean("modoOscuro", false);
+        Window window = getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        if (modoOscuro){
+            window.setStatusBarColor(Color.BLACK);
+            titulo.setTextColor(Color.WHITE);
+            constraintLayout.setBackgroundColor(Color.BLACK);
+            linearFecha.setBackgroundColor(Color.BLACK);
+            linearGoles.setBackgroundColor(Color.BLACK);
+            linearSpinners.setBackgroundColor(Color.BLACK);
+            linearEquipos.setBackgroundColor(Color.BLACK);
+        }else{
+            window.setStatusBarColor(Color.WHITE);
+            titulo.setTextColor(getColor(R.color.azul_oscuro));
+            constraintLayout.setBackgroundColor(Color.WHITE);
+            linearFecha.setBackgroundColor(Color.WHITE);
+            linearGoles.setBackgroundColor(Color.WHITE);
+            linearSpinners.setBackgroundColor(Color.WHITE);
+            linearEquipos.setBackgroundColor(Color.WHITE);
+        }
     }
 }

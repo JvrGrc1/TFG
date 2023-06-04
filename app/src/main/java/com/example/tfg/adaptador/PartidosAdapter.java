@@ -1,6 +1,8 @@
 package com.example.tfg.adaptador;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +14,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.tfg.R;
 import com.example.tfg.entidad.Partido;
+
+import org.checkerframework.checker.units.qual.C;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -69,7 +73,7 @@ public class PartidosAdapter extends RecyclerView.Adapter<PartidosAdapter.Partid
     @Override
     public PartidosAdapter.PartidosViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(contexto).inflate(R.layout.partidos_view, parent, false);
-        return new PartidosViewHolder(v);
+        return new PartidosViewHolder(v, contexto);
     }
 
     @Override
@@ -106,10 +110,10 @@ public class PartidosAdapter extends RecyclerView.Adapter<PartidosAdapter.Partid
 
     public static class PartidosViewHolder extends RecyclerView.ViewHolder{
 
-        TextView division, local, visitante, golesLocal,  golesVisitante;
+        TextView division, local, visitante, golesLocal,  golesVisitante, puntos;
         ImageView coronaLocal, coronaVisitante;
 
-        public PartidosViewHolder(@NonNull View itemView) {
+        public PartidosViewHolder(@NonNull View itemView, Context context) {
             super(itemView);
 
             division = itemView.findViewById(R.id.division);
@@ -119,6 +123,25 @@ public class PartidosAdapter extends RecyclerView.Adapter<PartidosAdapter.Partid
             golesVisitante = itemView.findViewById(R.id.golesVisitante);
             coronaLocal = itemView.findViewById(R.id.coronaLocal);
             coronaVisitante = itemView.findViewById(R.id.coronaVisitante);
+            puntos = itemView.findViewById(R.id.puntos);
+
+            boolean modoOscuro = context.getSharedPreferences("Ajustes", Context.MODE_PRIVATE)
+                    .getBoolean("modoOscuro", false);
+            if (modoOscuro) {
+                division.setTextColor(Color.WHITE);
+                local.setTextColor(Color.WHITE);
+                visitante.setTextColor(Color.WHITE);
+                golesLocal.setTextColor(Color.WHITE);
+                golesVisitante.setTextColor(Color.WHITE);
+                puntos.setTextColor(Color.WHITE);
+            } else {
+                division.setTextColor(Color.BLACK);
+                local.setTextColor(Color.BLACK);
+                visitante.setTextColor(Color.BLACK);
+                golesLocal.setTextColor(Color.BLACK);
+                golesVisitante.setTextColor(Color.BLACK);
+                puntos.setTextColor(Color.BLACK);
+            }
         }
     }
 }

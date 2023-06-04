@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/linearPedido"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -20,6 +20,7 @@
             tools:srcCompat="@tools:sample/avatars" />
 
         <LinearLayout
+            android:id="@+id/linearDetalles"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
@@ -48,6 +49,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/linearCantidad"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
@@ -62,6 +64,7 @@
                 android:background="@drawable/basura" />
 
             <LinearLayout
+                android:id="@+id/linearMasMenos"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_marginTop="20dp"
@@ -117,6 +120,6 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="5dp"
-        android:background="?android:attr/listDivider" />
+        android:background="@color/gris_oscurito" />
 
 </LinearLayout>

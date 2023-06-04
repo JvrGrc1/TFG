@@ -1,9 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="rectangle">
-    <corners android:radius="180dp"/>
-    <solid android:color="@color/gris_casi_blanco"/>
-    <size android:height="48dp" android:width="96dp"/>
-    <stroke android:color="@color/rojo_oscuro" android:width="1dp"
-        android:dashGap="500dp" android:dashWidth="570dp"/>
-</shape>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_enabled="true">
+        <shape>
+            <corners android:radius="180dp" />
+            <solid android:color="@color/gris_casi_blanco" />
+            <size android:height="48dp" android:width="96dp" />
+            <stroke
+                android:color="@color/rojo_oscuro"
+                android:width="2dp"
+                android:dashGap="190dp"
+                android:dashWidth="380dp" />
+        </shape>
+    </item>
+    <item>
+        <shape>
+            <corners android:radius="180dp" />
+            <solid android:color="@color/gris_oscurito" />
+            <size android:height="48dp" android:width="96dp" />
+            <stroke
+                android:color="@color/rojo_oscuro"
+                android:width="2dp"
+                android:dashGap="190dp"
+                android:dashWidth="380dp" />
+        </shape>
+    </item>
+</selector>
