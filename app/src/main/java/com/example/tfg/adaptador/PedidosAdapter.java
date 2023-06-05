@@ -20,7 +20,10 @@ import com.example.tfg.R;
 import com.example.tfg.conexion.ConexionFirebase;
 import com.example.tfg.entidad.Pedido;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 public class PedidosAdapter extends RecyclerView.Adapter<PedidosAdapter.PedidosViewHolder> {
 
@@ -68,9 +71,10 @@ public class PedidosAdapter extends RecyclerView.Adapter<PedidosAdapter.PedidosV
                 Toast.makeText(view.getContext(), "No puedes añadir más de 9 unidades por prenda.", Toast.LENGTH_SHORT).show();
             }else {
                 int cantidadNueva = (Integer.parseInt(holder.cantidad.getText().toString()) + 1);
-                holder.cantidad.setText(cantidadNueva + "");
+                holder.cantidad.setText(String.format("%d", cantidadNueva));
                 pedido.setCantidad(Long.parseLong(holder.cantidad.getText().toString()));
-                holder.precio.setText(String.format("%.2f€",pedido.getPrecioUnidad()*pedido.getCantidad()));
+                holder.precio.setText(String.format("Total: %.2f€",pedido.getPrecioUnidad()*pedido.getCantidad()));
+                conexion.updatePedido(crearMap(pedido, cantidadNueva), view.getContext());
             }
         });
 
@@ -79,9 +83,10 @@ public class PedidosAdapter extends RecyclerView.Adapter<PedidosAdapter.PedidosV
                 Toast.makeText(view.getContext(), "Si quiere eliminar este producto de su compra pulse el icono de la papelera.", Toast.LENGTH_SHORT).show();
             }else {
                 int cantidadNueva = (Integer.parseInt(holder.cantidad.getText().toString()) - 1);
-                holder.cantidad.setText(cantidadNueva + "");
+                holder.cantidad.setText(String.format("%d", cantidadNueva));
                 pedido.setCantidad(Long.parseLong(holder.cantidad.getText().toString()));
-                holder.precio.setText(String.format("%.2f€",pedido.getPrecioUnidad()*pedido.getCantidad()));
+                holder.precio.setText(String.format("Total: %.2f€",pedido.getPrecioUnidad()*pedido.getCantidad()));
+                conexion.updatePedido(crearMap(pedido, cantidadNueva), view.getContext());
             }
         });
     }
@@ -138,7 +143,7 @@ public class PedidosAdapter extends RecyclerView.Adapter<PedidosAdapter.PedidosV
                 }else {
                     int cantidadNueva = (Integer.parseInt(cantidad.getText().toString()) + 1);
                     cantidad.setText(cantidadNueva + "");
-                    //conexion.updatePedido(cantidadNueva);
+                    //conexion.updatePedido(cantidadNueva, crearMap());
                 }
             });
 
@@ -148,7 +153,6 @@ public class PedidosAdapter extends RecyclerView.Adapter<PedidosAdapter.PedidosV
                 }else {
                     int cantidadNueva = (Integer.parseInt(cantidad.getText().toString()) - 1);
                     cantidad.setText(cantidadNueva + "");
-                    //conexion.updatePedido(cantidadNueva);
                 }
             });
         }
@@ -179,5 +183,15 @@ public class PedidosAdapter extends RecyclerView.Adapter<PedidosAdapter.PedidosV
                 menos.setBackgroundResource(R.drawable.menos);
             }
         }
+    }
+    private Map<String, Object> crearMap(Pedido pedido, int cantidadNueva){
+        Map<String, Object> map = new HashMap<>();
+        map.put("cantidad", cantidadNueva);
+        map.put("comprador", conexion.obtenerUser().getEmail());
+        map.put("pagado", false);
+        map.put("precioUnidad", pedido.getPrecioUnidad());
+        map.put("talla", pedido.getTalla());
+        map.put("prenda", pedido.getPrenda());
+        return map;
     }
 }

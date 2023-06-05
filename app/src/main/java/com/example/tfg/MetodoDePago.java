@@ -2,7 +2,6 @@ package com.example.tfg;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.res.ResourcesCompat;
 
@@ -14,8 +13,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.text.InputFilter;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.Window;
@@ -23,8 +21,6 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -39,45 +35,41 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MetodoDePago extends AppCompatActivity {
-
-    private ImageButton volver;
     private TextView nombreTextView, total, tarjeta, dir, titulo, pago, aniadir;
     private RadioButton direccionRadio;
     private RadioGroup grupo;
     private Usuario usuario;
     private Button continuar, cancelar, pagar;
-    private TextInputEditText direccion, portal, piso, ciudad, provincia;
-    private EditText numTarjeta;
-    private TextInputLayout layDir, layPor, layPiso, layCiu, layPro, numero;
+    private TextInputEditText direccion, portal, piso, ciudad, provincia, numTarjeta, titular, cvv, fecha;
+    private TextInputLayout layDir, layPor, layPiso, layCiu, layPro, numero, layTitular, layCvv, layFecha;
     private ConexionFirebase conexion = new ConexionFirebase();
     private LinearLayout nuevaDireccion, crearDireccion;
-    private ConstraintLayout constraintLayout, constrainMetodoPago, constrainPago;
-    private CardView cardView;
+    private ConstraintLayout constrainMetodoPago;
     private Spinner spinner;
     private float totalCompra = 0;
     private boolean modoOscuro;
     private Window window;
     private String[] categorias = {"Elige tu tarjeta", "American Express", "Discover", "MasterCard", "VISA"};
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @SuppressLint("ResourceType")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_metodo_de_pago);
-        volver = findViewById(R.id.buttonVolver);
         titulo = findViewById(R.id.textViewTituloPago);
         constrainMetodoPago = findViewById(R.id.constrainMetodoPago);
         nombreTextView = findViewById(R.id.nombreApellidosPago);
         direccionRadio = findViewById(R.id.direccionPagoButton);
         nuevaDireccion = findViewById(R.id.layoutNuevaDireccion);
         crearDireccion = findViewById(R.id.crearDireccionPago);
-        cardView = findViewById(R.id.cardView);
-        constraintLayout = findViewById(R.id.constrainCard);
-        constrainPago = findViewById(R.id.constrainPago);
         grupo = findViewById(R.id.radioGroupPago);
         total = findViewById(R.id.textViewTotal);
         pago = findViewById(R.id.totalPago);
@@ -100,6 +92,12 @@ public class MetodoDePago extends AppCompatActivity {
         spinner = findViewById(R.id.spinner);
         numero = findViewById(R.id.textInputLayoutNumeroTarjeta);
         numTarjeta = findViewById(R.id.numeroTarjeta);
+        titular = findViewById(R.id.titularTarjeta);
+        layTitular = findViewById(R.id.textInputLayoutTitularTarjeta);
+        cvv = findViewById(R.id.cvvTarjeta);
+        layCvv = findViewById(R.id.textInputLayoutCvvTarjeta);
+        layFecha = findViewById(R.id.textInputLayoutFechaTarjeta);
+        fecha = findViewById(R.id.fechaTarjeta);
 
         spinner.setAdapter(new ArrayAdapter<>(MetodoDePago.this, android.R.layout.simple_spinner_dropdown_item, categorias));
 
@@ -118,7 +116,6 @@ public class MetodoDePago extends AppCompatActivity {
                 datosUsuario();
             }
         });
-        volver.setOnClickListener(v -> finish());
         ponerPrecio(pedidos);
 
         nuevaDireccion.setOnClickListener(v -> {
@@ -156,25 +153,111 @@ public class MetodoDePago extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (spinner.getSelectedItem().equals("Elige tu tarjeta")) {
-                    numTarjeta.setEnabled(false);
-                    numTarjeta.setText("");
-                    numero.setBoxBackgroundColor(getColor(R.color.gris_oscurito));
+                    activar(false, numTarjeta, numero);
+                    activar(false, titular, layTitular);
+                    activar(false, cvv, layCvv);
+                    activar(false, fecha, layFecha);
                 } else if (spinner.getSelectedItem().equals("American Express")) {
-                    numTarjeta.setEnabled(true);
-                    numTarjeta.setText("");
-                    numero.setBoxBackgroundColor(Color.WHITE);
+                    InputFilter[] filter = new InputFilter[1];              //Filtro para poner max lenght = 15
+                    filter[0] = new InputFilter.LengthFilter(15);
+                    numTarjeta.setFilters(filter);
+                    activar(true, numTarjeta, numero);
+                    activar(true, titular, layTitular);
+                    activar(true, cvv, layCvv);
+                    activar(true, fecha, layFecha);
                 }else{
-                    numTarjeta.setEnabled(true);
-                    numTarjeta.setText("");
-                    numero.setBoxBackgroundColor(Color.WHITE);
+                    InputFilter[] filter = new InputFilter[1];              //Filtro para poner max lenght = 16
+                    filter[0] = new InputFilter.LengthFilter(16);
+                    numTarjeta.setFilters(filter);activar(true, numTarjeta, numero);
+                    activar(true, titular, layTitular);
+                    activar(true, cvv, layCvv);
+                    activar(true, fecha, layFecha);
                 }
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
 
+        pagar.setOnClickListener(v -> {
+            if (coomprobarValores()){
+                comprobarTarjeta();
             }
         });
+    }
+
+    private void comprobarTarjeta(){
+        String numeroTarjeta = Objects.requireNonNull(numTarjeta.getText()).toString();
+        int primerNumero = Integer.parseInt(String.valueOf(numeroTarjeta.charAt(0)));
+        switch (spinner.getSelectedItem().toString()){
+            case "American Express":
+                if (primerNumero == 3){
+                    Toast.makeText(this, validacionLuhn(numeroTarjeta) + "", Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(this, "Número de tarjeta erróneo", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case "Discover":
+                if (primerNumero == 6){
+                    Toast.makeText(this, validacionLuhn(numeroTarjeta) + "", Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(this, "Número de tarjeta erróneo", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case "MasterCard":
+                if (primerNumero == 5){
+                    Toast.makeText(this, validacionLuhn(numeroTarjeta) + "", Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(this, "Número de tarjeta erróneo", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case "VISA":
+                if (primerNumero == 4){
+                    Toast.makeText(this, validacionLuhn(numeroTarjeta) + "", Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(this, "Número de tarjeta erróneo", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            default:
+                Toast.makeText(this, "Elige una tarjeta", Toast.LENGTH_SHORT).show();
+                break;
+        }
+    }
+
+    private boolean validacionLuhn(String numeroTarjeta){
+        int suma = 0;
+        boolean alternar = false;
+        for (int i = numeroTarjeta.length() - 1; i >= 0; i--) {
+            int digit = Character.getNumericValue(numeroTarjeta.charAt(i));
+
+            if (alternar) {
+                digit *= 2;
+                if (digit > 9) {
+                    digit = digit % 10 + 1;
+                }
+            }
+
+            suma += digit;
+            alternar = !alternar;
+        }
+
+        return suma % 10 == 0;
+
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void activar(boolean enabled, TextInputEditText editText, TextInputLayout textInputLayout){
+        if (enabled){
+            editText.setEnabled(true);
+            editText.setText("");
+            textInputLayout.setBoxBackgroundColor(Color.WHITE);
+            textInputLayout.setErrorEnabled(false);
+        }else{
+            editText.setEnabled(false);
+            editText.setText("");
+            textInputLayout.setBoxBackgroundColor(getColor(R.color.gris_oscurito));
+            textInputLayout.setErrorEnabled(false);
+        }
     }
 
     private void ponerPrecio(List<Pedido> pedidos) {
@@ -184,14 +267,11 @@ public class MetodoDePago extends AppCompatActivity {
         pago.setText(String.format("%s€", totalCompra));
     }
 
-
     @SuppressLint({"ResourceType", "UseCompatLoadingForDrawables"})
     private void comprobarModo(boolean modoOscuro){
         if (modoOscuro){
             window.setStatusBarColor(Color.BLACK);
             constrainMetodoPago.setBackgroundColor(Color.BLACK);
-            volver.setBackgroundColor(Color.BLACK);
-            volver.setImageDrawable(getDrawable(R.drawable.flecha_atras_night));
             nombreTextView.setTextColor(Color.WHITE);
             direccionRadio.setTextColor(Color.WHITE);
             direccionRadio.setButtonDrawable(R.drawable.radio_night);
@@ -283,5 +363,88 @@ public class MetodoDePago extends AppCompatActivity {
                 Objects.requireNonNull(direccion.getText()), Objects.requireNonNull(portal.getText()),
                 Objects.requireNonNull(piso.getText()), Objects.requireNonNull(provincia.getText()),
                 Objects.requireNonNull(ciudad.getText()));
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private boolean coomprobarValores(){
+        boolean correcto = true;
+        if (Objects.requireNonNull(numTarjeta.getText()).toString().equals("")){
+            numero.setError("Campo obligatorio");
+            correcto = false;
+        } else{
+            if (spinner.getSelectedItem().equals("American Express")){
+                if (numTarjeta.getText().length() < 15) {
+                    numero.setError("Número demasiado corto");
+                    correcto = false;
+                }else{
+                    numero.setErrorEnabled(false);
+                }
+            }else if (!spinner.getSelectedItem().equals("American Express")){
+                if (numTarjeta.getText().length() < 16) {
+                    numero.setError("Número demasiado corto");
+                    correcto = false;
+                }else{
+                    numero.setErrorEnabled(false);
+                }
+            }
+        }
+        if (Objects.requireNonNull(titular.getText()).toString().equals("")){
+            layTitular.setError("Campo obligatorio");
+            correcto = false;
+        }else if (titular.getText().toString().startsWith(" ") || titular.getText().toString().endsWith(" ")){
+            layTitular.setError("Empieza o acaba con espacios.");
+            correcto = false;
+        } else if (contieneNumeros(titular.getText().toString())){
+            layTitular.setError("No puede contener números");
+            correcto = false;
+        }else{
+            layTitular.setErrorEnabled(false);
+        }
+        if (cvv.getText().toString().length() < 3){
+            layCvv.setError("3 0 4 dígitos");
+            correcto = false;
+        }else{
+            layCvv.setErrorEnabled(false);
+        }
+        if (fecha.getText().toString().length() < 5){
+            layFecha.setError("Campo incorrecto");
+            correcto = false;
+        }else if (!fechaCorrecta(fecha.getText().toString())){
+            layFecha.setError("Fecha no válida");
+            correcto = false;
+        }else{
+            layFecha.setErrorEnabled(false);
+        }
+        return correcto;
+    }
+
+    private boolean contieneNumeros(String titular){
+        Pattern pattern = Pattern.compile(".*\\d.*");
+        Matcher matcher = pattern.matcher(titular);
+        return matcher.matches();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private boolean fechaCorrecta(String fecha){
+        String[] partes;
+        if (fecha.contains("/")) {
+            partes = fecha.split("/");
+        }else if (fecha.contains("-")) {
+            partes = fecha.split("-");
+        }else {
+            return false;
+        }
+        int mes = Integer.parseInt(partes[0].trim());
+        int anio = Integer.parseInt(partes[1].trim());
+        LocalDate now = LocalDate.now();
+        if (mes < 1 || mes > 12) {
+            return false;
+        } else if (anio < (now.getYear() - 2000)) {
+            return false;
+        } else if (anio == (now.getYear() - 2000) && mes < now.getMonthValue()) {
+            return false;
+        } else {
+            return true;
+        }
     }
 }

@@ -22,18 +22,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageButton
-        android:id="@+id/buttonVolver"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="15dp"
-        android:background="@color/white"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:contentDescription="Volver"
-        app:srcCompat="@drawable/flecha_atras" />
-
     <View
         android:id="@+id/divider2"
         android:layout_width="match_parent"
@@ -50,7 +38,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="50dp"
-        android:layout_marginBottom="125dp"
+        android:layout_marginBottom="130dp"
         app:layout_constraintBottom_toTopOf="@id/divider3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -194,8 +182,8 @@
                         android:id="@+id/textInputLayoutCiudadPago"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
                         android:layout_marginStart="5dp"
+                        android:layout_weight="1"
                         android:hint="@string/ciudad"
                         app:boxStrokeColor="@color/azul_oscuro"
                         app:hintTextColor="@color/azul_oscuro">
@@ -218,8 +206,8 @@
                         android:id="@+id/textInputLayoutPisoPago"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="2"
                         android:layout_marginEnd="5dp"
+                        android:layout_weight="2"
                         android:hint="@string/piso"
                         app:boxStrokeColor="@color/azul_oscuro"
                         app:helperText="@string/ejemplo_piso"
@@ -257,31 +245,33 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp">
 
                     <Button
                         android:id="@+id/buttonContinuarPago"
                         android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="5dp"
+                        android:layout_weight="1"
                         android:background="@drawable/fondo_registros"
                         android:fontFamily="@font/industrial_light"
-                        android:textStyle="bold"
-                        android:layout_marginEnd="5dp"
+                        android:text="@string/continuar"
                         android:textSize="20dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/continuar" />
+                        android:textStyle="bold" />
 
                     <Button
                         android:id="@+id/buttonCancelarPago"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="5dp"
+                        android:layout_weight="1"
                         android:background="@drawable/fondo_registros"
                         android:fontFamily="@font/industrial_light"
-                        android:textStyle="bold"
+                        android:text="@string/cancelar"
                         android:textSize="20dp"
-                        android:layout_weight="1"
-                        android:text="@string/cancelar" />
+                        android:textStyle="bold" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -351,7 +341,7 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/spinner">
 
-                        <EditText
+                        <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/numeroTarjeta"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -394,16 +384,17 @@
                         android:layout_width="150dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="20dp"
-                        android:layout_marginTop="20dp"
+                        android:layout_marginTop="10dp"
                         android:layout_marginBottom="10dp"
                         android:hint="CVV"
                         app:boxBackgroundColor="@color/white"
-                        app:boxStrokeColor="@color/morado_muy_claro"
                         app:boxBackgroundMode="outline"
                         app:boxCornerRadiusBottomEnd="8dp"
                         app:boxCornerRadiusBottomStart="8dp"
                         app:boxCornerRadiusTopEnd="8dp"
                         app:boxCornerRadiusTopStart="8dp"
+                        app:boxStrokeColor="@color/morado_muy_claro"
+                        app:helperText="3 o 4 digitos"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/textInputLayoutTitularTarjeta">
@@ -413,9 +404,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/thinoobold"
-                            android:maxLength="4"
                             android:gravity="center"
-                            android:inputType="number" />
+                            android:inputType="number"
+                            android:maxLength="4" />
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
@@ -423,17 +414,18 @@
                         android:layout_width="150dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="20dp"
-                        android:layout_marginTop="20dp"
+                        android:layout_marginTop="10dp"
                         android:layout_marginEnd="20dp"
                         android:layout_marginBottom="10dp"
                         android:hint="Fecha"
                         app:boxBackgroundColor="@color/white"
-                        app:boxStrokeColor="@color/morado_muy_claro"
                         app:boxBackgroundMode="outline"
                         app:boxCornerRadiusBottomEnd="8dp"
                         app:boxCornerRadiusBottomStart="8dp"
                         app:boxCornerRadiusTopEnd="8dp"
                         app:boxCornerRadiusTopStart="8dp"
+                        app:boxStrokeColor="@color/morado_muy_claro"
+                        app:helperText="Ej: 06/23"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/textInputLayoutCvvTarjeta"
@@ -445,8 +437,8 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/thinoobold"
                             android:gravity="center"
-                            android:maxLength="7"
-                            android:inputType="date" />
+                            android:inputType="date"
+                            android:maxLength="5" />
                     </com.google.android.material.textfield.TextInputLayout>
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>

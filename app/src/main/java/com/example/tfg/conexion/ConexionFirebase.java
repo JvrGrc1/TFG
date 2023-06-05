@@ -464,6 +464,29 @@ public class ConexionFirebase {
         });
     }
 
+    public void updatePedido(Map pedido, Context context){
+        db.collection("pedidos").get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()){
+                for (QueryDocumentSnapshot documents : task.getResult()) {
+                    if (documents.getString("comprador").equals(pedido.get("comprador")) && documents.getBoolean("pagado").equals(false) && documents.getString("prenda").equals(pedido.get("prenda")) && documents.getString("talla").equals(pedido.get("talla"))){
+                        db.collection("pedidos").document(documents.getId()).update(pedido).addOnCompleteListener(task1 -> {
+                            if (task1.isSuccessful()) {
+                                Toast.makeText(context, "Modificado correctamente", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(context, "Algo ha ido mal.", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                        break;
+                    }else {
+                        Toast.makeText(context, "Documento no encontrado", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }else{
+                Toast.makeText(context, "Task mala", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     public void sendVerfificacion(String correo){
         user.sendEmailVerification();
     }
