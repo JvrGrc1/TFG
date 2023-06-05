@@ -106,7 +106,7 @@ public class TiendaFragment extends Fragment {
             });
         });
 
-        boolean modoOscuro = getActivity().getSharedPreferences("Ajustes", Context.MODE_PRIVATE)
+        boolean modoOscuro = requireActivity().getSharedPreferences("Ajustes", Context.MODE_PRIVATE)
                 .getBoolean("modoOscuro", false);
 
         if (modoOscuro) {

@@ -36,7 +36,9 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -181,39 +183,39 @@ public class MetodoDePago extends AppCompatActivity {
 
         pagar.setOnClickListener(v -> {
             if (coomprobarValores()){
-                comprobarTarjeta();
+                comprobarTarjeta(pedidos);
             }
         });
     }
 
-    private void comprobarTarjeta(){
+    private void comprobarTarjeta(List<Pedido> pedidos){
         String numeroTarjeta = Objects.requireNonNull(numTarjeta.getText()).toString();
         int primerNumero = Integer.parseInt(String.valueOf(numeroTarjeta.charAt(0)));
         switch (spinner.getSelectedItem().toString()){
             case "American Express":
-                if (primerNumero == 3){
-                    Toast.makeText(this, validacionLuhn(numeroTarjeta) + "", Toast.LENGTH_SHORT).show();
+                if (primerNumero == 3 && validacionLuhn(numeroTarjeta)){
+                    pagarPedido(pedidos);
                 }else{
                     Toast.makeText(this, "Número de tarjeta erróneo", Toast.LENGTH_SHORT).show();
                 }
                 break;
             case "Discover":
-                if (primerNumero == 6){
-                    Toast.makeText(this, validacionLuhn(numeroTarjeta) + "", Toast.LENGTH_SHORT).show();
+                if (primerNumero == 6 && validacionLuhn(numeroTarjeta)){
+                    pagarPedido(pedidos);
                 }else{
                     Toast.makeText(this, "Número de tarjeta erróneo", Toast.LENGTH_SHORT).show();
                 }
                 break;
             case "MasterCard":
-                if (primerNumero == 5){
-                    Toast.makeText(this, validacionLuhn(numeroTarjeta) + "", Toast.LENGTH_SHORT).show();
+                if (primerNumero == 5 && validacionLuhn(numeroTarjeta)){
+                    pagarPedido(pedidos);
                 }else{
                     Toast.makeText(this, "Número de tarjeta erróneo", Toast.LENGTH_SHORT).show();
                 }
                 break;
             case "VISA":
-                if (primerNumero == 4){
-                    Toast.makeText(this, validacionLuhn(numeroTarjeta) + "", Toast.LENGTH_SHORT).show();
+                if (primerNumero == 4 && validacionLuhn(numeroTarjeta)){
+                    pagarPedido(pedidos);
                 }else{
                     Toast.makeText(this, "Número de tarjeta erróneo", Toast.LENGTH_SHORT).show();
                 }
@@ -221,6 +223,19 @@ public class MetodoDePago extends AppCompatActivity {
             default:
                 Toast.makeText(this, "Elige una tarjeta", Toast.LENGTH_SHORT).show();
                 break;
+        }
+    }
+
+    private void pagarPedido(List<Pedido> pedidos){
+        for (Pedido pedido : pedidos) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("comprador", conexion.obtenerUser().getEmail());
+            map.put("prenda", pedido.getPrenda());
+            map.put("talla", pedido.getTalla());
+            map.put("cantidad", pedido.getCantidad());
+            map.put("precioUnidad", pedido.getPrecioUnidad());
+            map.put("pagado", true);
+            conexion.updatePedido(map, this);
         }
     }
 

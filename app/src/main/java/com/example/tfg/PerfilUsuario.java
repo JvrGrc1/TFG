@@ -187,12 +187,14 @@ public class PerfilUsuario extends AppCompatActivity {
 
     private ActivityResultLauncher<Void> tomarFoto = registerForActivityResult(
             new ActivityResultContracts.TakePicturePreview(), result -> {
-                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-                imagen.setImageBitmap(result);
-                result.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-                String path = MediaStore.Images.Media.insertImage(this.getContentResolver(), result, correo.toString(), null);
-                nuevaUri = Uri.parse(path);
-                guardar.setVisibility(View.VISIBLE);
+                if(result != null) {
+                    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                    imagen.setImageBitmap(result);
+                    result.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+                    String path = MediaStore.Images.Media.insertImage(this.getContentResolver(), result, correo.toString(), null);
+                    nuevaUri = Uri.parse(path);
+                    guardar.setVisibility(View.VISIBLE);
+                }
             }
     );
 
@@ -208,8 +210,7 @@ public class PerfilUsuario extends AppCompatActivity {
     );
 
     private void subirImagen(Uri imagenUri){
-        String[] partes = conexion.obtenerUser().getEmail().split("@");
-        StorageReference ref = storageRef.child("perfilUsuario/" + partes[0] + ".jpg");
+        StorageReference ref = storageRef.child("perfilUsuario/" + conexion.obtenerUser().getEmail() + ".jpg");
         UploadTask uploadTask = ref.putFile(imagenUri);
         uploadTask.continueWithTask(contTask -> {
             if (!contTask.isSuccessful()) {
@@ -374,7 +375,7 @@ public class PerfilUsuario extends AppCompatActivity {
         }
         if (nuevaUri != null){
             subirImagen(nuevaUri);
-            usuario.setImagen("gs://balonmano-f213a.appspot.com/perfilUsuario/" + conexion.obtenerUser().getEmail().split("@")[0] + ".jpg");
+            usuario.setImagen("gs://balonmano-f213a.appspot.com/perfilUsuario/" + conexion.obtenerUser().getEmail() + ".jpg");
         }
         if (Objects.requireNonNull(tlf.getText()).toString().isEmpty()){
             usuario.setTlf("");

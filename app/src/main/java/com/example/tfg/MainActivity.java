@@ -107,25 +107,29 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.partidos:
                         animSet.start();
                         item.setIcon(R.drawable.partidos);
-                        Bundle b = new Bundle();
-                        if (!j.isEmpty()) {b.putSerializable("lista", (Serializable) j);}
+                        Bundle bundlePartidos = new Bundle();
+                        if (!j.isEmpty()) {bundlePartidos.putSerializable("lista", (Serializable) j);}
                         Fragment partidos = new PartidosFragment();
-                        partidos.setArguments(b);
+                        partidos.setArguments(bundlePartidos);
                         cambiarFragment(partidos);
                         break;
                     case R.id.tienda:
                         animSet.start();
                         item.setIcon(R.drawable.tienda);
-                        Bundle bt = new Bundle();
-                        if (!j.isEmpty()) {bt.putSerializable("ropa", (Serializable) prendas);}
+                        Bundle bundleTienda = new Bundle();
+                        if (!prendas.isEmpty()) {bundleTienda.putSerializable("ropa", (Serializable) prendas);}
                         Fragment tienda = new TiendaFragment();
-                        tienda.setArguments(bt);
+                        tienda.setArguments(bundleTienda);
                         cambiarFragment(tienda);
                         break;
                     case R.id.estadisticas:
                         animSet.start();
                         item.setIcon(R.drawable.estadisticas);
-                        cambiarFragment(new EstadisticasFragment());
+                        Bundle bundleEstadisticas = new Bundle();
+                        if (!j.isEmpty()) {bundleEstadisticas.putSerializable("lista", (Serializable) j);}
+                        Fragment estadisticas = new EstadisticasFragment();
+                        estadisticas.setArguments(bundleEstadisticas);
+                        cambiarFragment(estadisticas);
                         break;
                 }
             }

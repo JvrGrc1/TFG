@@ -78,20 +78,6 @@ public class PartidosFragment extends Fragment {
             recycler.setAdapter(adapter);
         }
 
-        /*recycler.addOnItemTouchListener(new RecyclerItemClickListener(getContext(), recycler, new RecyclerItemClickListener.OnItemClickListener() {
-            @Override
-            public void onItemClick(View v, int posicion) {
-                Intent intent = new Intent(v.getContext(), DetallesJornada.class);
-                intent.putExtra("partidos", (Serializable) adapter.getDatos().get(posicion).getPartidos());
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                requireActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-            }
-
-            @Override
-            public void onLongItemClick(View v, int posicion) {}
-        }));*/
-
         buscar.setOnClickListener(v -> {
             if (temporadas.getVisibility() == View.VISIBLE) {
                 adapter = new JornadasAdapter(getContext(), listaSegunSpinner(jugadores));
@@ -122,7 +108,7 @@ public class PartidosFragment extends Fragment {
             });
         });
 
-        boolean modoOscuro = getActivity().getSharedPreferences("Ajustes", Context.MODE_PRIVATE)
+        boolean modoOscuro = requireActivity().getSharedPreferences("Ajustes", Context.MODE_PRIVATE)
                 .getBoolean("modoOscuro", false);
 
         if (modoOscuro) {

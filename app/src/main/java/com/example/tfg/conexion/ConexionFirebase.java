@@ -12,9 +12,11 @@ import androidx.annotation.NonNull;
 
 import com.example.tfg.Login;
 import com.example.tfg.PerfilUsuario;
+import com.example.tfg.entidad.Jugador;
 import com.example.tfg.entidad.Partido;
 import com.example.tfg.entidad.Pedido;
 import com.example.tfg.entidad.Prenda;
+import com.example.tfg.entidad.Temporada;
 import com.example.tfg.entidad.Usuario;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -34,6 +36,7 @@ import com.google.firebase.storage.StorageReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
@@ -42,7 +45,7 @@ public class ConexionFirebase {
     private final FirebaseStorage storage = FirebaseStorage.getInstance();
     private final FirebaseAuth auth = FirebaseAuth.getInstance();
     private final FirebaseUser user = auth.getCurrentUser();
-    final long ONE_MEGABYTE = 5 * 1024 * 1024;
+    final long ONE_MEGABYTE = 100 * 1024 * 1024;
 
 
     public Task<List<Partido>> obtenerPartidos() {
@@ -77,7 +80,6 @@ public class ConexionFirebase {
         });
         return taskCompletionSource.getTask();
     }
-
     public Task<List<Prenda>> obtenerTienda(){
         TaskCompletionSource<List<Prenda>> taskCompletionSource = new TaskCompletionSource<>();
         db.collection("prendas").get().addOnCompleteListener(task -> {
@@ -96,7 +98,47 @@ public class ConexionFirebase {
         });
         return taskCompletionSource.getTask();
     }
+    public Task<List<Jugador>> obtenerJugadores(){
+        TaskCompletionSource<List<Jugador>> taskCompletionSource = new TaskCompletionSource<>();
+        db.collection("jugadores").get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()){
+                QuerySnapshot document  = task.getResult();
+                List<DocumentSnapshot> documents = document.getDocuments();
+                List<Jugador> jugadores = new ArrayList<>();
+                for (DocumentSnapshot snapsot : documents){
+                    Jugador jugador = new Jugador(snapsot.getString("nombre"), snapsot.getString("apellido1"), snapsot.getString("apellido2"), snapsot.getString("manoDominante"), listaTemporadas(snapsot.get("temporada")));
+                    jugadores.add(jugador);
+                }
+                taskCompletionSource.setResult(jugadores);
+            }else{
+                taskCompletionSource.setException(Objects.requireNonNull(task.getException()));
+            }
+        });
+        return taskCompletionSource.getTask();
+    }
+    private List<Temporada> listaTemporadas(Object mapa){
+        Map<String, Object> map = (Map<String, Object>) mapa;
+        List<Temporada> temporadas = new ArrayList<>();
+        for (Object object : map.values()){
+            Map<String,Object> mapaFinal = (Map<String, Object>) object;
+            String anio = key(map, object);
+            if (anio != null) {
+                Temporada temporada = new Temporada(anio, (Long) mapaFinal.get("2minutos"), (Long) mapaFinal.get("amarillas"), (Long) mapaFinal.get("rojas"), (Long) mapaFinal.get("paradas"), (Long) mapaFinal.get("disparos") , (String) mapaFinal.get("posicion"), (Long) mapaFinal.get("dorsal"), (Long) mapaFinal.get("goles"), (String) mapaFinal.get("equipo"));
+                temporadas.add(temporada);
+            }
+        }
+        return temporadas;
+    }
 
+    private String key(Map<String, Object> map, Object object) {
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            if (entry.getValue().equals(object)) {
+                return entry.getKey();
+
+            }
+        }
+        return null;
+    }
     public Task<List<Pedido>> obtenerPedidos(String usuario){
         TaskCompletionSource<List<Pedido>> taskCompletionSource = new TaskCompletionSource<>();
         db.collection("pedidos").get().addOnCompleteListener(task -> {
@@ -117,7 +159,6 @@ public class ConexionFirebase {
         });
         return taskCompletionSource.getTask();
     }
-
     public Task<Usuario> datosUsuario(String email){
         TaskCompletionSource<Usuario> taskCompletionSource = new TaskCompletionSource<>();
         db.collection("usuarios").get().addOnCompleteListener(task -> {
@@ -144,55 +185,49 @@ public class ConexionFirebase {
         });
         return taskCompletionSource.getTask();
     }
-
     public FirebaseUser obtenerUser(){
         return auth.getCurrentUser();
     }
-
     public void subirPedido(Context contexto, Map<String, Object> pedido) {
         Task<List<Pedido>> pedidos = obtenerPedidos(user.getEmail());
-        pedidos.addOnCompleteListener(new OnCompleteListener<List<Pedido>>() {
-            @Override
-            public void onComplete(@NonNull Task<List<Pedido>> task) {
-                if (task.isSuccessful()){
-                    List<Pedido> pedidos1 = task.getResult();
-                    if (pedidos1.isEmpty()){
-                        db.collection("pedidos").add(pedido).addOnCompleteListener(task1 -> {
-                            if (task1.isSuccessful()){
-                                Toast.makeText(contexto, "Se ha añadido el pedido correctamente.", Toast.LENGTH_SHORT).show();
-                            }else{
-                                Toast.makeText(contexto, "No se ha podido añadir el pedido. Intentelo de nuevo.", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                    }else{
-                        boolean repetido = false;
-                        long cantidad = 0;
-                        for (Pedido p : pedidos1){
-                            if (!p.isPagado() && p.getPrenda().equals(pedido.get("prenda")) && comprobarTallas(p.getTalla(), (String) pedido.get("talla"))){
-                                repetido = true;
-                                cantidad = p.getCantidad();
-                                borrarPedido(contexto, p);
-                            }
+        pedidos.addOnCompleteListener(task -> {
+            if (task.isSuccessful()){
+                List<Pedido> pedidos1 = task.getResult();
+                if (pedidos1.isEmpty()){
+                    db.collection("pedidos").add(pedido).addOnCompleteListener(task1 -> {
+                        if (task1.isSuccessful()){
+                            Toast.makeText(contexto, "Se ha añadido el pedido correctamente.", Toast.LENGTH_SHORT).show();
+                        }else{
+                            Toast.makeText(contexto, "No se ha podido añadir el pedido. Intentelo de nuevo.", Toast.LENGTH_SHORT).show();
                         }
-                        if (repetido){
-                            cantidad = cantidad + (long )pedido.get("cantidad");
-                            pedido.put("cantidad", cantidad);
-                        }
-                        db.collection("pedidos").add(pedido).addOnCompleteListener(task1 -> {
-                            if (task1.isSuccessful()){
-                                Toast.makeText(contexto, "Se ha añadido el pedido correctamente.", Toast.LENGTH_SHORT).show();
-                            }else{
-                                Toast.makeText(contexto, "No se ha podido añadir el pedido. Intentelo de nuevo.", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                    }
+                    });
                 }else{
-                    Toast.makeText(contexto, "Error al obtener los pedidos del usuario.", Toast.LENGTH_SHORT).show();
+                    boolean repetido = false;
+                    long cantidad = 0;
+                    for (Pedido p : pedidos1){
+                        if (!p.isPagado() && p.getPrenda().equals(pedido.get("prenda")) && comprobarTallas(p.getTalla(), (String) pedido.get("talla"))){
+                            repetido = true;
+                            cantidad = p.getCantidad();
+                            borrarPedido(contexto, p);
+                        }
+                    }
+                    if (repetido){
+                        cantidad = cantidad + (long )pedido.get("cantidad");
+                        pedido.put("cantidad", cantidad);
+                    }
+                    db.collection("pedidos").add(pedido).addOnCompleteListener(task1 -> {
+                        if (task1.isSuccessful()){
+                            Toast.makeText(contexto, "Se ha añadido el pedido correctamente.", Toast.LENGTH_SHORT).show();
+                        }else{
+                            Toast.makeText(contexto, "No se ha podido añadir el pedido. Intentelo de nuevo.", Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 }
+            }else{
+                Toast.makeText(contexto, "Error al obtener los pedidos del usuario.", Toast.LENGTH_SHORT).show();
             }
         });
     }
-
     private boolean comprobarTallas(String p, String pedido){
         if (p == null && pedido == null){return true;}
         else if (p == null && pedido != null){return false;}
@@ -200,7 +235,6 @@ public class ConexionFirebase {
         else if (p.equals(pedido)){return true;}
         else {return false;}
     }
-
     public void cargarImagen(Context contexto, ImageView holder, ImageView img, String url){
         StorageReference gsReference;
         if (url == null || url.isEmpty()){
@@ -214,7 +248,6 @@ public class ConexionFirebase {
             if (img != null){img.setImageBitmap(bitmap);}
         }).addOnFailureListener(exception -> Toast.makeText(contexto, "Error al descargar la imagen de la prenda", Toast.LENGTH_SHORT).show());
     }
-
     private String randomFoto(){
         int numero = (int) (Math.random() * 6) + 1;
         switch (numero) {
@@ -233,7 +266,6 @@ public class ConexionFirebase {
         }
         return "corriendo.png";
     }
-
     public void imagenPedido(Context contexto, ImageView holder, String nombrePrenda){
         Task<String> taskUrl = buscarImagenPorPrenda(nombrePrenda);
         taskUrl.addOnCompleteListener(task1 -> {
@@ -255,7 +287,6 @@ public class ConexionFirebase {
             }
         });
     }
-
     private Task<String> buscarImagenPorPrenda(String nombrePrenda) {
         TaskCompletionSource<String> taskCompletionSource = new TaskCompletionSource<>();
         db.collection("prendas").get().addOnCompleteListener(task -> {
@@ -276,7 +307,6 @@ public class ConexionFirebase {
         });
         return taskCompletionSource.getTask();
     }
-
     public void borrarPedido(Context contexto, Pedido prenda){
         db.collection("pedidos").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()){
@@ -301,7 +331,6 @@ public class ConexionFirebase {
             }
         });
     }
-
     public Task<Boolean> correoNoRegistrado(String correo) {
         TaskCompletionSource<Boolean> taskCompletionSource = new TaskCompletionSource<>();
         auth.fetchSignInMethodsForEmail(correo).addOnCompleteListener(task -> {
@@ -318,7 +347,6 @@ public class ConexionFirebase {
         });
         return taskCompletionSource.getTask();
     }
-
     public Task<List<String>> equiposFromTemporada(String temporada) {
         TaskCompletionSource<List<String>> taskCompletionSource = new TaskCompletionSource<>();
         db.collection("temporadas").document(temporada).get().addOnCompleteListener(task -> {
@@ -339,11 +367,9 @@ public class ConexionFirebase {
     public DocumentReference getDocumento(String anios, String division, String id){
         return db.collection("temporadas").document(anios).collection(division).document(id);
     }
-
     public void signIn(String correo, String psswrd, Login login){
         auth.signInWithEmailAndPassword(correo, psswrd).addOnCompleteListener(task -> login.iniciarMainActivity(task));
     }
-
     public void signOut(){auth.signOut();}
     public Task<Boolean> borrarCuenta(String correo, Context context){
         TaskCompletionSource<Boolean> taskCompletionSource = new TaskCompletionSource<>();
@@ -375,7 +401,6 @@ public class ConexionFirebase {
         });
         return taskCompletionSource.getTask();
     }
-
     public void rellenarSpinnerTemporadas(Context context, Spinner temporadas, Spinner division, Spinner jornada){
         db.collection("temporadas").get().addOnCompleteListener(task -> {
             List<String> listaAnios = new ArrayList<>();
@@ -393,7 +418,6 @@ public class ConexionFirebase {
             jornada.setEnabled(false);
         });
     }
-
     public void rellenarJornadas(Context context, Spinner temporadas, Spinner division, Spinner jornada){
         db.collection("temporadas").document(temporadas.getSelectedItem().toString()).collection(division.getSelectedItem().toString()).get().addOnCompleteListener(task -> {
             List<Integer> listaJornadas = new ArrayList<>();
@@ -409,7 +433,6 @@ public class ConexionFirebase {
             }
         });
     }
-
     public Task<Map<String, Object>> actualizarDatos(Spinner temporadas, Spinner division, Spinner jornada){
         TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
         db.collection("temporadas").document(temporadas.getSelectedItem().toString()).collection(division.getSelectedItem().toString()).get().addOnCompleteListener(task -> {
@@ -434,7 +457,6 @@ public class ConexionFirebase {
         });
         return taskCompletionSource.getTask();
     }
-
     public void modificarUser(Usuario usuario, PerfilUsuario perfilUsuario) {
         String correo = obtenerUser().getEmail();
         Map<String, Object> user = new HashMap<>();
@@ -463,7 +485,6 @@ public class ConexionFirebase {
             }
         });
     }
-
     public void updatePedido(Map pedido, Context context){
         db.collection("pedidos").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()){
@@ -477,8 +498,6 @@ public class ConexionFirebase {
                             }
                         });
                         break;
-                    }else {
-                        Toast.makeText(context, "Documento no encontrado", Toast.LENGTH_SHORT).show();
                     }
                 }
             }else{
@@ -486,7 +505,6 @@ public class ConexionFirebase {
             }
         });
     }
-
     public void sendVerfificacion(String correo){
         user.sendEmailVerification();
     }

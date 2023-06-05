@@ -1,5 +1,7 @@
 package com.example.tfg.entidad;
 
+import android.annotation.SuppressLint;
+
 import androidx.annotation.NonNull;
 
 import java.io.Serializable;
@@ -37,6 +39,7 @@ public class Jornada implements Serializable {
         this.partidos = partidos;
     }
 
+    @SuppressLint("DefaultLocale")
     @NonNull
     @Override
     public String toString() {
