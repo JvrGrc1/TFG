@@ -1,6 +1,7 @@
 package com.example.tfg;
 
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
@@ -11,9 +12,12 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Switch;
@@ -24,20 +28,24 @@ import com.example.tfg.conexion.ConexionFirebase;
 import com.example.tfg.entidad.Partido;
 import com.example.tfg.entidad.Pedido;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 @SuppressLint("UseSwitchCompatOrMaterialCode")
 public class Ajustes extends AppCompatActivity {
-
-    private TextView borrar, cambiar;
     private ConexionFirebase conexion = new ConexionFirebase();
     private List<Partido> j = new ArrayList<>();
     private List<Pedido> prendas = new ArrayList<>();
     private ConstraintLayout constraintLayout;
-    private TextView titulo, oscuro, correo, psswrd, historia, redes, patrocinadores, from, ajustes, tema;
-    private LinearLayout user;
+    private TextView titulo, oscuro, correo, psswrd, historia, redes, patrocinadores, from, ajustes, tema, borrar, cambiar;;
+    private LinearLayout user, line, nuevoEmail;
+    private EditText email;
     private ImageView jvr;
     private View divider;
     private Switch modo;
@@ -66,7 +74,9 @@ public class Ajustes extends AppCompatActivity {
         ajustes = findViewById(R.id.textViewAjustes);
         user = findViewById(R.id.linearUser);
         tema = findViewById(R.id.textViewTema);
-
+        line = findViewById(R.id.line1);
+        nuevoEmail = findViewById(R.id.nuevoEmail);
+        email = findViewById(R.id.correoNuevo);
 
         sharedPreferences = getSharedPreferences("Ajustes", Context.MODE_PRIVATE);
         window = getWindow();
@@ -76,12 +86,7 @@ public class Ajustes extends AppCompatActivity {
         prendas = (List<Pedido>) intent.getSerializableExtra("ropa");
 
         if (conexion.obtenerUser() == null) {
-            borrar.setVisibility(View.GONE);
-            cambiar.setVisibility(View.GONE);
-            ajustes.setVisibility(View.GONE);
-            user.setVisibility(View.GONE);
-            divider.setVisibility(View.GONE);
-            //FALTA COLOCAR BIEN: TEMAS
+            line.setVisibility(View.GONE);
         }
 
         comprobarModo();
@@ -132,11 +137,107 @@ public class Ajustes extends AppCompatActivity {
     }
 
     private void cambiarCorreo(){
-        //TODO
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View dialogView = inflater.inflate(R.layout.dialog_correo, null);
+        builder.setView(dialogView);
+
+        TextInputEditText correoChange = dialogView.findViewById(R.id.correoChange);
+        TextInputLayout textInputLayoutCorreoChange = dialogView.findViewById(R.id.textInputLayoutCorreoChange);
+        Button contiunar = dialogView.findViewById(R.id.buttonContinuar);
+        Button cancelar = dialogView.findViewById(R.id.buttonCancelar);
+
+        correoChange.setEnabled(true);
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
+        contiunar.setOnClickListener(v -> {
+            if (correoValido(correoChange.getText().toString(), textInputLayoutCorreoChange)){
+                Task<Boolean> cambiado = conexion.cambiarCorreo(correoChange.getText().toString());
+                cambiado.addOnCompleteListener(task -> {
+                    if (task.isSuccessful()){
+                        Toast.makeText(this, "Correo modificado", Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
+                    }else {
+                        Toast.makeText(this, "Error al modificar el correo", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
+        cancelar.setOnClickListener(v -> dialog.dismiss());
+    }
+    private boolean correoValido(String correo, TextInputLayout textInputLayout){
+
+        if (correo != null && !correo.equals("")){
+            if (correo.contains(" ")) {
+                textInputLayout.setError("El correo no puede contener espacios.");
+                return false;
+            }else{
+                String formatoCorreo = "^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$"; //Expresión regular para validar que un correo está bien formado.
+                Pattern pattern = Pattern.compile(formatoCorreo);
+                Matcher matcher = pattern.matcher(correo);
+                if (matcher.matches()){
+                    textInputLayout.setErrorEnabled(false);
+                    return true;
+                }else{
+                    textInputLayout.setError("El correo está mal escrito.");
+                    return false;
+                }
+            }
+        }else {
+            textInputLayout.setError("El correo no puede estar vacío.");
+            return false;
+        }
     }
 
     private void cambiarPsswrd(){
-        //TODO
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View dialogView = inflater.inflate(R.layout.dialog_psswrd, null);
+        builder.setView(dialogView);
+
+        TextInputEditText psswrdChange = dialogView.findViewById(R.id.psswrdChange);
+        TextInputLayout textInputLayoutCorreoChange = dialogView.findViewById(R.id.textInputLayoutPsswrdChange);
+        Button contiunar = dialogView.findViewById(R.id.buttonContinuar);
+        Button cancelar = dialogView.findViewById(R.id.buttonCancelar);
+
+        psswrdChange.setEnabled(true);
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
+        contiunar.setOnClickListener(v -> {
+            if (psswrdValida(psswrdChange.getText().toString(), textInputLayoutCorreoChange)){
+                Task<Boolean> cambiado = conexion.cambiarPsswrd(psswrdChange.getText().toString());
+                cambiado.addOnCompleteListener(task -> {
+                    if (task.isSuccessful()){
+                        Toast.makeText(this, "Contraseña modificada", Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
+                    }else {
+                        Toast.makeText(this, "Error al modificar la contraseña", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
+        cancelar.setOnClickListener(v -> dialog.dismiss());
+    }
+
+    private boolean psswrdValida(String psswrd, TextInputLayout textInputLayout){
+        if (psswrd != null && !psswrd.equals("")){
+            if (psswrd.contains(" ")) {
+                textInputLayout.setError("La contraseña no puede contener espacios.");
+                return false;
+            }else if (psswrd.length() < 6){
+                textInputLayout.setError("La contraseña debe contener mínimo 6 caracteres.");
+                return false;
+            }
+            textInputLayout.setErrorEnabled(false);
+            return true;
+        }else{
+            textInputLayout.setError("La contraseña no puede estar vacía.");
+            return false;
+        }
     }
 
     private void verHistoria(){
@@ -148,7 +249,20 @@ public class Ajustes extends AppCompatActivity {
     }
 
     private void verRedes(){
-        //TODO
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View dialogView = inflater.inflate(R.layout.dialog_redes, null);
+        builder.setView(dialogView);
+
+        Button ig = dialogView.findViewById(R.id.buttonIg);
+        Button yt = dialogView.findViewById(R.id.buttonYT);
+        Button twitter = dialogView.findViewById(R.id.buttonTwitter);
+
+        //TODO: Funcionalidad de los botones (En chatGPT hay una posible solucion)
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     private void cambiarCuenta() {

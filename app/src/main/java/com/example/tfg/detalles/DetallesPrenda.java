@@ -111,8 +111,6 @@ public class DetallesPrenda extends AppCompatActivity {
             s.setTextColor(Color.WHITE);
             s.setButtonDrawable(R.drawable.radio_night);
             nombrePrenda.setTextColor(Color.WHITE);
-        }else {
-
         }
 
 

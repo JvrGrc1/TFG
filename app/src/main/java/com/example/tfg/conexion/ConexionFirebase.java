@@ -129,7 +129,6 @@ public class ConexionFirebase {
         }
         return temporadas;
     }
-
     private String key(Map<String, Object> map, Object object) {
         for (Map.Entry<String, Object> entry : map.entrySet()) {
             if (entry.getValue().equals(object)) {
@@ -507,5 +506,55 @@ public class ConexionFirebase {
     }
     public void sendVerfificacion(String correo){
         user.sendEmailVerification();
+    }
+    public Task<Boolean> cambiarCorreo(String correo){
+        TaskCompletionSource taskCompletionSource = new TaskCompletionSource();
+        String cNow = user.getEmail();
+        user.updateEmail(correo).addOnCompleteListener(task -> {
+            if (task.isSuccessful()){
+                db.collection("usuarios").get().addOnCompleteListener(task1 -> {
+                    if (task1.isSuccessful()){
+                        QuerySnapshot snapshots = task1.getResult();
+                        for (DocumentSnapshot ds : snapshots){
+                            if (ds.getString("correo").equals(cNow)){
+                                Map<String, Object> user1 = new HashMap<>();
+                                user1.put("nombre", ds.getString("nombre"));
+                                user1.put("apellido1", ds.getString("apellido1"));
+                                user1.put("apellido2", ds.getString("apellido2"));
+                                user1.put("tlf", ds.getString("tlf"));
+                                user1.put("correo", correo);
+                                user1.put("imagen", ds.getString("imagen"));
+                                user1.put("rol", ds.getString("rol"));
+                                user1.put("direccion", ds.getString("direccion"));
+                                db.collection("usuarios").document(ds.getId()).update(user1).addOnCompleteListener(task2 -> {
+                                    if (task2.isSuccessful()){
+                                        taskCompletionSource.setResult(true);
+                                    }else{
+                                        taskCompletionSource.setException(Objects.requireNonNull(task.getException()));
+                                    }
+                                });
+                                break;
+                            }
+                        }
+                    }else{
+                        taskCompletionSource.setException(Objects.requireNonNull(task.getException()));
+                    }
+                });
+            }else{
+                taskCompletionSource.setException(Objects.requireNonNull(task.getException()));
+            }
+        });
+        return taskCompletionSource.getTask();
+    }
+    public Task<Boolean> cambiarPsswrd(String psswrd){
+        TaskCompletionSource taskCompletionSource = new TaskCompletionSource();
+        user.updatePassword(psswrd).addOnCompleteListener(task -> {
+            if (task.isSuccessful()){
+                taskCompletionSource.setResult(true);
+            }else {
+                taskCompletionSource.setException(Objects.requireNonNull(task.getException()));
+            }
+        });
+        return taskCompletionSource.getTask();
     }
 }

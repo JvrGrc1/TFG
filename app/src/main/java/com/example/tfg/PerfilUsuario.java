@@ -67,8 +67,8 @@ public class PerfilUsuario extends AppCompatActivity {
 
         nuevaUri = null;
 
-        nombre = findViewById(R.id.nombreMiUsuario);
-        nombre1 = findViewById(R.id.textInputLayoutNombreMiUsuario);
+        nombre = findViewById(R.id.correoChange);
+        nombre1 = findViewById(R.id.textInputLayoutCorreoChange);
         imagen = findViewById(R.id.imagenMiUsuario);
         edit = findViewById(R.id.buttonEditarImagenUser);
         rol = findViewById(R.id.rolMiUsuario);

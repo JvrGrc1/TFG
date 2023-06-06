@@ -33,107 +33,140 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewTituloAjustes" />
 
-
-    <TextView
-        android:id="@+id/textViewAjustes"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="25dp"
-        android:layout_marginTop="15dp"
-        android:fontFamily="@font/industrial_light"
-        android:text="Ajustes de usuario"
-        android:textColor="@color/gris_oscuro"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/divider4" />
-
     <LinearLayout
-        android:id="@+id/linearUser"
+        android:id="@+id/line1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
         android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@+id/textViewAjustes">
-
-        <TextView
-            android:id="@+id/correoAjustes"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginStart="40dp"
-            android:layout_marginEnd="30dp"
-            android:fontFamily="@font/industrial_light"
-            android:text="Cambiar correo electrónico"
-            android:textColor="@color/black"
-            android:textSize="20sp" />
-
-        <TextView
-            android:id="@+id/psswrdAjustes"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginStart="40dp"
-            android:layout_marginTop="30dp"
-            android:layout_marginEnd="30dp"
-            android:fontFamily="@font/industrial_light"
-            android:text="Cambiar contraseña"
-            android:textColor="@color/black"
-            android:textSize="20sp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/linearLayoutCambiarCuenta"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        app:layout_constraintTop_toBottomOf="@+id/linearUser">
-
-        <TextView
-            android:id="@+id/cambiarCuenta"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
-            android:layout_marginEnd="30dp"
-            android:fontFamily="@font/thinoobold"
-            android:text="Cambiar de Cuenta"
-            android:textColor="@color/azul_oscuro"
-            android:textSize="18sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/linearLayoutBorrarCuenta"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayoutCambiarCuenta">
-
-        <TextView
-            android:id="@+id/borrarCuenta"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
-            android:layout_marginEnd="30dp"
-            android:fontFamily="@font/thinoobold"
-            android:text="Borrar Cuenta"
-            android:textColor="@color/rojo_oscuro"
-            android:textSize="18sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/linearLayoutCambiarCuenta" />
-    </LinearLayout>
-
-    <View
-        android:id="@+id/divider6"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        android:background="@color/gris_oscurito"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayoutBorrarCuenta" />
+        app:layout_constraintTop_toBottomOf="@+id/divider4" >
+
+        <TextView
+            android:id="@+id/textViewAjustes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="25dp"
+            android:layout_marginTop="15dp"
+            android:fontFamily="@font/industrial_light"
+            android:text="Ajustes de usuario"
+            android:textColor="@color/gris_oscuro"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/divider4" />
+
+        <LinearLayout
+            android:id="@+id/linearUser"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:orientation="vertical"
+            app:layout_constraintTop_toBottomOf="@+id/textViewAjustes">
+
+            <TextView
+                android:id="@+id/correoAjustes"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="40dp"
+                android:layout_marginEnd="30dp"
+                android:fontFamily="@font/industrial_light"
+                android:text="Cambiar correo electrónico"
+                android:textColor="@color/black"
+                android:textSize="20sp" />
+
+            <LinearLayout
+                android:id="@+id/nuevoEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:theme="@style/Theme.Material3.Light"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@+id/textViewAjustes">
+
+                    <EditText
+                        android:id="@+id/correoNuevo"
+                        android:layout_width="200dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="30dp"
+                        android:layout_marginEnd="30dp"
+                        android:enabled="false"
+                        android:fontFamily="@font/thinoobold" />
+
+                <Button
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="@drawable/lapiz" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/psswrdAjustes"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="40dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginEnd="30dp"
+                android:fontFamily="@font/industrial_light"
+                android:text="Cambiar contraseña"
+                android:textColor="@color/black"
+                android:textSize="20sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayoutCambiarCuenta"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            app:layout_constraintTop_toBottomOf="@+id/linearUser">
+
+            <TextView
+                android:id="@+id/cambiarCuenta"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="40dp"
+                android:layout_marginEnd="30dp"
+                android:fontFamily="@font/thinoobold"
+                android:text="Cambiar de Cuenta"
+                android:textColor="@color/azul_oscuro"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayoutBorrarCuenta"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayoutCambiarCuenta">
+
+            <TextView
+                android:id="@+id/borrarCuenta"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="40dp"
+                android:layout_marginEnd="30dp"
+                android:fontFamily="@font/thinoobold"
+                android:text="Borrar Cuenta"
+                android:textColor="@color/rojo_oscuro"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/linearLayoutCambiarCuenta" />
+        </LinearLayout>
+
+        <View
+            android:id="@+id/divider6"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:background="@color/gris_oscurito"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayoutBorrarCuenta" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/textViewTema"
@@ -147,7 +180,7 @@
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/divider6" />
+        app:layout_constraintTop_toBottomOf="@+id/line1" />
 
     <LinearLayout
         android:id="@+id/linearModo"
