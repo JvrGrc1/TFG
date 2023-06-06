@@ -21,7 +21,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.tfg.R;
 import com.example.tfg.adaptador.ClasificacionAdapter;
 import com.example.tfg.conexion.ConexionFirebase;
-import com.example.tfg.entidad.Clasificacion;
 import com.example.tfg.entidad.Jugador;
 import com.example.tfg.entidad.Partido;
 import com.google.android.gms.tasks.Task;
@@ -73,9 +72,7 @@ public class EstadisticasFragment extends Fragment {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if (spinner.getSelectedItem().equals("Todas las temporadas")) {
-                    List<Clasificacion> clasificacion = pasarLista(partidos, "todas");
-                }
+
             }
 
             @Override
@@ -108,53 +105,6 @@ public class EstadisticasFragment extends Fragment {
         }
 
         return root;
-    }
-
-    private List<Clasificacion> pasarLista(List<Partido> partidos, String detalle){
-        List<Clasificacion> retorno = new ArrayList<>();
-        List<String> temp = new ArrayList<>();
-        switch (detalle){
-            case "todas":
-                int sp = spinner.getAdapter().getCount();       //Obtengo el numero de items del Spinner que corresponde con el numero de temporadas + 1
-                for (int i = 1; i <= sp; i++){
-                    temp.add((String) spinner.getAdapter().getItem(i));
-                    Task<List<String>> equiposTask = conexionFirebase.obtenerEquipos((String) spinner.getAdapter().getItem(i));
-                    int temporada = i;
-                    equiposTask.addOnCompleteListener(task -> {
-                        if (task.isSuccessful()){
-                            List<String> equipos = task.getResult();
-                            List<Clasificacion> clasificacions = new ArrayList<>();
-                            for (String equipo : equipos){
-                                clasificacions = recogerDatos(equipo, (String) spinner.getAdapter().getItem(temporada));
-                            }
-                        }
-                    });
-                }
-                break;
-        }
-
-        return retorno;
-    }
-
-    private List<Clasificacion> recogerDatos(String equipo, String temporada){
-        List<Clasificacion> clasificacions = new ArrayList<>();
-        Clasificacion quali = new Clasificacion(equipo, temporada);
-        for (Partido partido : partidos){                               //Recorre todos los partidos
-            if (partido.getDivision().equals(equipo) && fechaCorrecta(temporada, partido.getFecha())){              //Comprueba si es la division y temporada correcta
-                if (partido.getGolesLocal() != 0 && partido.getGolesVisitante() != 0) {
-                    if (partido.getLocal().contains("Leganés") && partido.getGolesLocal() > partido.getGolesVisitante()                         //Si Leganes es local y local gana
-                            || partido.getVisitante().contains("Leganés") && partido.getGolesVisitante() > partido.getGolesVisitante()) {       //Si leganes es visitante y visitante gana
-                        quali.setVictoria(quali.getVictoria() + 1);
-                    }else if (partido.getGolesLocal() == partido.getGolesVisitante()){                                                          //Si local y visitante empatan
-                        quali.setEmpate(quali.getEmpate() + 1);
-                    }else{                                                                                                                      //[(leganes visitante,gana local) o (leganes local,gana visitante)]
-                        quali.setDerrota(quali.getDerrota() + 1);
-                    }
-                    clasificacions.add(quali);
-                }
-            }
-        }
-        return clasificacions;
     }
 
     private boolean fechaCorrecta(String temporada, Date fecha){

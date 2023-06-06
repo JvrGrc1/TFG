@@ -36,6 +36,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class ConexionFirebase {
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -111,25 +112,6 @@ public class ConexionFirebase {
                 taskCompletionSource.setException(Objects.requireNonNull(task.getException()));
             }
         });
-        return taskCompletionSource.getTask();
-    }
-    public Task<List<String>> obtenerEquipos(String temporada){
-        TaskCompletionSource taskCompletionSource = new TaskCompletionSource();
-        db.collection("temporadas").document(temporada).get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()){
-                DocumentSnapshot snapshot = task.getResult();
-                Map<String, Object> map = snapshot.getData();
-                Set<String>set = map.keySet();
-                List<String> retorno = new ArrayList<>();
-                for (String s : set){
-                    retorno.add(s);
-                }
-                taskCompletionSource.setResult(retorno);
-            }else{
-                taskCompletionSource.setException(Objects.requireNonNull(task.getException()));
-            }
-        });
-
         return taskCompletionSource.getTask();
     }
     private List<Temporada> listaTemporadas(Object mapa){
