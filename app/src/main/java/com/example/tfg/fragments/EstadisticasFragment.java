@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ScrollView;
 import android.widget.Spinner;
@@ -19,8 +20,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.tfg.R;
 import com.example.tfg.adaptador.ClasificacionAdapter;
-import com.example.tfg.adaptador.JornadasAdapter;
 import com.example.tfg.conexion.ConexionFirebase;
+import com.example.tfg.entidad.Clasificacion;
 import com.example.tfg.entidad.Jugador;
 import com.example.tfg.entidad.Partido;
 import com.google.android.gms.tasks.Task;
@@ -28,6 +29,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class EstadisticasFragment extends Fragment {
@@ -67,14 +70,27 @@ public class EstadisticasFragment extends Fragment {
             partidos = (List<Partido>) args.getSerializable("lista");
         }
 
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if (spinner.getSelectedItem().equals("Todas las temporadas")) {
+                    List<Clasificacion> clasificacion = pasarLista(partidos, "todas");
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {}
+        });
+
         ClasificacionAdapter adapter = new ClasificacionAdapter(getContext(), partidos);
         recyclerView.setAdapter(adapter);
 
         Task<List<Jugador>> task = conexionFirebase.obtenerJugadores();
         task.addOnCompleteListener(command -> {
             if (command.isSuccessful()){
-            jugadores = command.getResult();
-
+                jugadores = command.getResult();
+            }else{
+                Toast.makeText(getContext(), "Error al cargar jugadores", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -93,6 +109,66 @@ public class EstadisticasFragment extends Fragment {
 
         return root;
     }
+
+    private List<Clasificacion> pasarLista(List<Partido> partidos, String detalle){
+        List<Clasificacion> retorno = new ArrayList<>();
+        List<String> temp = new ArrayList<>();
+        switch (detalle){
+            case "todas":
+                int sp = spinner.getAdapter().getCount();       //Obtengo el numero de items del Spinner que corresponde con el numero de temporadas + 1
+                for (int i = 1; i <= sp; i++){
+                    temp.add((String) spinner.getAdapter().getItem(i));
+                    Task<List<String>> equiposTask = conexionFirebase.obtenerEquipos((String) spinner.getAdapter().getItem(i));
+                    int temporada = i;
+                    equiposTask.addOnCompleteListener(task -> {
+                        if (task.isSuccessful()){
+                            List<String> equipos = task.getResult();
+                            List<Clasificacion> clasificacions = new ArrayList<>();
+                            for (String equipo : equipos){
+                                clasificacions = recogerDatos(equipo, (String) spinner.getAdapter().getItem(temporada));
+                            }
+                        }
+                    });
+                }
+                break;
+        }
+
+        return retorno;
+    }
+
+    private List<Clasificacion> recogerDatos(String equipo, String temporada){
+        List<Clasificacion> clasificacions = new ArrayList<>();
+        Clasificacion quali = new Clasificacion(equipo, temporada);
+        for (Partido partido : partidos){                               //Recorre todos los partidos
+            if (partido.getDivision().equals(equipo) && fechaCorrecta(temporada, partido.getFecha())){              //Comprueba si es la division y temporada correcta
+                if (partido.getGolesLocal() != 0 && partido.getGolesVisitante() != 0) {
+                    if (partido.getLocal().contains("Leganés") && partido.getGolesLocal() > partido.getGolesVisitante()                         //Si Leganes es local y local gana
+                            || partido.getVisitante().contains("Leganés") && partido.getGolesVisitante() > partido.getGolesVisitante()) {       //Si leganes es visitante y visitante gana
+                        quali.setVictoria(quali.getVictoria() + 1);
+                    }else if (partido.getGolesLocal() == partido.getGolesVisitante()){                                                          //Si local y visitante empatan
+                        quali.setEmpate(quali.getEmpate() + 1);
+                    }else{                                                                                                                      //[(leganes visitante,gana local) o (leganes local,gana visitante)]
+                        quali.setDerrota(quali.getDerrota() + 1);
+                    }
+                    clasificacions.add(quali);
+                }
+            }
+        }
+        return clasificacions;
+    }
+
+    private boolean fechaCorrecta(String temporada, Date fecha){
+        Calendar cal = Calendar.getInstance();
+        String[]partesTemp = temporada.split("-");
+        String[] partesFecha = fecha.toString().split(" ");
+        String anio = partesFecha[5].charAt(2) + "" + partesFecha[5].charAt(3);
+        cal.setTime(fecha);
+        if (anio.equals(partesTemp[0]) && cal.get(Calendar.MONTH) + 1 > 8 || anio.equals(partesTemp[1]) && cal.get(Calendar.MONTH) + 1 < 8){
+            return true;
+        }
+        return false;
+    }
+
     private void rellenarSpinner(){
         db.collection("temporadas").get().addOnCompleteListener(task -> {
             List<String> lista = new ArrayList<>();

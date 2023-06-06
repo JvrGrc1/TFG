@@ -8,8 +8,6 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-
 import com.example.tfg.Login;
 import com.example.tfg.PerfilUsuario;
 import com.example.tfg.entidad.Jugador;
@@ -18,7 +16,6 @@ import com.example.tfg.entidad.Pedido;
 import com.example.tfg.entidad.Prenda;
 import com.example.tfg.entidad.Temporada;
 import com.example.tfg.entidad.Usuario;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.gms.tasks.Tasks;
@@ -36,9 +33,9 @@ import com.google.firebase.storage.StorageReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 public class ConexionFirebase {
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -116,6 +113,25 @@ public class ConexionFirebase {
         });
         return taskCompletionSource.getTask();
     }
+    public Task<List<String>> obtenerEquipos(String temporada){
+        TaskCompletionSource taskCompletionSource = new TaskCompletionSource();
+        db.collection("temporadas").document(temporada).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()){
+                DocumentSnapshot snapshot = task.getResult();
+                Map<String, Object> map = snapshot.getData();
+                Set<String>set = map.keySet();
+                List<String> retorno = new ArrayList<>();
+                for (String s : set){
+                    retorno.add(s);
+                }
+                taskCompletionSource.setResult(retorno);
+            }else{
+                taskCompletionSource.setException(Objects.requireNonNull(task.getException()));
+            }
+        });
+
+        return taskCompletionSource.getTask();
+    }
     private List<Temporada> listaTemporadas(Object mapa){
         Map<String, Object> map = (Map<String, Object>) mapa;
         List<Temporada> temporadas = new ArrayList<>();
@@ -129,12 +145,10 @@ public class ConexionFirebase {
         }
         return temporadas;
     }
-
     private String key(Map<String, Object> map, Object object) {
         for (Map.Entry<String, Object> entry : map.entrySet()) {
             if (entry.getValue().equals(object)) {
                 return entry.getKey();
-
             }
         }
         return null;

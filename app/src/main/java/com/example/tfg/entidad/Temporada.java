@@ -4,7 +4,9 @@ import android.annotation.SuppressLint;
 
 import androidx.annotation.NonNull;
 
-public class Temporada {
+import java.io.Serializable;
+
+public class Temporada implements Serializable {
 
     private String anio;
     private long dosMinutos;
