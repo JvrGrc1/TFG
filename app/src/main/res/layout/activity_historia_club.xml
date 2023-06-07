@@ -5,11 +5,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/scrollHistoria"
     tools:context=".HistoriaClub">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constrainHistoria"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/white">
 
         <TextView
             android:id="@+id/textViewTituloHistoria"
@@ -25,6 +28,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
         <View
             android:id="@+id/divider2"
             android:layout_width="match_parent"
@@ -39,19 +43,68 @@
 
 
         <TextView
+            android:id="@+id/historia"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
-            android:text="@string/historia"
             android:fontFamily="@font/industrial_light"
-            android:textStyle="bold"
-            android:textSize="18sp"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
+            android:text="@string/historia"
             android:textColor="@color/black"
-            app:layout_constraintTop_toBottomOf="@id/divider2"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintTop_toBottomOf="@id/divider2" />
+
+        <TextView
+            android:id="@+id/historia1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/industrial_light"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
+            android:text="@string/historia1"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/historia" />
+
+        <TextView
+            android:id="@+id/historia2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/industrial_light"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
+            android:text="@string/historia2"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/historia1" />
+
+        <TextView
+            android:id="@+id/historia3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/industrial_light"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
+            android:text="@string/historia3"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/historia2" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

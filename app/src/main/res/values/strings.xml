@@ -73,11 +73,16 @@
     <string name="confirmar_pedido">Confirmar pedido</string>
     <string name="nuevo_correo">Nuevo correo elctrónico</string>
     <string name="historia">
-El Club Balonmano Leganés, nace en el año 2004 fundado por un grupo de aficionados al balonmano, persiguiendo un firme objetivo, el de dar la posibilidad de disfrutar de este deporte a todos los niveles.
+        El Club Balonmano Leganés, nace en el año 2004 fundado por un grupo de aficionados al balonmano, persiguiendo un firme objetivo, el de dar la posibilidad de disfrutar de este deporte a todos los niveles.
+    </string>
+    <string name="historia1">
+        En el nacimiento de este club se crean tan solo 4 equipos, Infantil, Cadete, Juvenil y Senior. Todos ellos de categoría masculina, compuesto por chavales que apuestan por el deporte del balonmano. Tan sólo una temporada después, se incorpora al club, la sección femenina.
+    </string>
 
-En el nacimiento de este club se crean tan solo 4 equipos, Infantil, Cadete, Juvenil y Senior. Todos ellos de categoría masculina, compuesto por chavales que apuestan por el deporte del balonmano. Tan sólo una temporada después, se incorpora al club, la sección femenina.
-
-En apenas 10 años hemos crecido notablemente. En la temporada 14/15, se inscribieron 15 equipos, y por primera vez, se inscribían seis equipos infantiles, 3 masculinos, y 3 femeninos. Este crecimiento es fruto de un trabajo constante con la base. Más de 200 niños inscritos en las escuelas de Balonmano, garantizan una base sólida con la que seguir trabajando para hacer si cabe este club más grande.
-
-El Club Balonmano Leganés, nace con un claro espíritu democrático y participativo. Los verdaderos gestores del club, son los socios, de esta forma el Club Balonmano Leganés, puede seguir mejorando día a día con el apoyo de todos.    </string>
+    <string name="historia2">
+        En apenas 10 años hemos crecido notablemente, en la temporada 14/15, se inscribieron 15 equipos, y por primera vez, se inscribían seis equipos infantiles, 3 masculinos, y 3 femeninos. Actualmente el club cuenta con más de 20 equipos, desde benjamines hasta Senior. Este crecimiento es fruto de un trabajo constante con la base, que cuenta con más de 200 niños inscritos en las escuelas de Balonmano, garantizando así una base sólida con la que seguir trabajando para hacer si cabe este club más grande.
+    </string>
+    <string name="historia3">
+        El Club Balonmano Leganés, nace con un claro espíritu democrático y participativo. Los verdaderos gestores del club, son los socios, de esta forma el Club Balonmano Leganés, puede seguir mejorando día a día con el apoyo de todos.
+    </string>
 </resources>
