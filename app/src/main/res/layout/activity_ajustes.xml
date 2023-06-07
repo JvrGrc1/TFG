@@ -256,18 +256,6 @@
             android:textSize="20sp" />
 
         <TextView
-            android:id="@+id/patrocinadores"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginStart="40dp"
-            android:layout_marginTop="30dp"
-            android:layout_marginEnd="30dp"
-            android:fontFamily="@font/industrial_light"
-            android:text="Patrocinadores"
-            android:textColor="@color/black"
-            android:textSize="20sp" />
-
-        <TextView
             android:id="@+id/redes"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

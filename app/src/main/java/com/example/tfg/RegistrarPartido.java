@@ -5,11 +5,13 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -103,18 +105,33 @@ public class RegistrarPartido extends AppCompatActivity {
                 Toast.makeText(RegistrarPartido.this, "Error en los Spinners", Toast.LENGTH_SHORT).show();
             }else{
                 if (todoRelleno()){
-                    new AlertDialog.Builder(RegistrarPartido.this)
-                            .setPositiveButton("Confirmar", (dialogInterface, i) -> {
-                                DocumentReference docRef = conexion.getDocumento(anios.getSelectedItem().toString(), division.getSelectedItem().toString(), id);
-                                // Crear un mapa con los campos que se van a actualizar y sus valores
-                                Map<String, Object> partido = crearMapaPartido();
-                                // Actualizar los campos del documento en Firebase Firestore
-                                actualizarPartido(docRef, partido);
-                            })
-                            .setNegativeButton("Salir", (dialogInterface, i) -> dialogInterface.dismiss())
-                            .setTitle("Confirmar cambios")
-                            .setMessage("Has realizado cambios en el partido ¿Desea continuar?")
-                            .show();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+                    LayoutInflater inflater = LayoutInflater.from(this);
+                    View dialogView = inflater.inflate(R.layout.dialog_sino, null);
+                    builder.setView(dialogView);
+
+                    TextView titulo = dialogView.findViewById(R.id.textViewTitulo);
+                    TextView msg = dialogView.findViewById(R.id.textViewMsg);
+                    Button continuar = dialogView.findViewById(R.id.buttonSi);
+                    Button cancelar = dialogView.findViewById(R.id.buttonNo);
+
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+
+                    titulo.setText("Confirmar cambios");
+                    msg.setText("Has realizado cambios en el partido ¿Deseas continuar?");
+                    continuar.setText("Confirmar");
+                    cancelar.setText("Salir");
+
+                    continuar.setOnClickListener(v1 -> {
+                        DocumentReference docRef = conexion.getDocumento(anios.getSelectedItem().toString(), division.getSelectedItem().toString(), id);
+                        // Crear un mapa con los campos que se van a actualizar y sus valores
+                        Map<String, Object> partido = crearMapaPartido();
+                        // Actualizar los campos del documento en Firebase Firestore
+                        actualizarPartido(docRef, partido);
+                    });
+                    cancelar.setOnClickListener(v1 -> dialog.dismiss());
                 }
             }
         });

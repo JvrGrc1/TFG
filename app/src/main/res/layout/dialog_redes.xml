@@ -15,43 +15,60 @@
             android:id="@+id/textViewRedes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/black"
             android:layout_marginTop="20dp"
             android:fontFamily="@font/industrial_light"
             android:text="Redes sociales del club"
+            android:textColor="@color/black"
             android:textSize="22sp"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
+            android:background="@drawable/ig"
             android:id="@+id/buttonIg"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="Instagram"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textViewRedes"/>
+            app:layout_constraintTop_toBottomOf="@+id/textViewRedes" />
+
         <Button
             android:id="@+id/buttonYT"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="YouTube"
-            app:layout_constraintStart_toStartOf="parent"
+            android:background="@drawable/yt"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="20dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/buttonIg"/>
+            app:layout_constraintTop_toBottomOf="@+id/textViewRedes" />
+
         <Button
             android:id="@+id/buttonTwitter"
-            android:layout_width="wrap_content"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/twitter"
+            app:layout_constraintEnd_toStartOf="@+id/buttonYT"
+            app:layout_constraintStart_toEndOf="@+id/buttonIg"
+            app:layout_constraintTop_toBottomOf="@+id/textViewRedes" />
+
+        <Button
+            android:id="@+id/buttonSalir"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/fondo_registros"
+            android:text="@string/cancelar"
             android:layout_marginTop="20dp"
-            android:text="Twitter"
-            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="50dp"
+            android:layout_marginEnd="50dp"
+            android:layout_marginBottom="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/buttonYT"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonTwitter" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

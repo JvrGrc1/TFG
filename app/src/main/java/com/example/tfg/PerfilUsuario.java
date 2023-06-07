@@ -20,9 +20,11 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -110,12 +112,26 @@ public class PerfilUsuario extends AppCompatActivity {
 
         guardar.setOnClickListener(v -> {
             if(comprobarNombreyApellidos() & tlfCorrecto() & comprobarDireccion()) {
-                new AlertDialog.Builder(PerfilUsuario.this)
-                        .setPositiveButton("Confirmar", (dialogInterface, i) -> modificarUser())
-                        .setNegativeButton("Cancelar", (dialogInterface, i) -> dialogInterface.dismiss())
-                        .setTitle("¿Estás seguro?")
-                        .setMessage("Si confirmas modificarás los datos de tu usuario.")
-                        .show();
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+                LayoutInflater inflater = LayoutInflater.from(this);
+                View dialogView = inflater.inflate(R.layout.dialog_sino, null);
+                builder.setView(dialogView);
+
+                TextView titulo = dialogView.findViewById(R.id.textViewTitulo);
+                TextView msg = dialogView.findViewById(R.id.textViewMsg);
+                Button continuar = dialogView.findViewById(R.id.buttonSi);
+                Button cancelar = dialogView.findViewById(R.id.buttonNo);
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
+
+                titulo.setText("¿Estás seguro?");
+                msg.setText("Si confirmas modificarás los datos de tu usuario.");
+                continuar.setText("Confirmar");
+
+                continuar.setOnClickListener(v1 -> modificarUser());
+                cancelar.setOnClickListener(v1 -> dialog.dismiss());
             }
         });
 
@@ -403,12 +419,27 @@ public class PerfilUsuario extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         if (guardar.getVisibility() == View.VISIBLE) {
-            new AlertDialog.Builder(PerfilUsuario.this)
-                    .setPositiveButton("Confirmar", (dialogInterface, i) -> dialogInterface.dismiss())
-                    .setNegativeButton("Salir", (dialogInterface, i) -> finish())
-                    .setTitle("Confirmar cambios")
-                    .setMessage("Se han detectado cambios en su usuario. ¿Desea continuar?")
-                    .show();
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+            LayoutInflater inflater = LayoutInflater.from(this);
+            View dialogView = inflater.inflate(R.layout.dialog_sino, null);
+            builder.setView(dialogView);
+
+            TextView titulo = dialogView.findViewById(R.id.textViewTitulo);
+            TextView msg = dialogView.findViewById(R.id.textViewMsg);
+            Button continuar = dialogView.findViewById(R.id.buttonSi);
+            Button cancelar = dialogView.findViewById(R.id.buttonNo);
+
+            AlertDialog dialog = builder.create();
+            dialog.show();
+
+            titulo.setText("Confirmar cambios");
+            msg.setText("Se han detectado cambios en su usuario. ¿Desea continuar?");
+            continuar.setText("Confirmar");
+            cancelar.setText("Salir");
+
+            continuar.setOnClickListener(v -> dialog.dismiss());
+            cancelar.setOnClickListener(v -> finish());
         }else{
             finish();
         }

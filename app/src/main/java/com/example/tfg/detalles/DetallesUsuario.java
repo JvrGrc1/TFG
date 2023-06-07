@@ -6,6 +6,7 @@ import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -242,11 +243,26 @@ public class DetallesUsuario extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {   //Si confirma la salida le devuelve a la MainActivity y si no se queda en DetallesUsuario
-        new AlertDialog.Builder(DetallesUsuario.this)
-                .setPositiveButton("Confirmar", (dialogInterface, i) -> intentMainActivity())
-                .setNegativeButton("Cancelar", (dialogInterface, i) -> dialogInterface.dismiss())
-                .setTitle("¿Estás seguro?")
-                .setMessage("Si confirmas volveras a la pantalla principal y no se creará tu usuario.")
-                .show();
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View dialogView = inflater.inflate(R.layout.dialog_sino, null);
+        builder.setView(dialogView);
+
+        TextView titulo = dialogView.findViewById(R.id.textViewTitulo);
+        TextView msg = dialogView.findViewById(R.id.textViewMsg);
+        Button continuar = dialogView.findViewById(R.id.buttonSi);
+        Button cancelar = dialogView.findViewById(R.id.buttonNo);
+
+        titulo.setText("¿Estas seguro?");
+        msg.setText("Si confirmas volveras a la pantalla principal y no se creará tu usuario.");
+        continuar.setText("Continuar");
+        cancelar.setText("Salir");
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
+        continuar.setOnClickListener(v -> dialog.dismiss());
+        cancelar.setOnClickListener(v -> intentMainActivity());
     }
 }

@@ -124,18 +124,33 @@ public class PedidosAdapter extends RecyclerView.Adapter<PedidosAdapter.PedidosV
 
             comprobarModo(adapter1);
 
-            trash.setOnClickListener(view ->
-                new AlertDialog.Builder(view.getContext())
-                        .setPositiveButton("Confirmar", (dialogInterface, i) -> {
-                            conexion.borrarPedido(view.getContext(), adapter.getDatos().get(getAdapterPosition()));
-                            adapter.borrarItem(getAdapterPosition());
-                            Toast.makeText(view.getContext(), "Prenda de ropa eleminada de la lista.", Toast.LENGTH_SHORT).show();
-                        })
-                        .setNegativeButton("Cancelar", (dialogInterface, i) -> dialogInterface.dismiss())
-                        .setTitle("¿Estás seguro?")
-                        .setMessage("Si confirmas eliminarás esta prenda de tu pedido.")
-                        .show()
-            );
+            trash.setOnClickListener(view ->{
+                AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+
+                LayoutInflater inflater = LayoutInflater.from(view.getContext());
+                View dialogView = inflater.inflate(R.layout.dialog_sino, null);
+                builder.setView(dialogView);
+
+                TextView titulo = dialogView.findViewById(R.id.textViewTitulo);
+                TextView msg = dialogView.findViewById(R.id.textViewMsg);
+                Button continuar = dialogView.findViewById(R.id.buttonSi);
+                Button cancelar = dialogView.findViewById(R.id.buttonNo);
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
+
+                titulo.setText("¿Estas seguro?");
+                msg.setText("Si confirmas eliminarás esta prenda de tu pedido.");
+                continuar.setText("Confirmar");
+                cancelar.setText("Cancelar");
+
+                continuar.setOnClickListener(v -> {
+                    conexion.borrarPedido(view.getContext(), adapter.getDatos().get(getAdapterPosition()));
+                    adapter.borrarItem(getAdapterPosition());
+                    Toast.makeText(view.getContext(), "Prenda de ropa eliminada de la lista.", Toast.LENGTH_SHORT).show();
+                });
+                cancelar.setOnClickListener(v -> dialog.dismiss());
+            });
 
             mas.setOnClickListener(view -> {
                 if (Integer.parseInt(cantidad.getText().toString()) == 9){

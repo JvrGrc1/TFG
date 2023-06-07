@@ -9,7 +9,9 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -28,6 +30,7 @@ import com.example.tfg.conexion.ConexionFirebase;
 import com.example.tfg.entidad.Partido;
 import com.example.tfg.entidad.Pedido;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -43,7 +46,7 @@ public class Ajustes extends AppCompatActivity {
     private List<Partido> j = new ArrayList<>();
     private List<Pedido> prendas = new ArrayList<>();
     private ConstraintLayout constraintLayout;
-    private TextView titulo, oscuro, correo, psswrd, historia, redes, patrocinadores, from, ajustes, tema, borrar, cambiar;;
+    private TextView titulo, oscuro, correo, psswrd, historia, redes, from, ajustes, tema, borrar, cambiar;;
     private LinearLayout user, line, nuevoEmail;
     private EditText email;
     private ImageView jvr;
@@ -67,7 +70,6 @@ public class Ajustes extends AppCompatActivity {
         psswrd = findViewById(R.id.psswrdAjustes);
         divider = findViewById(R.id.divider6);
         historia = findViewById(R.id.historia);
-        patrocinadores = findViewById(R.id.patrocinadores);
         redes = findViewById(R.id.redes);
         jvr = findViewById(R.id.jvrAjustes);
         from = findViewById(R.id.fromAjustes);
@@ -100,7 +102,6 @@ public class Ajustes extends AppCompatActivity {
         borrar.setOnClickListener(v -> borrarCuenta());
         cambiar.setOnClickListener(v -> cambiarCuenta());
         historia.setOnClickListener(v -> verHistoria());
-        patrocinadores.setOnClickListener(v -> verPatrocinadores());
         redes.setOnClickListener(v -> verRedes());
 
     }
@@ -117,7 +118,6 @@ public class Ajustes extends AppCompatActivity {
             psswrd.setTextColor(Color.BLACK);
             historia.setTextColor(Color.BLACK);
             redes.setTextColor(Color.BLACK);
-            patrocinadores.setTextColor(Color.BLACK);
             jvr.setImageDrawable(getDrawable(R.drawable.jvr));
             from.setTextColor(getColor(R.color.azul_oscuro_56));
         }else{
@@ -130,7 +130,6 @@ public class Ajustes extends AppCompatActivity {
             psswrd.setTextColor(Color.WHITE);
             historia.setTextColor(Color.WHITE);
             redes.setTextColor(Color.WHITE);
-            patrocinadores.setTextColor(Color.WHITE);
             jvr.setImageDrawable(getDrawable(R.drawable.jvr_night));
             from.setTextColor(Color.WHITE);
         }
@@ -241,11 +240,8 @@ public class Ajustes extends AppCompatActivity {
     }
 
     private void verHistoria(){
-        //TODO
-    }
-
-    private void verPatrocinadores(){
-        //TODO
+        Intent intent = new Intent(this, HistoriaClub.class);
+        startActivity(intent);
     }
 
     private void verRedes(){
@@ -259,10 +255,62 @@ public class Ajustes extends AppCompatActivity {
         Button yt = dialogView.findViewById(R.id.buttonYT);
         Button twitter = dialogView.findViewById(R.id.buttonTwitter);
 
-        //TODO: Funcionalidad de los botones (En chatGPT hay una posible solucion)
+        String paqueteIg = "com.instagram.android";
+        String paqueteYt = "com.twitter.android";
+        String paqueteTwitter = "com.youtube.android";
 
         AlertDialog dialog = builder.create();
         dialog.show();
+
+
+        ig.setOnClickListener(v -> {
+            if (appInstalada(paqueteIg)) {// Abrir la aplicación de Instagram
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse("instagram://user?username=bmleganes"));
+                intent.setPackage(paqueteIg);
+                startActivity(intent);
+            } else {// Abrir el perfil de Instagram en el navegador web
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse("https://www.instagram.com/bmleganes/"));
+                startActivity(intent);
+            }
+        });
+        yt.setOnClickListener(v -> {
+            if (appInstalada(paqueteYt)) {// Abrir la aplicación de Instagram
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse("https://www.youtube.com/user/balonmanoleganes"));
+                intent.setPackage(paqueteIg);
+                startActivity(intent);
+            } else {// Abrir el perfil de Instagram en el navegador web
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse("https://www.youtube.com/user/balonmanoleganes"));
+                startActivity(intent);
+            }
+        });
+        twitter.setOnClickListener(v -> {
+            if (appInstalada(paqueteTwitter)) {
+                // Abrir la aplicación de Twitter
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse("twitter://user?screen_name=cbleganes"));
+                intent.setPackage(paqueteTwitter);
+                startActivity(intent);
+            } else {
+                // Abrir el perfil de Twitter en el navegador web
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse("https://twitter.com/cbleganes"));
+                startActivity(intent);
+            }
+        });
+    }
+
+    private boolean appInstalada(String app){
+        PackageManager pm = getPackageManager();
+        try {
+            pm.getPackageInfo(app, PackageManager.GET_ACTIVITIES);
+            return true;
+        } catch (PackageManager.NameNotFoundException e) {
+            return false;
+        }
     }
 
     private void cambiarCuenta() {
@@ -274,19 +322,39 @@ public class Ajustes extends AppCompatActivity {
         finishAffinity();
     }
 
+    @SuppressLint("ResourceAsColor")
     private void borrarCuenta() {
-        Task<Boolean> borrado = conexion.borrarCuenta(conexion.obtenerUser().getEmail(), Ajustes.this);
-        borrado.addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                Intent intent1 = new Intent(this, MainActivity.class);
-                intent1.putExtra("lista", (Serializable) j);
-                intent1.putExtra("ropa", (Serializable) prendas);
-                startActivity(intent1);
-                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                finishAffinity();
-                Toast.makeText(this, "Cuenta borrada", Toast.LENGTH_SHORT).show();
-            }
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View dialogView = inflater.inflate(R.layout.dialog_sino, null);
+        builder.setView(dialogView);
+
+        TextView titulo = dialogView.findViewById(R.id.textViewTitulo);
+        TextView msg = dialogView.findViewById(R.id.textViewMsg);
+        Button continuar = dialogView.findViewById(R.id.buttonSi);
+        Button cancelar = dialogView.findViewById(R.id.buttonNo);
+
+        titulo.setText("¿Estas seguro?");
+        msg.setVisibility(View.GONE);
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+        continuar.setOnClickListener(v -> {
+            Task<Boolean> borrado = conexion.borrarCuenta(conexion.obtenerUser().getEmail(), Ajustes.this);
+            borrado.addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    Intent intent1 = new Intent(this, MainActivity.class);
+                    intent1.putExtra("lista", (Serializable) j);
+                    intent1.putExtra("ropa", (Serializable) prendas);
+                    startActivity(intent1);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                    finishAffinity();
+                    Toast.makeText(this, "Cuenta borrada", Toast.LENGTH_SHORT).show();
+                }
+            });
         });
+        cancelar.setOnClickListener(v -> dialog.dismiss());
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -304,7 +372,6 @@ public class Ajustes extends AppCompatActivity {
             psswrd.setTextColor(Color.BLACK);
             historia.setTextColor(Color.BLACK);
             redes.setTextColor(Color.BLACK);
-            patrocinadores.setTextColor(Color.BLACK);
             jvr.setImageDrawable(getDrawable(R.drawable.jvr));
             from.setTextColor(getColor(R.color.azul_oscuro_56));
         }else{
@@ -317,7 +384,6 @@ public class Ajustes extends AppCompatActivity {
             psswrd.setTextColor(Color.WHITE);
             historia.setTextColor(Color.WHITE);
             redes.setTextColor(Color.WHITE);
-            patrocinadores.setTextColor(Color.WHITE);
             jvr.setImageDrawable(getDrawable(R.drawable.jvr_night));
             from.setTextColor(Color.WHITE);
         }

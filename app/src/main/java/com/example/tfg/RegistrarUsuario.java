@@ -7,6 +7,8 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -168,12 +170,26 @@ public class RegistrarUsuario extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         if (!correo.getText().toString().isEmpty() || !psswrd.getText().toString().isEmpty()) {
-            new AlertDialog.Builder(RegistrarUsuario.this)
-                    .setPositiveButton("Confirmar", (dialogInterface, i) -> finish())
-                    .setNegativeButton("Cancelar", (dialogInterface, i) -> dialogInterface.dismiss())
-                    .setTitle("¿Seguro que quieres hacerlo?")
-                    .setMessage("Si sales perderas los datos introducidos.")
-                    .show();
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+            LayoutInflater inflater = LayoutInflater.from(this);
+            View dialogView = inflater.inflate(R.layout.dialog_sino, null);
+            builder.setView(dialogView);
+
+            TextView titulo = dialogView.findViewById(R.id.textViewTitulo);
+            TextView msg = dialogView.findViewById(R.id.textViewMsg);
+            Button continuar = dialogView.findViewById(R.id.buttonSi);
+            Button cancelar = dialogView.findViewById(R.id.buttonNo);
+
+            AlertDialog dialog = builder.create();
+            dialog.show();
+
+            titulo.setText("¿Seguro que quieres hacerlo?");
+            msg.setText("Si sales perderas los datos introducidos.");
+            cancelar.setText("Salir");
+
+            cancelar.setOnClickListener(v -> finish());
+            continuar.setOnClickListener(v -> dialog.dismiss());
         }else{
             finish();
         }
