@@ -41,7 +41,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerClasificacionEquipos"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="1dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -52,22 +52,23 @@
         <View
             android:id="@+id/divider2"
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginStart="2dp"
+            android:layout_height="0.5dp"
+            android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
-            android:layout_marginEnd="2dp"
+            android:layout_marginEnd="10dp"
             android:background="@color/gris_oscurito"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/recyclerClasificacionEquipos" />
 
         <TextView
+            android:id="@+id/maximosGoleadores"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="30dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="20dp"
             android:fontFamily="@font/industrial_light"
-            android:text="@string/max_goleadores"
+            android:text="Máximos goleadores"
             android:textColor="@color/azul_oscuro"
             android:textSize="24sp"
             android:textStyle="bold"

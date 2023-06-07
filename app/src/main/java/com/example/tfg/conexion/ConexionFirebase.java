@@ -504,4 +504,21 @@ public class ConexionFirebase {
     public void sendVerfificacion(String correo){
         user.sendEmailVerification();
     }
+    public Task<List<String>> getTemporadas(){
+        TaskCompletionSource taskCompletionSource = new TaskCompletionSource();
+
+        db.collection("temporadas").get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()){
+                List<String> lista = new ArrayList<>();
+                QuerySnapshot snapshots = task.getResult();
+                for (DocumentSnapshot ds : snapshots){
+                    lista.add(ds.getId());
+                }
+                taskCompletionSource.setResult(lista);
+            }else{
+                taskCompletionSource.setException(Objects.requireNonNull(task.getException()));
+            }
+        });
+        return taskCompletionSource.getTask();
+    }
 }
