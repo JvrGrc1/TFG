@@ -8,9 +8,7 @@ import java.io.Serializable;
 public class Usuario implements Serializable {
 
     private String correo, nombre, apellido1, apellido2, rol, imagen, tlf, direccion;
-    public Usuario(){
-
-    }
+    public Usuario(){}
 
     public Usuario(String correo, String nombre, String apellido1, String rol) {
         this.correo = correo;

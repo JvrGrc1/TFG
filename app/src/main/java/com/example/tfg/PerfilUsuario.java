@@ -34,6 +34,8 @@ import com.example.tfg.conexion.ConexionFirebase;
 import com.example.tfg.entidad.Partido;
 import com.example.tfg.entidad.Pedido;
 import com.example.tfg.entidad.Usuario;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.storage.FirebaseStorage;
@@ -225,12 +227,14 @@ public class PerfilUsuario extends AppCompatActivity {
             }
     );
 
-    private void subirImagen(Uri imagenUri){
+    private Task<Boolean> subirImagen(Uri imagenUri){
+        TaskCompletionSource taskCompletionSource = new TaskCompletionSource();
         StorageReference ref = storageRef.child("perfilUsuario/" + conexion.obtenerUser().getEmail() + ".jpg");
         UploadTask uploadTask = ref.putFile(imagenUri);
         uploadTask.continueWithTask(contTask -> {
             if (!contTask.isSuccessful()) {
                 Toast.makeText(PerfilUsuario.this, "Error al subir la imagen.", Toast.LENGTH_SHORT).show();
+                taskCompletionSource.setResult(taskCompletionSource.getTask().getException());
             }
             return ref.getDownloadUrl();
         }).addOnCompleteListener(completeTask -> {
@@ -238,10 +242,13 @@ public class PerfilUsuario extends AppCompatActivity {
                 Uri downloadUri = completeTask.getResult();
                 String urlFoto = downloadUri.toString();
                 conexion.cargarImagen(PerfilUsuario.this, imagen, null, urlFoto);
+                taskCompletionSource.setResult(true);
             } else {
                 Toast.makeText(PerfilUsuario.this, "Error al poner la imagen.", Toast.LENGTH_SHORT).show();
+                taskCompletionSource.setResult(taskCompletionSource.getTask().getException());
             }
         });
+        return taskCompletionSource.getTask();
     }
 
     private boolean comprobarNombreyApellidos(){
@@ -390,21 +397,38 @@ public class PerfilUsuario extends AppCompatActivity {
             usuario.setApellido2(apellido2.getText().toString());
         }
         if (nuevaUri != null){
-            subirImagen(nuevaUri);
-            usuario.setImagen("gs://balonmano-f213a.appspot.com/perfilUsuario/" + conexion.obtenerUser().getEmail() + ".jpg");
+            Task<Boolean> subido  = subirImagen(nuevaUri);
+            subido.addOnCompleteListener(task -> {
+                if (task.isSuccessful()){
+                    usuario.setImagen("gs://balonmano-f213a.appspot.com/perfilUsuario/" + conexion.obtenerUser().getEmail() + ".jpg");
+                    if (Objects.requireNonNull(tlf.getText()).toString().isEmpty()){
+                        usuario.setTlf("");
+                    }else{
+                        usuario.setTlf(tlf.getText().toString());
+                    }
+                    if (!Objects.requireNonNull(direccion.getText()).toString().isEmpty()){
+                        usuario.setDireccion(obtenerDireccion());
+                    }else{
+                        usuario.setDireccion("");
+                    }
+                    conexion.modificarUser(usuario, this);
+                    intentMainActivity();
+                }
+            });
+        }else {
+            if (Objects.requireNonNull(tlf.getText()).toString().isEmpty()) {
+                usuario.setTlf("");
+            } else {
+                usuario.setTlf(tlf.getText().toString());
+            }
+            if (!Objects.requireNonNull(direccion.getText()).toString().isEmpty()) {
+                usuario.setDireccion(obtenerDireccion());
+            } else {
+                usuario.setDireccion("");
+            }
+            conexion.modificarUser(usuario, this);
+            intentMainActivity();
         }
-        if (Objects.requireNonNull(tlf.getText()).toString().isEmpty()){
-            usuario.setTlf("");
-        }else{
-            usuario.setTlf(tlf.getText().toString());
-        }
-        if (!Objects.requireNonNull(direccion.getText()).toString().isEmpty()){
-            usuario.setDireccion(obtenerDireccion());
-        }else{
-            usuario.setDireccion("");
-        }
-        conexion.modificarUser(usuario, this);
-        intentMainActivity();
     }
 
     private void intentMainActivity() {
@@ -413,7 +437,7 @@ public class PerfilUsuario extends AppCompatActivity {
         intent.putExtra("ropa", (Serializable) pedidos);
         startActivity(intent);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-        finish();
+        finishAffinity();
     }
 
     @Override

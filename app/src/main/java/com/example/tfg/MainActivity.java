@@ -176,8 +176,6 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.cerrar:
                     conexion.signOut();
                     intentMainActivity();
-                case R.id.consultaEquipo:
-                    break;
             }
             return false;
         });

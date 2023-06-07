@@ -1,7 +1,6 @@
 package com.example.tfg.fragments;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -19,17 +18,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.example.tfg.conexion.ConexionFirebase;
-import com.example.tfg.detalles.DetallesJornada;
-import com.example.tfg.R;
 import com.example.tfg.adaptador.JornadasAdapter;
-import com.example.tfg.adaptador.RecyclerItemClickListener;
+import com.example.tfg.conexion.ConexionFirebase;
+import com.example.tfg.R;
 import com.example.tfg.entidad.Partido;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -37,9 +33,9 @@ public class PartidosFragment extends Fragment {
 
     private ImageButton buscar;
     private RecyclerView recycler;
-    private JornadasAdapter adapter;
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private Spinner temporadas, equipos, jornadas;
+    private JornadasAdapter adapter;
     private final ConexionFirebase conexion = new ConexionFirebase();
     private List<Partido> jugadores = new ArrayList<>();
     private ConstraintLayout constraintLayout;

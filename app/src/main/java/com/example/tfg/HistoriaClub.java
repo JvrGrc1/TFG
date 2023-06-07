@@ -3,7 +3,6 @@ package com.example.tfg;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -13,13 +12,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.example.tfg.adaptador.ImagenAdapter;
-import com.example.tfg.conexion.ConexionFirebase;
-import com.google.android.gms.tasks.Task;
-
-import java.util.List;
 
 public class HistoriaClub extends AppCompatActivity {
 

@@ -3,21 +3,19 @@
     <item android:title="@string/usuario"
         android:icon="@drawable/usuario"
         android:id="@+id/user"/>
+
     <item android:title="@string/registrar_partido"
         android:icon="@drawable/pista_balonmano"
         android:id="@+id/registrarPartido"/>
-    <item android:title="@string/consultar_jugador"
-        android:icon="@drawable/jugador"
-        android:id="@+id/consultaJugador"/>
-    <item android:title="@string/consultar_equipo"
-        android:icon="@drawable/equipo"
-        android:id="@+id/consultaEquipo"/>
+
     <item android:title="@string/ajustes"
         android:icon="@drawable/ajustes"
         android:id="@+id/ajustes"/>
+
     <item android:title="@string/registrarse"
         android:icon="@drawable/registrarse"
         android:id="@+id/registrarse"/>
+
     <item android:title="@string/cerrar_sesion"
         android:icon="@drawable/cerrar_sesion"
         android:id="@+id/cerrar"/>

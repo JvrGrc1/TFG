@@ -17,12 +17,6 @@
         android:theme="@style/Theme.TFG"
         tools:targetApi="31">
         <activity
-            android:name=".ConsultarEquipo"
-            android:exported="false" />
-        <activity
-            android:name=".ConsultarJugador"
-            android:exported="false" />
-        <activity
             android:name=".detalles.DetallesPartido"
             android:exported="false" />
         <activity
