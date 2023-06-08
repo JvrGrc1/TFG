@@ -8,8 +8,6 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-
 import com.example.tfg.Login;
 import com.example.tfg.PerfilUsuario;
 import com.example.tfg.entidad.Jugador;
@@ -18,7 +16,6 @@ import com.example.tfg.entidad.Pedido;
 import com.example.tfg.entidad.Prenda;
 import com.example.tfg.entidad.Temporada;
 import com.example.tfg.entidad.Usuario;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.gms.tasks.Tasks;
@@ -36,9 +33,10 @@ import com.google.firebase.storage.StorageReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class ConexionFirebase {
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -119,12 +117,14 @@ public class ConexionFirebase {
     private List<Temporada> listaTemporadas(Object mapa){
         Map<String, Object> map = (Map<String, Object>) mapa;
         List<Temporada> temporadas = new ArrayList<>();
-        for (Object object : map.values()){
-            Map<String,Object> mapaFinal = (Map<String, Object>) object;
-            String anio = key(map, object);
-            if (anio != null) {
-                Temporada temporada = new Temporada(anio, (Long) mapaFinal.get("2minutos"), (Long) mapaFinal.get("amarillas"), (Long) mapaFinal.get("rojas"), (Long) mapaFinal.get("paradas"), (Long) mapaFinal.get("disparos") , (String) mapaFinal.get("posicion"), (Long) mapaFinal.get("dorsal"), (Long) mapaFinal.get("goles"), (String) mapaFinal.get("equipo"));
-                temporadas.add(temporada);
+        if(map.values() != null) {
+            for (Object object : map.values()) {
+                Map<String, Object> mapaFinal = (Map<String, Object>) object;
+                String anio = key(map, object);
+                if (anio != null) {
+                    Temporada temporada = new Temporada(anio, (Long) mapaFinal.get("2minutos"), (Long) mapaFinal.get("amarillas"), (Long) mapaFinal.get("rojas"), (Long) mapaFinal.get("paradas"), (Long) mapaFinal.get("disparos"), (String) mapaFinal.get("posicion"), (Long) mapaFinal.get("dorsal"), (Long) mapaFinal.get("goles"), (String) mapaFinal.get("equipo"));
+                    temporadas.add(temporada);
+                }
             }
         }
         return temporadas;
@@ -133,7 +133,6 @@ public class ConexionFirebase {
         for (Map.Entry<String, Object> entry : map.entrySet()) {
             if (entry.getValue().equals(object)) {
                 return entry.getKey();
-
             }
         }
         return null;
@@ -506,6 +505,23 @@ public class ConexionFirebase {
     }
     public void sendVerfificacion(String correo){
         user.sendEmailVerification();
+    }
+    public Task<List<String>> getTemporadas(){
+        TaskCompletionSource taskCompletionSource = new TaskCompletionSource();
+
+        db.collection("temporadas").get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()){
+                List<String> lista = new ArrayList<>();
+                QuerySnapshot snapshots = task.getResult();
+                for (DocumentSnapshot ds : snapshots){
+                    lista.add(ds.getId());
+                }
+                taskCompletionSource.setResult(lista);
+            }else{
+                taskCompletionSource.setException(Objects.requireNonNull(task.getException()));
+            }
+        });
+        return taskCompletionSource.getTask();
     }
     public Task<Boolean> cambiarCorreo(String correo){
         TaskCompletionSource taskCompletionSource = new TaskCompletionSource();

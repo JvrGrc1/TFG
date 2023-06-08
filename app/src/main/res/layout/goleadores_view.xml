@@ -12,77 +12,62 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="10dp"
-        android:gravity="right"
         android:layout_marginBottom="10dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent">
 
         <TextView
-            android:id="@+id/textViewPosicion"
-            android:layout_width="20dp"
+            android:id="@+id/textViewNombre"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:fontFamily="@font/industrial_light"
-            android:text="1º"
+            android:text="Nombre"
+            android:gravity="center"
             android:textColor="@color/black"
-            android:gravity="right"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/textViewTemporadaGol"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/industrial_light"
+            android:text="21-22"
+            android:gravity="center"
+            android:textColor="@color/black"
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/textViewEquipo"
-            android:layout_width="150dp"
+            android:id="@+id/textViewGoles"
+            android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:fontFamily="@font/industrial_light"
-            android:text="1 Nacional Maculino"
+            android:text="130"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:layout_marginStart="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+        <TextView
+            android:id="@+id/textViewDisparos"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/industrial_light"
+            android:text="200"
+            android:gravity="center"
             android:textColor="@color/black"
             android:layout_marginStart="10dp"
-            android:gravity="center"
+            android:layout_marginEnd="20dp"
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/textViewPosicion"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/textViewTemporada"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/industrial_light"
-            android:text="22-23"
-            android:textColor="@color/black"
-            android:gravity="center"
-            android:textSize="20sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/textViewEquipo"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/textViewVicEmpDer"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/industrial_light"
-            android:text="8/6/8"
-            android:textColor="@color/black"
-            android:gravity="center"
-            android:layout_marginStart="10dp"
-            android:textSize="20sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/textViewTemporada"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/textViewPuntos"
-            android:layout_width="70dp"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/industrial_light"
-            android:text="22 ptos"
-            android:textColor="@color/black"
-            android:gravity="center"
-            android:textSize="20sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
