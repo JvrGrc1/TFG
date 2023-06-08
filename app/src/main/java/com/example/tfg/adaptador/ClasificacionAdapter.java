@@ -26,6 +26,9 @@ public class ClasificacionAdapter  extends RecyclerView.Adapter<ClasificacionAda
         this.contexto = context;
         this.clasificacion = clasificacionsList;
         Collections.sort(this.clasificacion, new ClasificacionComparator());
+        if (clasificacionsList.size() > 10){
+            this.clasificacion = clasificacionsList.subList(0,10);
+        }
     }
 
     public void setDatos(List<Clasificacion> listaDatos) {

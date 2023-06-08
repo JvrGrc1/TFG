@@ -31,21 +31,91 @@
         <Spinner
             android:id="@+id/spinnerStatsEquipos"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="5dp"
             android:layout_marginEnd="30dp"
             android:gravity="end"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textViewClasificacion" />
+            app:layout_constraintTop_toBottomOf="@+id/textViewClasificacion"
+            tools:ignore="TouchTargetSizeCheck" />
+
+        <LinearLayout
+            android:id="@+id/linearTabla"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/spinnerStatsEquipos">
+
+            <TextView
+                android:id="@+id/textPosicion"
+                android:layout_width="70dp"
+                android:layout_height="match_parent"
+                android:fontFamily="@font/industrial_light"
+                android:gravity="center"
+                android:text="Posición"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textEquipo"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:fontFamily="@font/industrial_light"
+                android:gravity="center"
+                android:text="Equipo"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textTemporada"
+                android:layout_width="80dp"
+                android:layout_height="match_parent"
+                android:fontFamily="@font/industrial_light"
+                android:gravity="center"
+                android:text="Temporada"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textVDE"
+                android:layout_width="70dp"
+                android:layout_height="match_parent"
+                android:fontFamily="@font/industrial_light"
+                android:gravity="center"
+                android:text="V/D/E"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textPuntos"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="10dp"
+                android:fontFamily="@font/industrial_light"
+                android:gravity="center"
+                android:text="Puntos"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerClasificacionEquipos"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="1dp"
+            android:layout_marginTop="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/spinnerStatsEquipos">
+            app:layout_constraintTop_toBottomOf="@+id/linearTabla">
 
         </androidx.recyclerview.widget.RecyclerView>
 
@@ -54,7 +124,7 @@
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="15dp"
             android:layout_marginEnd="10dp"
             android:background="@color/gris_oscurito"
             app:layout_constraintEnd_toEndOf="parent"
@@ -66,13 +136,94 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="30dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="30dp"
             android:fontFamily="@font/industrial_light"
-            android:text="Máximos goleadores"
+            android:text="Top 10 Máximos goleadores"
             android:textColor="@color/azul_oscuro"
             android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/divider2"/>
+            app:layout_constraintTop_toBottomOf="@id/divider2" />
+
+        <Spinner
+            android:id="@+id/spinnerGoleadores"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="30dp"
+            android:gravity="end"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/maximosGoleadores"
+            tools:ignore="TouchTargetSizeCheck" />
+
+        <LinearLayout
+            android:id="@+id/linearGolesTabla"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/spinnerGoleadores">
+
+            <TextView
+                android:id="@+id/textNombreJugador"
+                android:layout_width="70dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="20dp"
+                android:fontFamily="@font/industrial_light"
+                android:gravity="center"
+                android:text="Nombre"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textTempJugador"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:fontFamily="@font/industrial_light"
+                android:gravity="center"
+                android:text="Temporada"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textGolesJugador"
+                android:layout_width="80dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="20dp"
+                android:fontFamily="@font/industrial_light"
+                android:gravity="center"
+                android:text="Goles"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textDisparosJugador"
+                android:layout_width="70dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="20dp"
+                android:fontFamily="@font/industrial_light"
+                android:gravity="center"
+                android:text="Disparos"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerGoleadores"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearGolesTabla" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

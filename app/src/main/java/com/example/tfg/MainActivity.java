@@ -28,6 +28,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.tfg.conexion.ConexionFirebase;
 import com.example.tfg.databinding.ActivityMainBinding;
+import com.example.tfg.entidad.Jugador;
 import com.example.tfg.entidad.Partido;
 import com.example.tfg.entidad.Prenda;
 import com.example.tfg.entidad.Usuario;
@@ -56,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageView abrir;
     private List<Partido> j = new ArrayList<>();
     private List<Prenda> prendas = new ArrayList<>();
+    private List<Jugador> jugadores = new ArrayList<>();
     private final ConexionFirebase conexion = new ConexionFirebase();
     private DrawerLayout drawerLayout;
     private MenuItem cerrar, registroUser, usuario, registroPartido;
@@ -72,10 +74,21 @@ public class MainActivity extends AppCompatActivity {
         if (!intent.hasExtra("lista")) {
             iniciarPartidos();
         } else {
-            j = (List<Partido>) intent.getSerializableExtra("lista");
-            prendas = (List<Prenda>) intent.getSerializableExtra("ropa");
+            this.j = (List<Partido>) intent.getSerializableExtra("lista");
+            this.prendas = (List<Prenda>) intent.getSerializableExtra("ropa");
             iniciarPrendas();
             iniciarPartidos();
+        }
+
+        if (!intent.hasExtra("jugadores")){
+            Task<List<Jugador>> task = conexion.obtenerJugadores();
+            task.addOnCompleteListener(task1 -> {
+                if(task1.isSuccessful()){
+                    this.jugadores = task1.getResult();
+                }
+            });
+        }else{
+            this.jugadores = (List<Jugador>) intent.getSerializableExtra("jugadores");
         }
 
         bottomNav = findViewById(R.id.bottomNavigationView);
@@ -126,7 +139,10 @@ public class MainActivity extends AppCompatActivity {
                         animSet.start();
                         item.setIcon(R.drawable.estadisticas);
                         Bundle bundleEstadisticas = new Bundle();
-                        if (!j.isEmpty()) {bundleEstadisticas.putSerializable("lista", (Serializable) j);}
+                        if (!j.isEmpty()) {
+                            bundleEstadisticas.putSerializable("lista", (Serializable) j);
+                            bundleEstadisticas.putSerializable("jugadores", (Serializable) jugadores);
+                        }
                         Fragment estadisticas = new EstadisticasFragment();
                         estadisticas.setArguments(bundleEstadisticas);
                         cambiarFragment(estadisticas);

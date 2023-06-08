@@ -117,12 +117,14 @@ public class ConexionFirebase {
     private List<Temporada> listaTemporadas(Object mapa){
         Map<String, Object> map = (Map<String, Object>) mapa;
         List<Temporada> temporadas = new ArrayList<>();
-        for (Object object : map.values()){
-            Map<String,Object> mapaFinal = (Map<String, Object>) object;
-            String anio = key(map, object);
-            if (anio != null) {
-                Temporada temporada = new Temporada(anio, (Long) mapaFinal.get("2minutos"), (Long) mapaFinal.get("amarillas"), (Long) mapaFinal.get("rojas"), (Long) mapaFinal.get("paradas"), (Long) mapaFinal.get("disparos") , (String) mapaFinal.get("posicion"), (Long) mapaFinal.get("dorsal"), (Long) mapaFinal.get("goles"), (String) mapaFinal.get("equipo"));
-                temporadas.add(temporada);
+        if(map.values() != null) {
+            for (Object object : map.values()) {
+                Map<String, Object> mapaFinal = (Map<String, Object>) object;
+                String anio = key(map, object);
+                if (anio != null) {
+                    Temporada temporada = new Temporada(anio, (Long) mapaFinal.get("2minutos"), (Long) mapaFinal.get("amarillas"), (Long) mapaFinal.get("rojas"), (Long) mapaFinal.get("paradas"), (Long) mapaFinal.get("disparos"), (String) mapaFinal.get("posicion"), (Long) mapaFinal.get("dorsal"), (Long) mapaFinal.get("goles"), (String) mapaFinal.get("equipo"));
+                    temporadas.add(temporada);
+                }
             }
         }
         return temporadas;
