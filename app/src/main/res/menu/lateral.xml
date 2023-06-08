@@ -9,9 +9,6 @@
     <item android:title="@string/consultar_jugador"
         android:icon="@drawable/jugador"
         android:id="@+id/consultaJugador"/>
-    <item android:title="@string/consultar_equipo"
-        android:icon="@drawable/equipo"
-        android:id="@+id/consultaEquipo"/>
     <item android:title="@string/ajustes"
         android:icon="@drawable/ajustes"
         android:id="@+id/ajustes"/>

@@ -192,7 +192,7 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.cerrar:
                     conexion.signOut();
                     intentMainActivity();
-                case R.id.consultaEquipo:
+                case R.id.consultaJugador:
                     break;
             }
             return false;
