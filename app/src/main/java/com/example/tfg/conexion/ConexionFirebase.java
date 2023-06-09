@@ -1,15 +1,24 @@
 package com.example.tfg.conexion;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
+
 import com.example.tfg.Login;
+import com.example.tfg.MainActivity;
 import com.example.tfg.PerfilUsuario;
+import com.example.tfg.R;
 import com.example.tfg.entidad.Jugador;
 import com.example.tfg.entidad.Partido;
 import com.example.tfg.entidad.Pedido;
@@ -19,6 +28,8 @@ import com.example.tfg.entidad.Usuario;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.gms.tasks.Tasks;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.SignInMethodQueryResult;
@@ -30,6 +41,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -366,7 +378,47 @@ public class ConexionFirebase {
         return db.collection("temporadas").document(anios).collection(division).document(id);
     }
     public void signIn(String correo, String psswrd, Login login){
-        auth.signInWithEmailAndPassword(correo, psswrd).addOnCompleteListener(task -> login.iniciarMainActivity(task));
+        auth.signInWithEmailAndPassword(correo, psswrd).addOnCompleteListener(task -> {
+            if (!auth.getCurrentUser().isEmailVerified()) {
+                sendVerfificacion(correo);
+                signOut();
+                AlertDialog.Builder builder = new AlertDialog.Builder(login);
+
+                LayoutInflater inflater = LayoutInflater.from(login);
+                View dialogView = inflater.inflate(R.layout.dialog_sino, null);
+                builder.setView(dialogView);
+
+                TextView titulo = dialogView.findViewById(R.id.textViewTitulo);
+                TextView msg = dialogView.findViewById(R.id.textViewMsg);
+                Button continuar = dialogView.findViewById(R.id.buttonSi);
+                Button cancelar = dialogView.findViewById(R.id.buttonNo);
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
+
+                titulo.setText("Verifica tu correo");
+                msg.setText("Se ha enviado un correo de verificación al email");
+                continuar.setText("Verificado");
+                cancelar.setText("Salir");
+
+                continuar.setOnClickListener(v1 -> {
+                    auth.signInWithEmailAndPassword(correo, psswrd).addOnCompleteListener(task1 -> {
+                        if (!auth.getCurrentUser().isEmailVerified()) {
+                            sendVerfificacion(correo);
+                            signOut();
+                            Toast.makeText(login, "No has verificado el correo", Toast.LENGTH_SHORT).show();
+                        }else{
+                            login.iniciarMainActivity(task1);
+                        }
+                    });
+                });
+                cancelar.setOnClickListener(v1 -> {
+                    login.iniciarMainActivity(task);
+                });
+            }else {
+                login.iniciarMainActivity(task);
+            }
+        });
     }
     public void signOut(){auth.signOut();}
     public Task<Boolean> borrarCuenta(String correo, Context context){
@@ -503,9 +555,7 @@ public class ConexionFirebase {
             }
         });
     }
-    public void sendVerfificacion(String correo){
-        user.sendEmailVerification();
-    }
+    public void sendVerfificacion(String correo){auth.getCurrentUser().sendEmailVerification();}
     public Task<List<String>> getTemporadas(){
         TaskCompletionSource taskCompletionSource = new TaskCompletionSource();
 

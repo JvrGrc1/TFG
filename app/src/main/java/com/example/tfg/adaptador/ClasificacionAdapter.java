@@ -1,5 +1,6 @@
 package com.example.tfg.adaptador;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.view.LayoutInflater;
@@ -12,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.tfg.R;
 import com.example.tfg.entidad.Clasificacion;
-import com.example.tfg.entidad.Partido;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -25,6 +25,9 @@ public class ClasificacionAdapter  extends RecyclerView.Adapter<ClasificacionAda
     public ClasificacionAdapter (Context context, List<Clasificacion> clasificacionsList){
         this.contexto = context;
         this.clasificacion = clasificacionsList;
+        for (Clasificacion c : clasificacionsList){
+            c.setPuntos((c.getVictoria()*2) + c.getEmpate());
+        }
         Collections.sort(this.clasificacion, new ClasificacionComparator());
         if (clasificacionsList.size() > 10){
             this.clasificacion = clasificacionsList.subList(0,10);
@@ -43,13 +46,14 @@ public class ClasificacionAdapter  extends RecyclerView.Adapter<ClasificacionAda
         return new ClasificacionViewHolder(v, contexto);
     }
 
+    @SuppressLint("DefaultLocale")
     @Override
     public void onBindViewHolder(@NonNull ClasificacionAdapter.ClasificacionViewHolder holder, int position) {
         Clasificacion clasificacion1 = clasificacion.get(position);
 
-        holder.posicion.setText("" + (position + 1));
+        holder.posicion.setText(String.format("%d", (position + 1)));
         holder.temp.setText(clasificacion1.getTemporada());
-        holder.puntos.setText("" + ((clasificacion1.getVictoria() * 2) + clasificacion1.getEmpate()));
+        holder.puntos.setText(String.format("%d", clasificacion1.getPuntos()));
         holder.vde.setText(String.format("%d/%d/%d", clasificacion1.getVictoria(), clasificacion1.getDerrota(), clasificacion1.getEmpate()));
         holder.equipo.setText(setNombre(clasificacion1.getNombre()));
 
@@ -109,17 +113,22 @@ public class ClasificacionAdapter  extends RecyclerView.Adapter<ClasificacionAda
     static class ClasificacionComparator implements Comparator<Clasificacion> {
         @Override
         public int compare(Clasificacion p1, Clasificacion p2) {
-            // Ordenar por victorias descendiente
-            int resultado = Long.compare(p2.getVictoria(), p1.getVictoria());
+            //Ordenar por puntos desc
+            int resultado = Long.compare(p2.getPuntos(), p1.getPuntos());
             if (resultado != 0) {
                 return resultado;
             }
-            // Ordenar por empates descendiente
+            // Ordenar por victorias desc
+            resultado = Long.compare(p2.getVictoria(), p1.getVictoria());
+            if (resultado != 0) {
+                return resultado;
+            }
+            // Ordenar por empates desc
             resultado = Long.compare(p2.getEmpate(), p1.getEmpate());
             if (resultado != 0) {
                 return resultado;
             }
-            // Ordenar por derrotas descendiente
+            // Ordenar por derrotas desc
             return Long.compare(p2.getDerrota(), p1.getDerrota());
         }
     }

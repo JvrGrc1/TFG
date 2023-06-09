@@ -93,25 +93,7 @@ public class DetallesPrenda extends AppCompatActivity {
         constrain.setOnClickListener(v -> finish());
         constrain2.setOnClickListener(v -> {});
 
-        boolean modoOscuro = getSharedPreferences("Ajustes", Context.MODE_PRIVATE).getBoolean("modoOscuro", false);
-        Window window = getWindow();
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        if (modoOscuro){
-            constrain2.setBackgroundColor(Color.BLACK);
-            precioPrenda.setTextColor(Color.WHITE);
-            tallas.setTextColor(Color.WHITE);
-            xl.setTextColor(Color.WHITE);
-            xl.setButtonDrawable(R.drawable.radio_night);
-            l.setTextColor(Color.WHITE);
-            l.setButtonDrawable(R.drawable.radio_night);
-            m.setTextColor(Color.WHITE);
-            m.setButtonDrawable(R.drawable.radio_night);
-            xs.setTextColor(Color.WHITE);
-            xs.setButtonDrawable(R.drawable.radio_night);
-            s.setTextColor(Color.WHITE);
-            s.setButtonDrawable(R.drawable.radio_night);
-            nombrePrenda.setTextColor(Color.WHITE);
-        }
+        comprobarModo();
 
 
         grupo.setOnCheckedChangeListener((group, id) -> {
@@ -169,5 +151,27 @@ public class DetallesPrenda extends AppCompatActivity {
         }
         ArrayAdapter<Integer> adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item, lista);
         cantidad.setAdapter(adapter);
+    }
+
+    private void comprobarModo() {
+        boolean modoOscuro = getSharedPreferences("Ajustes", Context.MODE_PRIVATE).getBoolean("modoOscuro", false);
+        Window window = getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        if (modoOscuro){
+            constrain2.setBackgroundColor(Color.BLACK);
+            precioPrenda.setTextColor(Color.WHITE);
+            tallas.setTextColor(Color.WHITE);
+            xl.setTextColor(Color.WHITE);
+            xl.setButtonDrawable(R.drawable.radio_night);
+            l.setTextColor(Color.WHITE);
+            l.setButtonDrawable(R.drawable.radio_night);
+            m.setTextColor(Color.WHITE);
+            m.setButtonDrawable(R.drawable.radio_night);
+            xs.setTextColor(Color.WHITE);
+            xs.setButtonDrawable(R.drawable.radio_night);
+            s.setTextColor(Color.WHITE);
+            s.setButtonDrawable(R.drawable.radio_night);
+            nombrePrenda.setTextColor(Color.WHITE);
+        }
     }
 }

@@ -193,6 +193,10 @@ public class MainActivity extends AppCompatActivity {
                     conexion.signOut();
                     intentMainActivity();
                 case R.id.consultaJugador:
+                    Intent intentJugadores = new Intent(this, ConsultarJugador.class);
+                    intentJugadores.putExtra("jugadores", (Serializable) jugadores);
+                    startActivity(intentJugadores);
+                    drawerLayout.closeDrawer(GravityCompat.START);
                     break;
             }
             return false;

@@ -254,6 +254,7 @@ public class Ajustes extends AppCompatActivity {
         Button ig = dialogView.findViewById(R.id.buttonIg);
         Button yt = dialogView.findViewById(R.id.buttonYT);
         Button twitter = dialogView.findViewById(R.id.buttonTwitter);
+        Button cancelar = dialogView.findViewById(R.id.buttonSalir);
 
         String paqueteIg = "com.instagram.android";
         String paqueteYt = "com.twitter.android";
@@ -262,7 +263,7 @@ public class Ajustes extends AppCompatActivity {
         AlertDialog dialog = builder.create();
         dialog.show();
 
-
+        cancelar.setOnClickListener(v -> dialog.dismiss());
         ig.setOnClickListener(v -> {
             if (appInstalada(paqueteIg)) {// Abrir la aplicación de Instagram
                 Intent intent = new Intent(Intent.ACTION_VIEW);

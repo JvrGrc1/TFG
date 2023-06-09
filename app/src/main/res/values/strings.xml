@@ -86,4 +86,10 @@
         El Club Balonmano Leganés, nace con un claro espíritu democrático y participativo. Los verdaderos gestores del club, son los socios, de esta forma el Club Balonmano Leganés, puede seguir mejorando día a día con el apoyo de todos.
     </string>
     <string name="max_goleadores">Máximos goleadores</string>
+    <string name="consultar_jugadores">Consultar jugadores</string>
+    <string name="estadisticas_jugador">Estadísticas jugador</string>
+    <string name="mano_dominante">Mano dominante:</string>
+    <string name="equipo_actual">Equipo actual:</string>
+    <string name="temporada">Temporada</string>
+    <string name="no_hay_datos">No hay datos</string>
 </resources>
