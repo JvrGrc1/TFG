@@ -192,6 +192,7 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.cerrar:
                     conexion.signOut();
                     intentMainActivity();
+                    break;
                 case R.id.consultaJugador:
                     Intent intentJugadores = new Intent(this, ConsultarJugador.class);
                     intentJugadores.putExtra("jugadores", (Serializable) jugadores);
