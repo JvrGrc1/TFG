@@ -1,5 +1,6 @@
 package com.example.tfg;
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
@@ -191,6 +192,12 @@ public class RegistrarUsuario extends AppCompatActivity {
             cancelar.setOnClickListener(v -> finish());
             continuar.setOnClickListener(v -> dialog.dismiss());
         }else{
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            intent.putExtra("correo", correo.getText().toString());
+            intent.putExtra("psswrd", psswrd.getText().toString());
+            intent.putExtra("lista", (Serializable) j);
+            intent.putExtra("ropa", (Serializable) prendas);
+            startActivity(intent);
             finish();
         }
     }

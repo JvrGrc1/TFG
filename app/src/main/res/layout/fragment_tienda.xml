@@ -11,7 +11,7 @@
 
     <ImageButton
         android:id="@+id/botonCompra"
-        android:contentDescription="Carrito de la compra"
+        android:contentDescription="@string/carrito_compra"
         android:layout_width="45dp"
         android:layout_height="45dp"
         android:layout_marginTop="10dp"

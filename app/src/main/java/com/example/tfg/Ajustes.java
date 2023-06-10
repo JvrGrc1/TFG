@@ -19,7 +19,6 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Switch;
@@ -30,7 +29,6 @@ import com.example.tfg.conexion.ConexionFirebase;
 import com.example.tfg.entidad.Partido;
 import com.example.tfg.entidad.Pedido;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -46,11 +44,9 @@ public class Ajustes extends AppCompatActivity {
     private List<Partido> j = new ArrayList<>();
     private List<Pedido> prendas = new ArrayList<>();
     private ConstraintLayout constraintLayout;
-    private TextView titulo, oscuro, correo, psswrd, historia, redes, from, ajustes, tema, borrar, cambiar;;
-    private LinearLayout user, line, nuevoEmail;
-    private EditText email;
+    private TextView titulo, oscuro, correo, psswrd, historia, redes, from, borrar, cambiar;;
+    private LinearLayout line;
     private ImageView jvr;
-    private View divider;
     private Switch modo;
     private SharedPreferences sharedPreferences;
     private Window window;
@@ -68,17 +64,11 @@ public class Ajustes extends AppCompatActivity {
         oscuro = findViewById(R.id.oscuro);
         correo = findViewById(R.id.correoAjustes);
         psswrd = findViewById(R.id.psswrdAjustes);
-        divider = findViewById(R.id.divider6);
         historia = findViewById(R.id.historia);
         redes = findViewById(R.id.redes);
         jvr = findViewById(R.id.jvrAjustes);
         from = findViewById(R.id.fromAjustes);
-        ajustes = findViewById(R.id.textViewAjustes);
-        user = findViewById(R.id.linearUser);
-        tema = findViewById(R.id.textViewTema);
         line = findViewById(R.id.line1);
-        nuevoEmail = findViewById(R.id.nuevoEmail);
-        email = findViewById(R.id.correoNuevo);
 
         sharedPreferences = getSharedPreferences("Ajustes", Context.MODE_PRIVATE);
         window = getWindow();
@@ -280,7 +270,7 @@ public class Ajustes extends AppCompatActivity {
             if (appInstalada(paqueteYt)) {// Abrir la aplicación de Instagram
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.setData(Uri.parse("https://www.youtube.com/user/balonmanoleganes"));
-                intent.setPackage(paqueteIg);
+                intent.setPackage(paqueteYt);
                 startActivity(intent);
             } else {// Abrir el perfil de Instagram en el navegador web
                 Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -342,7 +332,7 @@ public class Ajustes extends AppCompatActivity {
         AlertDialog dialog = builder.create();
         dialog.show();
         continuar.setOnClickListener(v -> {
-            Task<Boolean> borrado = conexion.borrarCuenta(conexion.obtenerUser().getEmail(), Ajustes.this);
+            Task<Boolean> borrado = conexion.borrarCuenta(dialog, conexion.obtenerUser().getEmail(), Ajustes.this);
             borrado.addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     Intent intent1 = new Intent(this, MainActivity.class);

@@ -1,6 +1,26 @@
 <resources>
-    <string name="app_name">CB Leganés</string>
+    <string name="ajustes">Ajustes</string>
+    <string name="ajustes_user">Ajustes de usuario</string>
+    <string name="cambiar_correo_electronico">Cambiar correo electrónico</string>
+    <string name="cambiar_contraseña">Cambiar contraseña</string>
+    <string name="cambiar_cuenta">Cambiar de Cuenta</string>
+    <string name="borrar_cuenta">Borrar Cuenta</string>
+    <string name="tema">Tema</string>
+    <string name="modo_oscuro">Modo oscuro</string>
+    <string name="datos_club">Datos del club</string>
+    <string name="historia_info_club">Historia e información del club</string>
+    <string name="redes">Redes</string>
+    <string name="from">From</string>
+    <string name="logo_jvr">Logo JVR</string>
+    <string name="consultar_jugadores">Consultar jugadores</string>
+    <string name="no_hay_datos">No hay datos</string>
+    <string name="estadisticas_jugador">Estadísticas jugador</string>
+    <string name="nombre">Nombre</string>
+    <string name="apellido1">1º Apellido</string>
+    <string name="mano_dominante">Mano dominante:</string>
     <string name="text_view">TextView</string>
+    <string name="equipo_actual">Equipo actual:</string>
+    <string name="temporada">Temporada</string>
     <string name="ejemplo_prenda">1ª Equipación 22/23</string>
     <string name="aniadir_cesta">Añadir a la cesta</string>
     <string name="ejemplo_precio">Desde: 20€</string>
@@ -11,18 +31,32 @@
     <string name="s">S</string>
     <string name="xs">XS</string>
     <string name="conocerte">Queremos conocer más sobre ti</string>
-    <string name="nombre">Nombre</string>
-    <string name="apellido1">1º Apellido</string>
     <string name="apellido2_opc">2º Apellido (opcional)</string>
-    <string name="apellido2">2º Apellido</string>
+    <string name="telefono_opc">Teléfono (opcional)</string>
+    <string name="telefono_ejemplo">Ej: 628519047</string>
+    <string name="rol">Rol:</string>
     <string name="admin">Administrador</string>
     <string name="entrenador">Entrenador</string>
     <string name="jugador">Jugador</string>
-    <string name="rol">Rol:</string>
     <string name="codigo">Código:</string>
-    <string name="telefono_opc">Teléfono (opcional)</string>
-    <string name="telefono_ejemplo">Ej: 628519047</string>
     <string name="continuar">Continuar</string>
+    <string name="historia_club">Historia del club</string>
+    <string name="historia">
+        El Club Balonmano Leganés, nace en el año 2004 fundado por un grupo de aficionados al balonmano, persiguiendo un firme objetivo, el de dar la posibilidad de disfrutar de este deporte a todos los niveles.
+    </string>
+    <string name="historia1">
+        En el nacimiento de este club se crean tan solo 4 equipos, Infantil, Cadete, Juvenil y Senior. Todos ellos de categoría masculina, compuesto por chavales que apuestan por el deporte del balonmano. Tan sólo una temporada después, se incorpora al club, la sección femenina.
+    </string>
+
+    <string name="historia2">
+        En apenas 10 años hemos crecido notablemente, en la temporada 14/15, se inscribieron 15 equipos, y por primera vez, se inscribían seis equipos infantiles, 3 masculinos, y 3 femeninos. Actualmente el club cuenta con más de 20 equipos, desde benjamines hasta Senior. Este crecimiento es fruto de un trabajo constante con la base, que cuenta con más de 200 niños inscritos en las escuelas de Balonmano, garantizando así una base sólida con la que seguir trabajando para hacer si cabe este club más grande.
+    </string>
+    <string name="historia3">
+        El Club Balonmano Leganés, nace con un claro espíritu democrático y participativo. Los verdaderos gestores del club, son los socios, de esta forma el Club Balonmano Leganés, puede seguir mejorando día a día con el apoyo de todos.
+    </string>
+    <string name="max_goleadores">Máximos goleadores</string>
+    <string name="app_name">CB Leganés</string>
+    <string name="apellido2">2º Apellido</string>
     <string name="correo_user">Correo del usuario</string>
     <string name="contraseña">Contraseña</string>
     <string name="iniciar_sesion">Iniciar Sesión</string>
@@ -44,7 +78,6 @@
     <string name="titulo_registro_user">Registro de\nusuario</string>
     <string name="advertencia_contraseña">La contraseña debe contener min. 6 caracteres.</string>
     <string name="ya_tiene_cuenta">INICIA SESIÓN AQUÍ</string>
-    <string name="from">From</string>
     <string name="posicion">Posición</string>
     <string name="ejemplo_cantidad">9</string>
     <string name="estadisticas">Estadísticas</string>
@@ -53,7 +86,6 @@
     <string name="usuario">Mi usuario</string>
     <string name="consultar_jugador">Consultar Jugador</string>
     <string name="consultar_equipo">Consultar Equipo</string>
-    <string name="ajustes">Ajustes</string>
     <string name="cerrar_sesion">Cerrar Sesión</string>
     <string name="telefono">Teléfono</string>
     <string name="direccion">Dirección</string>
@@ -72,24 +104,49 @@
     <string name="ejPrecio">30€</string>
     <string name="confirmar_pedido">Confirmar pedido</string>
     <string name="nuevo_correo">Nuevo correo elctrónico</string>
-    <string name="historia">
-        El Club Balonmano Leganés, nace en el año 2004 fundado por un grupo de aficionados al balonmano, persiguiendo un firme objetivo, el de dar la posibilidad de disfrutar de este deporte a todos los niveles.
-    </string>
-    <string name="historia1">
-        En el nacimiento de este club se crean tan solo 4 equipos, Infantil, Cadete, Juvenil y Senior. Todos ellos de categoría masculina, compuesto por chavales que apuestan por el deporte del balonmano. Tan sólo una temporada después, se incorpora al club, la sección femenina.
-    </string>
-
-    <string name="historia2">
-        En apenas 10 años hemos crecido notablemente, en la temporada 14/15, se inscribieron 15 equipos, y por primera vez, se inscribían seis equipos infantiles, 3 masculinos, y 3 femeninos. Actualmente el club cuenta con más de 20 equipos, desde benjamines hasta Senior. Este crecimiento es fruto de un trabajo constante con la base, que cuenta con más de 200 niños inscritos en las escuelas de Balonmano, garantizando así una base sólida con la que seguir trabajando para hacer si cabe este club más grande.
-    </string>
-    <string name="historia3">
-        El Club Balonmano Leganés, nace con un claro espíritu democrático y participativo. Los verdaderos gestores del club, son los socios, de esta forma el Club Balonmano Leganés, puede seguir mejorando día a día con el apoyo de todos.
-    </string>
-    <string name="max_goleadores">Máximos goleadores</string>
-    <string name="consultar_jugadores">Consultar jugadores</string>
-    <string name="estadisticas_jugador">Estadísticas jugador</string>
-    <string name="mano_dominante">Mano dominante:</string>
-    <string name="equipo_actual">Equipo actual:</string>
-    <string name="temporada">Temporada</string>
-    <string name="no_hay_datos">No hay datos</string>
+    <string name="logo_club">Logo del club</string>
+    <string name="tarjeta_de_credito">Tarjeta de Credito</string>
+    <string name="numero_tarjeta">Número de la tarjeta</string>
+    <string name="titular">Titular</string>
+    <string name="cvv">CVV</string>
+    <string name="guardar">Guardar</string>
+    <string name="imagen_perfil">Imagen de perfil</string>
+    <string name="editar_imagen_usuario">Editar imagen usuario</string>
+    <string name="editar_partido">Editar partido</string>
+    <string name="agregar_datos">Agregar datos</string>
+    <string name="primero">1º</string>
+    <string name="ejemplo_equipo">1 Nacional Maculino</string>
+    <string name="ejemplo_temporada">22–23</string>
+    <string name="ejemplo_vde">8/6/8</string>
+    <string name="ejemplo_puntos">22 ptos</string>
+    <string name="introduce_correo_new">Introduce un nuevo correo :</string>
+    <string name="introduce_contraseña_new">Introduce la contraseña nueva:</string>
+    <string name="redes_sociales_club">Redes sociales del club</string>
+    <string name="titulo">titulo</string>
+    <string name="mensaje">mensaje</string>
+    <string name="clasificacion_equipos">Clasificación de equipos</string>
+    <string name="equipo">Equipo</string>
+    <string name="vde">V/D/E</string>
+    <string name="puntos">Puntos</string>
+    <string name="top_10_max_goleadores">Top 10 Máximos goleadores</string>
+    <string name="goles">Goles</string>
+    <string name="tiros">Tiros</string>
+    <string name="buscar_partidos">Buscar partidos</string>
+    <string name="carrito_compra">Carrito de la compra</string>
+    <string name="ejemplo_goles">130</string>
+    <string name="ejemplo_tiros">200</string>
+    <string name="prenda_de_ropa">Prenda de ropa</string>
+    <string name="ganador_equipo_local">Ganador equipo local</string>
+    <string name="ganador_equipo_visitante">Ganador equipo visitante</string>
+    <string name="prenda_pedida">Prenda pedida</string>
+    <string name="equipo_puntos">Equipo:</string>
+    <string name="equipo_jugador">Equipo Jugador</string>
+    <string name="posicion_puntos">Posición:</string>
+    <string name="posicion_jugador">Posicion jugador</string>
+    <string name="goles_puntos">Goles:</string>
+    <string name="tiros_puntos">Tiros:</string>
+    <string name="paradas_puntos">Paradas:</string>
+    <string name="amarillas_puntos">Amarillas:</string>
+    <string name="rojas_puntos">Rojas:</string>
+    <string name="dos_min_puntos">2 Minutos:</string>
 </resources>

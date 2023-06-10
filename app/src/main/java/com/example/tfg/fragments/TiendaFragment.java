@@ -21,6 +21,7 @@ import com.example.tfg.R;
 import com.example.tfg.adaptador.RecyclerItemClickListener;
 import com.example.tfg.adaptador.TiendaAdapter;
 import com.example.tfg.conexion.ConexionFirebase;
+import com.example.tfg.entidad.Partido;
 import com.example.tfg.entidad.Pedido;
 import com.example.tfg.entidad.Prenda;
 import com.google.android.gms.tasks.Task;

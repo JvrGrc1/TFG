@@ -67,7 +67,14 @@ public class Login extends AppCompatActivity {
             }
         });
 
-        nueva.setOnClickListener(view -> finish());
+        nueva.setOnClickListener(view -> {
+            Intent intent1 = new Intent(Login.this, RegistrarUsuario.class);
+            intent1.putExtra("lista", (Serializable) j);
+            intent1.putExtra("ropa", (Serializable) prendas);
+            startActivity(intent1);
+            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+            finishAffinity();
+        });
 
         SharedPreferences sp = getSharedPreferences("Ajustes", this.MODE_PRIVATE);
         Window window = getWindow();

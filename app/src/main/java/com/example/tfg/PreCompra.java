@@ -61,6 +61,7 @@ public class PreCompra extends AppCompatActivity {
             Intent intent = new Intent(this, MetodoDePago.class);
             intent.putExtra("pedido", (Serializable) pedidos);
             startActivity(intent);
+            finish();
         });
     }
 }

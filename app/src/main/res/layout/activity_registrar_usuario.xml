@@ -92,7 +92,7 @@
 
     <ImageView
         android:id="@+id/imageViewRegistroLogo"
-        android:contentDescription="Logo del club"
+        android:contentDescription="@string/logo_club"
         android:layout_width="300dp"
         android:layout_height="300dp"
         app:layout_constraintEnd_toEndOf="parent"

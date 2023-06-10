@@ -1,7 +1,6 @@
 package com.example.tfg.conexion;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
@@ -16,7 +15,6 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 
 import com.example.tfg.Login;
-import com.example.tfg.MainActivity;
 import com.example.tfg.PerfilUsuario;
 import com.example.tfg.R;
 import com.example.tfg.entidad.Jugador;
@@ -28,8 +26,6 @@ import com.example.tfg.entidad.Usuario;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.gms.tasks.Tasks;
-import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.SignInMethodQueryResult;
@@ -41,14 +37,11 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class ConexionFirebase {
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -379,51 +372,56 @@ public class ConexionFirebase {
     }
     public void signIn(String correo, String psswrd, Login login){
         auth.signInWithEmailAndPassword(correo, psswrd).addOnCompleteListener(task -> {
-            if (!auth.getCurrentUser().isEmailVerified()) {
-                sendVerfificacion(correo);
-                signOut();
-                AlertDialog.Builder builder = new AlertDialog.Builder(login);
+            if (task.isSuccessful()) {
+                if (!auth.getCurrentUser().isEmailVerified()) {
+                    sendVerfificacion(correo);
+                    signOut();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(login);
 
-                LayoutInflater inflater = LayoutInflater.from(login);
-                View dialogView = inflater.inflate(R.layout.dialog_sino, null);
-                builder.setView(dialogView);
+                    LayoutInflater inflater = LayoutInflater.from(login);
+                    View dialogView = inflater.inflate(R.layout.dialog_sino, null);
+                    builder.setView(dialogView);
 
-                TextView titulo = dialogView.findViewById(R.id.textViewTitulo);
-                TextView msg = dialogView.findViewById(R.id.textViewMsg);
-                Button continuar = dialogView.findViewById(R.id.buttonSi);
-                Button cancelar = dialogView.findViewById(R.id.buttonNo);
+                    TextView titulo = dialogView.findViewById(R.id.textViewTitulo);
+                    TextView msg = dialogView.findViewById(R.id.textViewMsg);
+                    Button continuar = dialogView.findViewById(R.id.buttonSi);
+                    Button cancelar = dialogView.findViewById(R.id.buttonNo);
 
-                AlertDialog dialog = builder.create();
-                dialog.show();
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
 
-                titulo.setText("Verifica tu correo");
-                msg.setText("Se ha enviado un correo de verificación al email");
-                continuar.setText("Verificado");
-                cancelar.setText("Salir");
+                    titulo.setText("Verifica tu correo");
+                    msg.setText("Se ha enviado un correo de verificación al email");
+                    continuar.setText("Verificado");
+                    cancelar.setText("Salir");
 
-                continuar.setOnClickListener(v1 -> {
-                    auth.signInWithEmailAndPassword(correo, psswrd).addOnCompleteListener(task1 -> {
-                        if (!auth.getCurrentUser().isEmailVerified()) {
-                            sendVerfificacion(correo);
-                            signOut();
-                            Toast.makeText(login, "No has verificado el correo", Toast.LENGTH_SHORT).show();
-                        }else{
-                            login.iniciarMainActivity(task1);
-                        }
+                    continuar.setOnClickListener(v1 -> {
+                        auth.signInWithEmailAndPassword(correo, psswrd).addOnCompleteListener(task1 -> {
+                            if (!auth.getCurrentUser().isEmailVerified()) {
+                                sendVerfificacion(correo);
+                                signOut();
+                                Toast.makeText(login, "No has verificado el correo", Toast.LENGTH_SHORT).show();
+                            } else {
+                                login.iniciarMainActivity(task1);
+                            }
+                        });
                     });
-                });
-                cancelar.setOnClickListener(v1 -> {
+                    cancelar.setOnClickListener(v1 -> {
+                        login.iniciarMainActivity(task);
+                    });
+                } else {
                     login.iniciarMainActivity(task);
-                });
-            }else {
-                login.iniciarMainActivity(task);
+                }
+            }else{
+                Toast.makeText(login, "Los datos introducidos son erroneos", Toast.LENGTH_SHORT).show();
             }
         });
     }
     public void signOut(){auth.signOut();}
-    public Task<Boolean> borrarCuenta(String correo, Context context){
+    public Task<Boolean> borrarCuenta(AlertDialog dialog, String correo, Context context){
+        dialog.dismiss();
         TaskCompletionSource<Boolean> taskCompletionSource = new TaskCompletionSource<>();
-        user.delete().addOnCompleteListener(task -> {
+        auth.getCurrentUser().delete().addOnCompleteListener(task -> {
             if (task.isSuccessful()){
                 db.collection("usuarios")
                         .whereEqualTo("correo", correo)
@@ -431,13 +429,19 @@ public class ConexionFirebase {
                         .addOnCompleteListener(task1 -> {
                             if (task1.isSuccessful()) {
                                 for (QueryDocumentSnapshot document : task1.getResult()) {
-                                    db.collection("usuarios").document(document.getId()).delete()
-                                            .addOnSuccessListener(aVoid -> {
+                                    String img = document.getString("imagen");
+                                    db.collection("usuarios").document(document.getId()).delete().addOnSuccessListener(aVoid -> {
+                                        Task<Void> task2 = storage.getReferenceFromUrl(img).delete();
+                                        task2.addOnCompleteListener(task3 -> {
+                                            if (task3.isSuccessful()){
                                                 taskCompletionSource.setResult(true);
-                                            })
-                                            .addOnFailureListener(e -> {
-                                                Toast.makeText(context, "Error al eliminar el documento", Toast.LENGTH_SHORT).show();
-                                            });
+                                            }else{
+                                                Toast.makeText(context, "Error al eliminar la imagen de perfil de la bd", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                                    }).addOnFailureListener(e -> {
+                                        Toast.makeText(context, "Error al eliminar el documento", Toast.LENGTH_SHORT).show();
+                                    });
                                 }
                             } else {
                                 taskCompletionSource.setResult(false);
@@ -542,7 +546,7 @@ public class ConexionFirebase {
                     if (documents.getString("comprador").equals(pedido.get("comprador")) && documents.getBoolean("pagado").equals(false) && documents.getString("prenda").equals(pedido.get("prenda")) && documents.getString("talla").equals(pedido.get("talla"))){
                         db.collection("pedidos").document(documents.getId()).update(pedido).addOnCompleteListener(task1 -> {
                             if (task1.isSuccessful()) {
-                                Toast.makeText(context, "Modificado correctamente", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, "Pedido pagado con éxito", Toast.LENGTH_SHORT).show();
                             } else {
                                 Toast.makeText(context, "Algo ha ido mal.", Toast.LENGTH_SHORT).show();
                             }

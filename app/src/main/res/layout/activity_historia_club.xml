@@ -21,7 +21,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="20dp"
             android:fontFamily="@font/favter1"
-            android:text="Historia del club"
+            android:text="@string/historia_club"
             android:textColor="@color/azul_oscuro"
             android:textSize="15sp"
             android:textStyle="normal"

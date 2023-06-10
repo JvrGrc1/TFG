@@ -34,6 +34,8 @@ import com.example.tfg.conexion.ConexionFirebase;
 import com.example.tfg.entidad.Partido;
 import com.example.tfg.entidad.Pedido;
 import com.example.tfg.entidad.Usuario;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.storage.FirebaseStorage;
@@ -201,7 +203,7 @@ public class PerfilUsuario extends AppCompatActivity {
         textInputLayout.setDefaultHintTextColor(ColorStateList.valueOf(Color.WHITE));
     }
 
-    private ActivityResultLauncher<Void> tomarFoto = registerForActivityResult(
+    private final ActivityResultLauncher<Void> tomarFoto = registerForActivityResult(
             new ActivityResultContracts.TakePicturePreview(), result -> {
                 if(result != null) {
                     ByteArrayOutputStream bytes = new ByteArrayOutputStream();
@@ -214,23 +216,27 @@ public class PerfilUsuario extends AppCompatActivity {
             }
     );
 
-    private ActivityResultLauncher<Intent> elegirDeGaleria = registerForActivityResult(
+    private final ActivityResultLauncher<Intent> elegirDeGaleria = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), result -> {
                 if (result.getResultCode() == Activity.RESULT_OK) {
-                    Uri imagenUri = result.getData().getData();
-                    imagen.setImageURI(imagenUri);
-                    nuevaUri = imagenUri;
-                    guardar.setVisibility(View.VISIBLE);
+                    if (result.getData() != null) {
+                        Uri imagenUri = result.getData().getData();
+                        imagen.setImageURI(imagenUri);
+                        nuevaUri = imagenUri;
+                        guardar.setVisibility(View.VISIBLE);
+                    }
                 }
             }
     );
 
-    private void subirImagen(Uri imagenUri){
+    private Task<Boolean> subirImagen(Uri imagenUri){
+        TaskCompletionSource<Boolean> taskCompletionSource = new TaskCompletionSource<>();
         StorageReference ref = storageRef.child("perfilUsuario/" + conexion.obtenerUser().getEmail() + ".jpg");
         UploadTask uploadTask = ref.putFile(imagenUri);
         uploadTask.continueWithTask(contTask -> {
             if (!contTask.isSuccessful()) {
                 Toast.makeText(PerfilUsuario.this, "Error al subir la imagen.", Toast.LENGTH_SHORT).show();
+                taskCompletionSource.setException(Objects.requireNonNull(taskCompletionSource.getTask().getException()));
             }
             return ref.getDownloadUrl();
         }).addOnCompleteListener(completeTask -> {
@@ -238,16 +244,19 @@ public class PerfilUsuario extends AppCompatActivity {
                 Uri downloadUri = completeTask.getResult();
                 String urlFoto = downloadUri.toString();
                 conexion.cargarImagen(PerfilUsuario.this, imagen, null, urlFoto);
+                taskCompletionSource.setResult(true);
             } else {
                 Toast.makeText(PerfilUsuario.this, "Error al poner la imagen.", Toast.LENGTH_SHORT).show();
+                taskCompletionSource.setException(Objects.requireNonNull(taskCompletionSource.getTask().getException()));
             }
         });
+        return taskCompletionSource.getTask();
     }
 
     private boolean comprobarNombreyApellidos(){
-        String nombre1 = nombre.getText().toString();
-        String apellido11 = apellido1.getText().toString();
-        String apellido21 = apellido2.getText().toString();
+        String nombre1 = Objects.requireNonNull(nombre.getText()).toString();
+        String apellido11 = Objects.requireNonNull(apellido1.getText()).toString();
+        String apellido21 = Objects.requireNonNull(apellido2.getText()).toString();
         if (!apellido11.isEmpty() & !nombre1.isEmpty()){
             return true;
         }else{
@@ -270,11 +279,11 @@ public class PerfilUsuario extends AppCompatActivity {
         }
     }
     private boolean comprobarDireccion(){
-        String direccion1 = direccion.getText().toString().trim();
-        String piso1 = piso.getText().toString().trim();
-        String ciudad1 = ciudad.getText().toString().trim();
-        String provincia1 = provincia.getText().toString().trim();
-        String portal1 = portal.getText().toString().trim();
+        String direccion1 = Objects.requireNonNull(direccion.getText()).toString().trim();
+        String piso1 = Objects.requireNonNull(piso.getText()).toString().trim();
+        String ciudad1 = Objects.requireNonNull(ciudad.getText()).toString().trim();
+        String provincia1 = Objects.requireNonNull(provincia.getText()).toString().trim();
+        String portal1 = Objects.requireNonNull(portal.getText()).toString().trim();
 
         if (direccion1.isEmpty() || piso1.isEmpty() || portal1.isEmpty() || ciudad1.isEmpty() || provincia1.isEmpty()){
             if (direccion1.isEmpty() && piso1.isEmpty() && portal1.isEmpty() && ciudad1.isEmpty() && provincia1.isEmpty()) {
@@ -317,7 +326,7 @@ public class PerfilUsuario extends AppCompatActivity {
     }
 
     private boolean tlfCorrecto(){    //Comprueba que no contenga espacios, que empieze por 6,7,8 o 9 y tenga 9 dígitos.
-        String tlf1 = tlf.getText().toString();
+        String tlf1 = Objects.requireNonNull(tlf.getText()).toString();
         if (tlf1.isEmpty() || tlf1.matches("^[6|7|8|9][0-9]{8}$")){
             return true;
         }else {
@@ -336,7 +345,7 @@ public class PerfilUsuario extends AppCompatActivity {
     }
 
     private String obtenerDireccion(){
-        return String.format("%s,%s,%s,%s,%s", direccion.getText().toString(), portal.getText().toString(), piso.getText().toString(), provincia.getText().toString(), ciudad.getText().toString());
+        return String.format("%s,%s,%s,%s,%s", Objects.requireNonNull(direccion.getText()), Objects.requireNonNull(portal.getText()), Objects.requireNonNull(piso.getText()), Objects.requireNonNull(provincia.getText()), Objects.requireNonNull(ciudad.getText()));
     }
 
     public void addTextChangedListener(TextInputEditText editText, String usuario) {
@@ -390,21 +399,38 @@ public class PerfilUsuario extends AppCompatActivity {
             usuario.setApellido2(apellido2.getText().toString());
         }
         if (nuevaUri != null){
-            subirImagen(nuevaUri);
-            usuario.setImagen("gs://balonmano-f213a.appspot.com/perfilUsuario/" + conexion.obtenerUser().getEmail() + ".jpg");
+            Task<Boolean> subido  = subirImagen(nuevaUri);
+            subido.addOnCompleteListener(task -> {
+                if (task.isSuccessful()){
+                    usuario.setImagen("gs://balonmano-f213a.appspot.com/perfilUsuario/" + conexion.obtenerUser().getEmail() + ".jpg");
+                    if (Objects.requireNonNull(tlf.getText()).toString().isEmpty()){
+                        usuario.setTlf("");
+                    }else{
+                        usuario.setTlf(tlf.getText().toString());
+                    }
+                    if (!Objects.requireNonNull(direccion.getText()).toString().isEmpty()){
+                        usuario.setDireccion(obtenerDireccion());
+                    }else{
+                        usuario.setDireccion("");
+                    }
+                    conexion.modificarUser(usuario, this);
+                    intentMainActivity();
+                }
+            });
+        }else {
+            if (Objects.requireNonNull(tlf.getText()).toString().isEmpty()){
+                usuario.setTlf("");
+            }else{
+                usuario.setTlf(tlf.getText().toString());
+            }
+            if (!Objects.requireNonNull(direccion.getText()).toString().isEmpty()){
+                usuario.setDireccion(obtenerDireccion());
+            }else{
+                usuario.setDireccion("");
+            }
+            conexion.modificarUser(usuario, this);
+            intentMainActivity();
         }
-        if (Objects.requireNonNull(tlf.getText()).toString().isEmpty()){
-            usuario.setTlf("");
-        }else{
-            usuario.setTlf(tlf.getText().toString());
-        }
-        if (!Objects.requireNonNull(direccion.getText()).toString().isEmpty()){
-            usuario.setDireccion(obtenerDireccion());
-        }else{
-            usuario.setDireccion("");
-        }
-        conexion.modificarUser(usuario, this);
-        intentMainActivity();
     }
 
     private void intentMainActivity() {

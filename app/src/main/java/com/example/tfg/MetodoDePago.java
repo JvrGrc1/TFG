@@ -35,6 +35,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
@@ -139,6 +140,7 @@ public class MetodoDePago extends AppCompatActivity {
                 radioButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
                 grupo.addView(radioButton);
                 crearDireccion.setVisibility(View.GONE);
+                if (modoOscuro){radioButton.setTextColor(Color.WHITE);radioButton.setButtonDrawable(R.drawable.radio_night);}
             }
         });
 
@@ -151,7 +153,6 @@ public class MetodoDePago extends AppCompatActivity {
         });
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (spinner.getSelectedItem().equals("Elige tu tarjeta")) {
@@ -182,7 +183,9 @@ public class MetodoDePago extends AppCompatActivity {
         });
 
         pagar.setOnClickListener(v -> {
-            if (coomprobarValores()){
+            if (grupo.getCheckedRadioButtonId() == -1){
+                Toast.makeText(this, "Elige una direccion", Toast.LENGTH_SHORT).show();
+            }else if (comprobarValores()){
                 comprobarTarjeta(pedidos);
             }
         });
@@ -237,6 +240,7 @@ public class MetodoDePago extends AppCompatActivity {
             map.put("pagado", true);
             conexion.updatePedido(map, this);
         }
+        finish();
     }
 
     private boolean validacionLuhn(String numeroTarjeta){
@@ -334,12 +338,8 @@ public class MetodoDePago extends AppCompatActivity {
         String portal1 = Objects.requireNonNull(portal.getText()).toString().trim();
 
         if (direccion1.isEmpty() || piso1.isEmpty() || portal1.isEmpty() || ciudad1.isEmpty() || provincia1.isEmpty()){
-            if (direccion1.isEmpty() && piso1.isEmpty() && portal1.isEmpty() && ciudad1.isEmpty() && provincia1.isEmpty()) {
-                return true;
-            }else{
-                Toast.makeText(this, "Dirección, Piso, Portal, Ciudad y Provincia tienen que estar: rellenos o vacíos.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Los campos están vacios", Toast.LENGTH_SHORT).show();
                 return false;
-            }
         }else {
             int t = 0;
             if (direccion1.startsWith(" ") || direccion1.endsWith(" ")) {
@@ -381,7 +381,7 @@ public class MetodoDePago extends AppCompatActivity {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private boolean coomprobarValores(){
+    private boolean comprobarValores(){
         boolean correcto = true;
         if (Objects.requireNonNull(numTarjeta.getText()).toString().equals("")){
             numero.setError("Campo obligatorio");

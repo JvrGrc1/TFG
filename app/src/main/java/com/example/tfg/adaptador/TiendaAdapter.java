@@ -1,5 +1,6 @@
 package com.example.tfg.adaptador;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.view.LayoutInflater;
@@ -39,6 +40,7 @@ public class TiendaAdapter extends RecyclerView.Adapter<TiendaAdapter.TiendaView
         return new TiendaViewHolder(view, contexto);
     }
 
+    @SuppressLint("DefaultLocale")
     @Override
     public void onBindViewHolder(@NonNull TiendaAdapter.TiendaViewHolder holder, int position) {
         Prenda prenda = prendas.get(position);

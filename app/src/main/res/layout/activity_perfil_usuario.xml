@@ -25,7 +25,7 @@
 
     <ImageButton
         android:id="@+id/buttonGuardar"
-        android:contentDescription="Guardar"
+        android:contentDescription="@string/guardar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
@@ -63,7 +63,7 @@
 
             <ImageView
                 android:id="@+id/imagenMiUsuario"
-                android:contentDescription="Imagen de perfil"
+                android:contentDescription="@string/imagen_perfil"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
                 android:layout_marginTop="20dp"
@@ -352,7 +352,7 @@
 
             <ImageButton
                 android:id="@+id/buttonEditarImagenUser"
-                android:contentDescription="Editar imagen usuario"
+                android:contentDescription="@string/editar_imagen_usuario"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_marginTop="-30dp"

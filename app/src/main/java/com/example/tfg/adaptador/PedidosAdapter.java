@@ -23,7 +23,6 @@ import com.example.tfg.entidad.Pedido;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 public class PedidosAdapter extends RecyclerView.Adapter<PedidosAdapter.PedidosViewHolder> {
 
@@ -106,6 +105,7 @@ public class PedidosAdapter extends RecyclerView.Adapter<PedidosAdapter.PedidosV
         PedidosAdapter adapter;
 
 
+        @SuppressLint({"DefaultLocale", "SetTextI18n"})
         public PedidosViewHolder(@NonNull View itemView, PedidosAdapter adapter1) {
             super(itemView);
             adapter = adapter1;
@@ -157,7 +157,7 @@ public class PedidosAdapter extends RecyclerView.Adapter<PedidosAdapter.PedidosV
                     Toast.makeText(view.getContext(), "No puedes añadir más de 9 unidades por prenda.", Toast.LENGTH_SHORT).show();
                 }else {
                     int cantidadNueva = (Integer.parseInt(cantidad.getText().toString()) + 1);
-                    cantidad.setText(cantidadNueva + "");
+                    cantidad.setText(String.format("%d", cantidadNueva));
                     //conexion.updatePedido(cantidadNueva, crearMap());
                 }
             });
@@ -173,7 +173,7 @@ public class PedidosAdapter extends RecyclerView.Adapter<PedidosAdapter.PedidosV
         }
 
         private void comprobarModo(PedidosAdapter adapter1) {
-            boolean modoOscuro = adapter1.context.getSharedPreferences("Ajustes", adapter1.context.MODE_PRIVATE).getBoolean("modoOscuro", false);
+            boolean modoOscuro = adapter1.context.getSharedPreferences("Ajustes", Context.MODE_PRIVATE).getBoolean("modoOscuro", false);
             if (modoOscuro){
                 linear.setBackgroundColor(Color.BLACK);
                 linearCantidad.setBackgroundColor(Color.BLACK);

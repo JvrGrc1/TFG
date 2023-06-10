@@ -15,7 +15,7 @@
 
         <ImageButton
             android:id="@+id/botonBuscar"
-            android:contentDescription="Buscar partidos"
+            android:contentDescription="@string/buscar_partidos"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginTop="10dp"

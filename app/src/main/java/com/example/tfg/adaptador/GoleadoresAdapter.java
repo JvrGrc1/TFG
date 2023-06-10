@@ -1,5 +1,6 @@
 package com.example.tfg.adaptador;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.view.LayoutInflater;
@@ -11,11 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.tfg.R;
-import com.example.tfg.entidad.Clasificacion;
 import com.example.tfg.entidad.Jugador;
-import com.example.tfg.entidad.Temporada;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -46,14 +44,15 @@ public class GoleadoresAdapter extends RecyclerView.Adapter<GoleadoresAdapter.Go
         return new GoleadoresViewHolder(v, contexto);
     }
 
+    @SuppressLint("DefaultLocale")
     @Override
     public void onBindViewHolder(@NonNull GoleadoresViewHolder holder, int position) {
         Jugador jugador = jugadores.get(position);
 
         holder.nombre.setText(jugador.getNombre());
         holder.temp.setText(jugador.getTemporadas().get(0).getAnio());
-        holder.goles.setText("" + jugador.getTemporadas().get(0).getGoles());
-        holder.disparos.setText(""+ jugador.getTemporadas().get(0).getDisparos());
+        holder.goles.setText(String.format("%d", jugador.getTemporadas().get(0).getGoles()));
+        holder.disparos.setText(String.format("%d", jugador.getTemporadas().get(0).getDisparos()));
 
     }
 

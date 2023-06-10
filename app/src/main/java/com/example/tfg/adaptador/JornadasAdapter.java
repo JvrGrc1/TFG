@@ -1,14 +1,12 @@
 package com.example.tfg.adaptador;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -77,12 +75,13 @@ public class JornadasAdapter extends RecyclerView.Adapter<JornadasAdapter.Jornad
         return new JornadaViewHolder(view, contexto);
     }
 
+    @SuppressLint("DefaultLocale")
     @Override
     public void onBindViewHolder(@NonNull JornadasAdapter.JornadaViewHolder holder, int position) {
 
         Jornada jornada1 =jornada.get(position);
 
-        holder.jornada.setText("Jornada " + jornada1.getJornada());
+        holder.jornada.setText(String.format("Jornada %d", jornada1.getJornada()));
         holder.recyclerView.setLayoutManager(new LinearLayoutManager(contexto));
         PartidosAdapter adapter = new PartidosAdapter(contexto, jornada1.getPartidos());
         holder.recyclerView.setAdapter(adapter);

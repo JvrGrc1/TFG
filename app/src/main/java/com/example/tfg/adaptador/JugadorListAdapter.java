@@ -1,6 +1,5 @@
 package com.example.tfg.adaptador;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,10 +11,7 @@ import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.tfg.R;
-import com.example.tfg.entidad.Clasificacion;
 import com.example.tfg.entidad.Jugador;
-
-import java.util.List;
 
 public class JugadorListAdapter extends ListAdapter<Jugador, JugadorListAdapter.JugadorViewHolder> {
 

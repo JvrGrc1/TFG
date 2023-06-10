@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:fontFamily="@font/favter1"
-        android:text="Ajustes"
+        android:text="@string/ajustes"
         android:textColor="@color/azul_oscuro"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -48,7 +48,7 @@
             android:layout_marginStart="25dp"
             android:layout_marginTop="15dp"
             android:fontFamily="@font/industrial_light"
-            android:text="Ajustes de usuario"
+            android:text="@string/ajustes_user"
             android:textColor="@color/gris_oscuro"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -70,33 +70,9 @@
                 android:layout_marginStart="40dp"
                 android:layout_marginEnd="30dp"
                 android:fontFamily="@font/industrial_light"
-                android:text="Cambiar correo electrónico"
+                android:text="@string/cambiar_correo_electronico"
                 android:textColor="@color/black"
                 android:textSize="20sp" />
-
-            <LinearLayout
-                android:id="@+id/nuevoEmail"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:theme="@style/Theme.Material3.Light"
-                android:visibility="gone"
-                app:layout_constraintTop_toBottomOf="@+id/textViewAjustes">
-
-                    <EditText
-                        android:id="@+id/correoNuevo"
-                        android:layout_width="200dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="30dp"
-                        android:layout_marginEnd="30dp"
-                        android:enabled="false"
-                        android:fontFamily="@font/thinoobold" />
-
-                <Button
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:background="@drawable/lapiz" />
-            </LinearLayout>
 
             <TextView
                 android:id="@+id/psswrdAjustes"
@@ -106,7 +82,7 @@
                 android:layout_marginTop="30dp"
                 android:layout_marginEnd="30dp"
                 android:fontFamily="@font/industrial_light"
-                android:text="Cambiar contraseña"
+                android:text="@string/cambiar_contraseña"
                 android:textColor="@color/black"
                 android:textSize="20sp" />
 
@@ -126,7 +102,7 @@
                 android:layout_marginStart="40dp"
                 android:layout_marginEnd="30dp"
                 android:fontFamily="@font/thinoobold"
-                android:text="Cambiar de Cuenta"
+                android:text="@string/cambiar_cuenta"
                 android:textColor="@color/azul_oscuro"
                 android:textSize="18sp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -147,7 +123,7 @@
                 android:layout_marginStart="40dp"
                 android:layout_marginEnd="30dp"
                 android:fontFamily="@font/thinoobold"
-                android:text="Borrar Cuenta"
+                android:text="@string/borrar_cuenta"
                 android:textColor="@color/rojo_oscuro"
                 android:textSize="18sp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -175,7 +151,7 @@
         android:layout_marginStart="25dp"
         android:layout_marginTop="15dp"
         android:fontFamily="@font/industrial_light"
-        android:text="Tema"
+        android:text="@string/tema"
         android:textColor="@color/gris_oscuro"
         android:textSize="18sp"
         android:textStyle="bold"
@@ -186,25 +162,28 @@
         android:id="@+id/linearModo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="5dp"
         android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewTema">
 
         <TextView
             android:id="@+id/oscuro"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginStart="40dp"
             android:layout_weight="1"
             android:fontFamily="@font/industrial_light"
-            android:text="Modo Oscuro"
+            android:gravity="center_vertical"
+            android:text="@string/modo_oscuro"
             android:textColor="@color/black"
             android:textSize="20sp" />
 
         <Switch
             android:id="@+id/switchModo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:layout_marginEnd="30dp"
             android:foregroundGravity="right"
             tools:ignore="UseSwitchCompatOrMaterialXml" />
@@ -229,7 +208,7 @@
         android:layout_marginStart="25dp"
         android:layout_marginTop="15dp"
         android:fontFamily="@font/industrial_light"
-        android:text="Datos del club"
+        android:text="@string/datos_club"
         android:textColor="@color/gris_oscuro"
         android:textSize="18sp"
         android:textStyle="bold"
@@ -251,7 +230,7 @@
             android:layout_marginStart="40dp"
             android:layout_marginEnd="30dp"
             android:fontFamily="@font/industrial_light"
-            android:text="Historia e información del club"
+            android:text="@string/historia_info_club"
             android:textColor="@color/black"
             android:textSize="20sp" />
 
@@ -263,7 +242,7 @@
             android:layout_marginTop="30dp"
             android:layout_marginEnd="30dp"
             android:fontFamily="@font/industrial_light"
-            android:text="Redes"
+            android:text="@string/redes"
             android:textColor="@color/black"
             android:textSize="20sp" />
     </LinearLayout>
@@ -273,6 +252,7 @@
         android:layout_width="60dp"
         android:layout_height="40dp"
         android:layout_marginBottom="15dp"
+        android:contentDescription="@string/logo_jvr"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

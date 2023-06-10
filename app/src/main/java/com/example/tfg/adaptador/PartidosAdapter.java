@@ -1,8 +1,8 @@
 package com.example.tfg.adaptador;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.tfg.R;
 import com.example.tfg.entidad.Partido;
-
-import org.checkerframework.checker.units.qual.C;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -95,10 +93,11 @@ public class PartidosAdapter extends RecyclerView.Adapter<PartidosAdapter.Partid
         }
     }
 
+    @SuppressLint("DefaultLocale")
     private static void setGoles(@NonNull PartidosViewHolder holder, Partido partido) {
         if (partido.getGolesVisitante() != 0 && partido.getGolesLocal() != 0) {
-            holder.golesLocal.setText(partido.getGolesLocal() + "");
-            holder.golesVisitante.setText(partido.getGolesVisitante() + "");
+            holder.golesLocal.setText(String.format("%d", partido.getGolesLocal()));
+            holder.golesVisitante.setText(String.format("%d", partido.getGolesVisitante()));
         }else{
             holder.golesLocal.setText("-");
             holder.golesVisitante.setText("-");
