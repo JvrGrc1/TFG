@@ -149,4 +149,7 @@
     <string name="amarillas_puntos">Amarillas:</string>
     <string name="rojas_puntos">Rojas:</string>
     <string name="dos_min_puntos">2 Minutos:</string>
+    <string name="primer_equipo_senior">Primer equipo Senior del Club Balonmano Leganés</string>
+    <string name="resultado_copa_reina">El equipo senior del BM Leganés queda cuarto en la Copas de la Reina</string>
+    <string name="aficion_club">Afición del Club Balonmano Leganés</string>
 </resources>

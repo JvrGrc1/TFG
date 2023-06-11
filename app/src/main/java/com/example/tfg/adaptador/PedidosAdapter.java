@@ -65,11 +65,11 @@ public class PedidosAdapter extends RecyclerView.Adapter<PedidosAdapter.PedidosV
         } else{
             holder.talla.setVisibility(View.INVISIBLE);
         }
-        holder.mas.setOnClickListener(view -> {                                 //Incrementar el número de prendas
-            if (Integer.parseInt(holder.cantidad.getText().toString()) == 9){
-                Toast.makeText(view.getContext(), "No puedes añadir más de 9 unidades por prenda.", Toast.LENGTH_SHORT).show();
+        holder.menos.setOnClickListener(view -> {                                 //Decrementar el número de prendas
+            if (Integer.parseInt(holder.cantidad.getText().toString()) == 1){
+                Toast.makeText(view.getContext(), "Si quiere eliminar este producto de su compra pulse el icono de la papelera.", Toast.LENGTH_SHORT).show();
             }else {
-                int cantidadNueva = (Integer.parseInt(holder.cantidad.getText().toString()) + 1);
+                int cantidadNueva = (Integer.parseInt(holder.cantidad.getText().toString()) - 1);
                 holder.cantidad.setText(String.format("%d", cantidadNueva));
                 pedido.setCantidad(Long.parseLong(holder.cantidad.getText().toString()));
                 holder.precio.setText(String.format("Total: %.2f€",pedido.getPrecioUnidad()*pedido.getCantidad()));
@@ -77,11 +77,11 @@ public class PedidosAdapter extends RecyclerView.Adapter<PedidosAdapter.PedidosV
             }
         });
 
-        holder.menos.setOnClickListener(view -> {                               //Decrementar el número de prendas
-            if (Integer.parseInt(holder.cantidad.getText().toString()) == 1){
-                Toast.makeText(view.getContext(), "Si quiere eliminar este producto de su compra pulse el icono de la papelera.", Toast.LENGTH_SHORT).show();
+        holder.mas.setOnClickListener(view -> {                               //Incrementar el número de prendas
+            if (Integer.parseInt(holder.cantidad.getText().toString()) == 9){
+                Toast.makeText(view.getContext(), "No puedes añadir más de 9 unidades por prenda.", Toast.LENGTH_SHORT).show();
             }else {
-                int cantidadNueva = (Integer.parseInt(holder.cantidad.getText().toString()) - 1);
+                int cantidadNueva = (Integer.parseInt(holder.cantidad.getText().toString()) + 1);
                 holder.cantidad.setText(String.format("%d", cantidadNueva));
                 pedido.setCantidad(Long.parseLong(holder.cantidad.getText().toString()));
                 holder.precio.setText(String.format("Total: %.2f€",pedido.getPrecioUnidad()*pedido.getCantidad()));
@@ -114,8 +114,8 @@ public class PedidosAdapter extends RecyclerView.Adapter<PedidosAdapter.PedidosV
             nombre = itemView.findViewById(R.id.nombrePrendaPedido);
             precio = itemView.findViewById(R.id.precioPrendaPedido);
             talla = itemView.findViewById(R.id.tallaPrendaPedido);
-            mas = itemView.findViewById(R.id.buttonMasPrendaPedido);
             menos = itemView.findViewById(R.id.buttonMenosprendaPedido);
+            mas = itemView.findViewById(R.id.buttonMasPrendaPedido);
             trash = itemView.findViewById(R.id.buttonBasuraPrendaPedido);
             linear = itemView.findViewById(R.id.linearPedido);
             linearCantidad = itemView.findViewById(R.id.linearCantidad);

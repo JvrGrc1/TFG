@@ -71,12 +71,12 @@
                 android:layout_weight="1">
 
                 <Button
-                    android:id="@+id/buttonMasPrendaPedido"
+                    android:id="@+id/buttonMenosprendaPedido"
                     android:layout_width="0dp"
                     android:layout_height="30dp"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
-                    android:background="@drawable/mas" />
+                    android:background="@drawable/menos" />
 
                 <TextView
                     android:id="@+id/cantidadPrendaPedido"
@@ -92,12 +92,12 @@
                     android:textStyle="bold" />
 
                 <Button
-                    android:id="@+id/buttonMenosprendaPedido"
+                    android:id="@+id/buttonMasPrendaPedido"
                     android:layout_width="0dp"
-                    android:layout_height="30dp"
+                    android:layout_height="25dp"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
-                    android:background="@drawable/menos" />
+                    android:background="@drawable/mas" />
             </LinearLayout>
 
             <TextView

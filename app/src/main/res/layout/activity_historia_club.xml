@@ -47,7 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:fontFamily="@font/thinoobold"
+            android:fontFamily="@font/industrial_light"
             android:paddingStart="15dp"
             android:paddingEnd="15dp"
             android:text="@string/historia"
@@ -58,12 +58,23 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/divider2" />
 
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:contentDescription="@string/primer_equipo_senior"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/historia"
+            app:srcCompat="@drawable/bm_antiguo" />
+
         <TextView
             android:id="@+id/historia1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:fontFamily="@font/thinoobold"
+            android:fontFamily="@font/industrial_light"
             android:paddingStart="15dp"
             android:paddingEnd="15dp"
             android:text="@string/historia1"
@@ -72,14 +83,25 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/historia" />
+            app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:contentDescription="@string/resultado_copa_reina"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/historia1"
+            app:srcCompat="@drawable/bm_antiguo_2" />
 
         <TextView
             android:id="@+id/historia2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:fontFamily="@font/thinoobold"
+            android:fontFamily="@font/industrial_light"
             android:paddingStart="15dp"
             android:paddingEnd="15dp"
             android:text="@string/historia2"
@@ -88,14 +110,26 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/historia1" />
+            app:layout_constraintTop_toBottomOf="@+id/imageView3" />
+
+        <ImageView
+            android:id="@+id/imageView4"
+            android:layout_width="300dp"
+            android:layout_height="200dp"
+            android:contentDescription="@string/aficion_club"
+            android:layout_marginTop="5dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/historia2"
+            app:srcCompat="@drawable/aficion_bm_leganes" />
 
         <TextView
             android:id="@+id/historia3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:fontFamily="@font/thinoobold"
+            android:layout_marginBottom="10dp"
+            android:fontFamily="@font/industrial_light"
             android:paddingStart="15dp"
             android:paddingEnd="15dp"
             android:text="@string/historia3"
@@ -104,7 +138,8 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/historia2" />
+            app:layout_constraintTop_toBottomOf="@id/imageView4"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
