@@ -92,6 +92,10 @@ public class ClasificacionAdapter  extends RecyclerView.Adapter<ClasificacionAda
             vde = itemView.findViewById(R.id.textViewVicEmpDer);
             puntos = itemView.findViewById(R.id.textViewPuntos);
 
+            comprobarModo(contexto);
+        }
+
+        private void comprobarModo(Context contexto) {
             boolean modoOscuro = contexto.getSharedPreferences("Ajustes", Context.MODE_PRIVATE)
                     .getBoolean("modoOscuro", false);
             if (modoOscuro) {

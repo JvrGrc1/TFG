@@ -69,6 +69,10 @@ public class TiendaAdapter extends RecyclerView.Adapter<TiendaAdapter.TiendaView
             imagen = itemView.findViewById(R.id.imagenPrenda);
             constraintLayout = itemView.findViewById(R.id.constrainTiendaView);
 
+            comprobarModo(context);
+        }
+
+        private void comprobarModo(Context context) {
             boolean modoOscuro = context.getSharedPreferences("Ajustes", Context.MODE_PRIVATE)
                     .getBoolean("modoOscuro", false);
             if (modoOscuro) {

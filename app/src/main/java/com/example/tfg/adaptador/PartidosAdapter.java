@@ -124,6 +124,10 @@ public class PartidosAdapter extends RecyclerView.Adapter<PartidosAdapter.Partid
             coronaVisitante = itemView.findViewById(R.id.coronaVisitante);
             puntos = itemView.findViewById(R.id.puntos);
 
+            comprobarModo(context);
+        }
+
+        private void comprobarModo(Context context) {
             boolean modoOscuro = context.getSharedPreferences("Ajustes", Context.MODE_PRIVATE)
                     .getBoolean("modoOscuro", false);
             if (modoOscuro) {

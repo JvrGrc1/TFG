@@ -96,6 +96,10 @@ public class TemporadaAdapter extends RecyclerView.Adapter<TemporadaAdapter.Temp
             dosMin = itemView.findViewById(R.id.textViewDosMinTemp);
             dosMinJugador = itemView.findViewById(R.id.textViewDosMinJugadorTemp);
 
+            comprobarModo(context);
+        }
+
+        private void comprobarModo(Context context) {
             boolean modoOscuro = context.getSharedPreferences("Ajustes", Context.MODE_PRIVATE)
                     .getBoolean("modoOscuro", false);
             if (modoOscuro) {

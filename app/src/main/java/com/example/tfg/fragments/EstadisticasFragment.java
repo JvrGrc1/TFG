@@ -308,14 +308,14 @@ public class EstadisticasFragment extends Fragment {
     }
 
     private Task<List<String>> getTemporadas(){
-        TaskCompletionSource taskCompletionSource = new TaskCompletionSource();
+        TaskCompletionSource<List<String>> taskCompletionSource = new TaskCompletionSource<>();
         Task<List<String>> task = conexionFirebase.getTemporadas();
         task.addOnCompleteListener(task1 -> {
             if (task1.isSuccessful()){
                 List<String> temp = task1.getResult();
                 taskCompletionSource.setResult(temp);
             }else{
-                taskCompletionSource.setException(taskCompletionSource.getTask().getException());
+                taskCompletionSource.setException(Objects.requireNonNull(taskCompletionSource.getTask().getException()));
             }
         });
         return taskCompletionSource.getTask();

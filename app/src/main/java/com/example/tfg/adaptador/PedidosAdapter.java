@@ -65,7 +65,7 @@ public class PedidosAdapter extends RecyclerView.Adapter<PedidosAdapter.PedidosV
         } else{
             holder.talla.setVisibility(View.INVISIBLE);
         }
-        holder.mas.setOnClickListener(view -> {
+        holder.mas.setOnClickListener(view -> {                                 //Incrementar el número de prendas
             if (Integer.parseInt(holder.cantidad.getText().toString()) == 9){
                 Toast.makeText(view.getContext(), "No puedes añadir más de 9 unidades por prenda.", Toast.LENGTH_SHORT).show();
             }else {
@@ -77,7 +77,7 @@ public class PedidosAdapter extends RecyclerView.Adapter<PedidosAdapter.PedidosV
             }
         });
 
-        holder.menos.setOnClickListener(view -> {
+        holder.menos.setOnClickListener(view -> {                               //Decrementar el número de prendas
             if (Integer.parseInt(holder.cantidad.getText().toString()) == 1){
                 Toast.makeText(view.getContext(), "Si quiere eliminar este producto de su compra pulse el icono de la papelera.", Toast.LENGTH_SHORT).show();
             }else {
@@ -150,25 +150,6 @@ public class PedidosAdapter extends RecyclerView.Adapter<PedidosAdapter.PedidosV
                     Toast.makeText(view.getContext(), "Prenda de ropa eliminada de la lista.", Toast.LENGTH_SHORT).show();
                 });
                 cancelar.setOnClickListener(v -> dialog.dismiss());
-            });
-
-            mas.setOnClickListener(view -> {
-                if (Integer.parseInt(cantidad.getText().toString()) == 9){
-                    Toast.makeText(view.getContext(), "No puedes añadir más de 9 unidades por prenda.", Toast.LENGTH_SHORT).show();
-                }else {
-                    int cantidadNueva = (Integer.parseInt(cantidad.getText().toString()) + 1);
-                    cantidad.setText(String.format("%d", cantidadNueva));
-                    //conexion.updatePedido(cantidadNueva, crearMap());
-                }
-            });
-
-            menos.setOnClickListener(view -> {
-                if (Integer.parseInt(cantidad.getText().toString()) == 1){
-                    Toast.makeText(view.getContext(), "Si quiere eliminar este producto de su compra pulse el icono de la papelera.", Toast.LENGTH_SHORT).show();
-                }else {
-                    int cantidadNueva = (Integer.parseInt(cantidad.getText().toString()) - 1);
-                    cantidad.setText(cantidadNueva + "");
-                }
             });
         }
 

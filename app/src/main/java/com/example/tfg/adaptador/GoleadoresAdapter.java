@@ -25,10 +25,11 @@ public class GoleadoresAdapter extends RecyclerView.Adapter<GoleadoresAdapter.Go
 
     public GoleadoresAdapter(Context contexto, List<Jugador> jugadores) {
         this.contexto = contexto;
-        this.jugadores = jugadores;
-        Collections.sort(this.jugadores, new GoleadoresComparator());
+        Collections.sort(jugadores, new GoleadoresComparator());
         if (jugadores.size() > 20){
             this.jugadores = jugadores.subList(0,10);
+        }else{
+            this.jugadores = jugadores;
         }
     }
 
@@ -71,6 +72,10 @@ public class GoleadoresAdapter extends RecyclerView.Adapter<GoleadoresAdapter.Go
             disparos = itemView.findViewById(R.id.textViewDisparos);
             temp = itemView.findViewById(R.id.textViewTemporadaGol);
 
+            comprobarModo(contexto);
+        }
+
+        private void comprobarModo(Context contexto) {
             boolean modoOscuro = contexto.getSharedPreferences("Ajustes", Context.MODE_PRIVATE)
                     .getBoolean("modoOscuro", false);
             if (modoOscuro) {

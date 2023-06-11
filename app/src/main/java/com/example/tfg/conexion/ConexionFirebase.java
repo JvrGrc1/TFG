@@ -59,8 +59,8 @@ public class ConexionFirebase {
                 List<DocumentSnapshot> documents = document.getDocuments();
                 List<Task<QuerySnapshot>> divisionTasks = new ArrayList<>();
                 for (DocumentSnapshot ds : documents) {
-                    for (int d = 1; d <=4; d++) {
-                        divisionTasks.add(ds.getReference().collection(ds.getString("division" + d)).get());
+                    for (int d = 1; d <= Objects.requireNonNull(ds.getData()).size(); d++) {
+                        divisionTasks.add(ds.getReference().collection(Objects.requireNonNull(ds.getString("division" + d))).get());
                     }
                 }
                 Tasks.whenAllComplete(divisionTasks).addOnCompleteListener(task2 -> {
@@ -215,7 +215,7 @@ public class ConexionFirebase {
                         }
                     }
                     if (repetido){
-                        cantidad = cantidad + (long )pedido.get("cantidad");
+                        cantidad = cantidad + (long) pedido.get("cantidad");
                         pedido.put("cantidad", cantidad);
                     }
                     db.collection("pedidos").add(pedido).addOnCompleteListener(task1 -> {
@@ -539,14 +539,16 @@ public class ConexionFirebase {
             }
         });
     }
-    public void updatePedido(Map pedido, Context context){
+    public void updatePedido(Map<String, Object> pedido, Context context){
         db.collection("pedidos").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()){
                 for (QueryDocumentSnapshot documents : task.getResult()) {
-                    if (documents.getString("comprador").equals(pedido.get("comprador")) && documents.getBoolean("pagado").equals(false) && documents.getString("prenda").equals(pedido.get("prenda")) && documents.getString("talla").equals(pedido.get("talla"))){
+                    if (Objects.equals(documents.getString("comprador"), pedido.get("comprador")) && Objects.equals(documents.getBoolean("pagado"), false) && Objects.equals(documents.getString("prenda"), pedido.get("prenda")) && Objects.equals(documents.getString("talla"), pedido.get("talla"))){
                         db.collection("pedidos").document(documents.getId()).update(pedido).addOnCompleteListener(task1 -> {
                             if (task1.isSuccessful()) {
-                                Toast.makeText(context, "Pedido pagado con éxito", Toast.LENGTH_SHORT).show();
+                                if (Objects.equals(pedido.get("pagado"), "true")) {
+                                    Toast.makeText(context, "Pedido pagado con éxito", Toast.LENGTH_SHORT).show();
+                                }
                             } else {
                                 Toast.makeText(context, "Algo ha ido mal.", Toast.LENGTH_SHORT).show();
                             }
@@ -561,7 +563,7 @@ public class ConexionFirebase {
     }
     public void sendVerfificacion(String correo){auth.getCurrentUser().sendEmailVerification();}
     public Task<List<String>> getTemporadas(){
-        TaskCompletionSource taskCompletionSource = new TaskCompletionSource();
+        TaskCompletionSource<List<String>> taskCompletionSource = new TaskCompletionSource<>();
 
         db.collection("temporadas").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()){
@@ -578,7 +580,8 @@ public class ConexionFirebase {
         return taskCompletionSource.getTask();
     }
     public Task<Boolean> cambiarCorreo(String correo){
-        TaskCompletionSource taskCompletionSource = new TaskCompletionSource();
+        TaskCompletionSource<Boolean> taskCompletionSource = new TaskCompletionSource<>();
+        assert user != null;
         String cNow = user.getEmail();
         user.updateEmail(correo).addOnCompleteListener(task -> {
             if (task.isSuccessful()){
@@ -586,7 +589,7 @@ public class ConexionFirebase {
                     if (task1.isSuccessful()){
                         QuerySnapshot snapshots = task1.getResult();
                         for (DocumentSnapshot ds : snapshots){
-                            if (ds.getString("correo").equals(cNow)){
+                            if (Objects.equals(ds.getString("correo"), cNow)){
                                 Map<String, Object> user1 = new HashMap<>();
                                 user1.put("nombre", ds.getString("nombre"));
                                 user1.put("apellido1", ds.getString("apellido1"));
@@ -617,7 +620,7 @@ public class ConexionFirebase {
         return taskCompletionSource.getTask();
     }
     public Task<Boolean> cambiarPsswrd(String psswrd){
-        TaskCompletionSource taskCompletionSource = new TaskCompletionSource();
+        TaskCompletionSource<Boolean> taskCompletionSource = new TaskCompletionSource<>();
         user.updatePassword(psswrd).addOnCompleteListener(task -> {
             if (task.isSuccessful()){
                 taskCompletionSource.setResult(true);

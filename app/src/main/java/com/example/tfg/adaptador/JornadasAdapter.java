@@ -105,6 +105,12 @@ public class JornadasAdapter extends RecyclerView.Adapter<JornadasAdapter.Jornad
             jornada = itemView.findViewById(R.id.jornada);
             recyclerView = itemView.findViewById(R.id.recyclerPartidos);
 
+            comprobarModo(context);
+
+        }
+
+        @RequiresApi(api = Build.VERSION_CODES.M)
+        private void comprobarModo(Context context) {
             boolean modoOscuro = context.getSharedPreferences("Ajustes", Context.MODE_PRIVATE)
                     .getBoolean("modoOscuro", false);
             if (modoOscuro) {
@@ -114,7 +120,6 @@ public class JornadasAdapter extends RecyclerView.Adapter<JornadasAdapter.Jornad
                 jornada.setTextColor(context.getColor(R.color.azul_oscuro));
                 recyclerView.setBackgroundColor(Color.WHITE);
             }
-
         }
     }
 }
